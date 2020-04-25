@@ -1,4 +1,6 @@
 /db.sqlite3
+/static/
+/media/
 
 
 # Created by https://www.gitignore.io/api/python,windows,sublimetext

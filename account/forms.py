@@ -36,13 +36,14 @@ class UserUpdateForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		for field in self.fields:
-			self.fields[field].widget.attrs['autocomplete'] = 'off'
+		#for field in self.fields:
+			#self.fields[field].widget.attrs['autocomplete'] = 'off'
 		self.fields['first_name'].widget.attrs['placeholder'] = 'Your first name'
 		self.fields['last_name'].widget.attrs['placeholder'] = 'Your last name'
 		self.fields['age'].widget.attrs['placeholder'] = 'Your age'
 		self.fields['username'].widget.attrs['placeholder'] = 'Your username'
 		self.fields['email'].widget.attrs['placeholder'] = 'Your email'
+		self.fields['image'].widget.attrs['enctype'] = 'multipart/form-data'
 
 
 class NewArticleForm(forms.ModelForm):

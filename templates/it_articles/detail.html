@@ -52,19 +52,16 @@
 		<div class="title">Comments ({{article.comments.all.count}})</div>
 		<form method="post" class="take-comment-form">
 			{% csrf_token %}
-			<img src="{% static 'account/images/mona.png' %}" alt="d">
+			<img src="{% if comment.user.image %}{{comment.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="d">
 			<input name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">
 			<input type="submit" value="Send">
 		</form>
 		<ul>
 			{% for comment in comments %}
 				<li>
-					<img src="{% static 'account/images/mona.png' %}" alt="Mona.png">
+					<img src="{% if comment.user.image %}{{comment.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
 					<div class="comment">
 						<div class="user">
-							{% if comment.id == 48 %}
-								{{comment.qwert}}
-							{% endif %}
 							<div>
 								<div>{{comment.user}}</div>
 								<div class="date">{{comment.date}}</div>

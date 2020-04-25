@@ -12,14 +12,12 @@
 
 	<div class="user-top">
 		{% load static %}
-		<img src="{{request.user.image.url}}" alt="sdfsf" class="user-img">
+		<img src="{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="sdfsf" class="user-img">
 	</div>
 
 {% endblock %}
 
 {% block content %}
-
-	{{request.user.image.url}}
 	
 	<div class="content-container">
 		<div class="user-info">
