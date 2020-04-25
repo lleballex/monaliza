@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}Monaliza{% endblock %}</title>
+	{% load static %}
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+	<link rel="stylesheet" href="{% static 'style_menu.css' %}">
+	<link rel="stylesheet" href="{% static 'style_top.css' %}">
+	<link rel="stylesheet" href="{% static 'style_articles.css' %}">
+	<link rel="stylesheet" href="{% static 'style_messages.css' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="{% static 'jquery.nicescroll.js' %}"></script>
+	<script src="{% static 'script.js' %}"></script>
+	<script src="https://use.fontawesome.com/ec35c87a07.js"></script>
+	<script src="{% static 'script_messages.js' %}"></script>
+	{% block staticfiles %}{% endblock %}
+</head>
+<body>
+	<div class="menu">
+		<ul>
+			<li>
+				{% if not request.user.is_authenticated %}
+					<a class="main_menu user" href="{% url 'account:login' %}">Sign in</a>
+					<div class="sub_menu">
+						<a href="{% url 'account:register' %}">Sign up</a>
+					</div>
+				{% else %}
+					{% url 'account:profile' as url_profile %}
+					{% url 'account:my_articles' as url_my_articles %}
+					<a class="main_menu user {% if url_profile in request.path or url_my_articles in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
+					<div class="sub_menu {% if url_profile in request.path or url_my_articles in request.path %}active{% endif %}">
+						{% url 'account:settings' as url_settings %}
+						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}">Settings</a>
+						<a href="{% url 'account:my_articles' %}" class="{% if request.path == url_my_articles %}active{% endif %}">My articles</a>
+						<a href="{% url 'account:notifications' %}">Notifications</a>
+					</div>
+				{% endif %}
+			</li>
+			<li>
+				{% url 'it_articles:articles_all' as url_articles_all %}
+				<a class="main_menu {% if request.path == url_articles_all %}active{% endif %}" href="{% url 'it_articles:articles_all' %}">It articles</a>
+				<div class="sub_menu {% if request.path == url_articles_all %}active{% endif %}">
+					<a class="{% if request.path == url_articles_all and request.GET.language == 'cpp' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=cpp">C++</a>
+					<a class="{% if request.path == url_articles_all and request.GET.language == 'python' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=python">Python</a>
+					<a class="{% if request.path == url_articles_all and request.GET.language == 'web' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=web">Web</a>
+				</div>
+			</li>
+			<li><a class="main_menu" href="http://localhost:8000/articles">IT articles</a></li>
+			<li><a class="main_menu" href="http://localhost:8000/studying">Studying</a></li>
+			<li><a class="main_menu" href="http://localhost:8000/about">About</a></li>
+		</ul>
+		<div class="title"><a href="{% url 'start_page:main_view' %}">Monaliza</a></div>
+	</div>
+	<form class="search" method="get" action="{% url 'it_articles:search' %}">
+		<input type="text" name="text">
+		<input type="submit" value="Search">
+	</form>
+	<div class="container">
+		<div class="top">
+			{% block top %}
+				<div class="top_intro">
+					{% block top_title %}PROJECTS{% endblock %}
+				</div>
+				<div class="top_menu">
+					<ul>
+						<li><input class="btn active" id="articles_new" type="button" id="new_works" value='New works'></li>
+						<li><input class="btn" id="articles_popular" type="button" id="popular_works" value='Popular works'></li>
+						<li><input class="btn" type="button" id="also" value='Also'></li>
+					</ul>
+				</div>
+			{% endblock %}
+		</div>
+		<div class="content">
+			{% if messages %}
+				<div class="messages">
+					{% for message in messages %}
+						<div class="message {{message.tags}}">
+							{{message|safe}}
+							<button class="close">x</button>
+						</div>
+					{% endfor %}
+				</div>
+	{% endif %}		
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+</body>
+</html>

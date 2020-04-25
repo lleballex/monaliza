@@ -1,0 +1,84 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+
+	{{article.title}}
+	
+{% endblock %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">
+		{{article.title}}
+		<!--<div class="top_user">{{article.user}}</div>-->
+	</div>
+
+{% endblock %}
+
+{% block content %}
+
+	<script>
+		/*$(function() {
+			$('.fa-times').on('click', function() {
+				alert($(this).attr('id'));
+				
+			});
+		});*/
+		function qqq(num) {
+			{% for comment in comments %}
+				{% if comment.id == 48 %}
+				alert({{comment.user.username}});
+
+				{% else %}
+				alert({{comment.id}});
+				{% endif %}
+			{% endfor %}
+		}
+
+	</script>
+
+	<div class="content-container">
+	<div class="article-content">
+		{{article.text|safe}}
+	</div>
+	<div class="comments">
+		<div class="title">Comments ({{article.comments.all.count}})</div>
+		<form method="post" class="take-comment-form">
+			{% csrf_token %}
+			<img src="{% static 'account/images/mona.png' %}" alt="d">
+			<input name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">
+			<input type="submit" value="Send">
+		</form>
+		<ul>
+			{% for comment in comments %}
+				<li>
+					<img src="{% static 'account/images/mona.png' %}" alt="Mona.png">
+					<div class="comment">
+						<div class="user">
+							{% if comment.id == 48 %}
+								{{comment.qwert}}
+							{% endif %}
+							<div>
+								<div>{{comment.user}}</div>
+								<div class="date">{{comment.date}}</div>
+							</div>
+							{% if comment.user == request.user %}
+								<i id="{{comment.id}}" class="fa fa-times" aria-hidden="true" onclick="qqq(1)"></i>
+							{% endif %}
+						</div>
+						<div class="text">{{comment.text}}</div>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+	</div>
+
+{% endblock %}

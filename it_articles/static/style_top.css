@@ -1,0 +1,62 @@
+.top {
+	box-sizing: border-box;
+	width: 100%;
+	background: #227093;
+	padding: 20px 0 0 20px;
+}
+
+.top_intro {
+	font-size: 40px;
+	color: #fff;
+	padding-bottom: 20px;
+	text-transform: uppercase;
+}
+
+.top_user {
+	font-size: 20px;
+	padding-top: 10px;
+	color: #ccc;
+	text-transform: none;
+}
+
+.top_menu {
+	margin-top: 0px;
+}
+
+.top_menu ul {
+	margin: 0;
+	padding: 0;
+}
+
+.top_menu li {
+	display: inline-block;	
+	margin: 0;
+	padding: 0
+}
+
+.top_menu .btn {
+	border: none;
+	background: none;
+	padding: 20px 30px;
+	font-size: 23px;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	color: #fff;
+	margin-right: -5px;
+
+	transition: .1s;
+	cursor: pointer;
+}
+
+.top_menu .btn:hover {
+	background: #34ace0;
+}
+
+.top_menu .btn.active {
+	background: #eee;
+	color: #000;
+}
+
+.top_menu .btn:focus {
+	outline: none;
+}

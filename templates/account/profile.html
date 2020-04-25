@@ -1,0 +1,88 @@
+{% extends 'wrapper.html' %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'account/css/style_user_update.css' %}">
+	<link rel="stylesheet" href="{% static 'account/css/style_profile.css' %}">
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="user-top">
+		{% load static %}
+		<img src="{{request.user.image.url}}" alt="sdfsf" class="user-img">
+	</div>
+
+{% endblock %}
+
+{% block content %}
+
+	{{request.user.image.url}}
+	
+	<div class="content-container">
+		<div class="user-info">
+			<div class="username">{{request.user.username}}</div>
+			<ul class="statistic">
+					<li>
+						<div class="number">{{request.user.articles.all.count}}</div>
+						<div class="word">Articles</div>
+					</li>
+					<li>
+						<div class="number">{{request.user.articles.all.count}}</div>
+						<div class="word">Questions</div>
+					</li>
+					<li>
+						<div class="number">{{request.user.articles.all.count}}</div>	
+						<div class="word">Answers</div>	
+				</li>
+			</ul>
+			<table class="info">
+				<tr>
+					<td class="title">Name:</td>
+					<td>
+						{% if request.user.first_name and request.user.last_name %}
+							{{request.user.first_name}} {{request.user.last_name}}
+						{% elif request.user.first_name %}
+							{{request.user.first_name}} 
+						{% elif request.user.last_name %}
+							{{request.user.last_name}}
+						{% else %}
+							<span class="missing">missing</span>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="title">Email:</td>
+					<td>{{request.user.email}}</td>
+				</tr>
+				<tr>
+					<td class="title">Age:</td>
+					<td>
+						{% if request.user.age %}
+							{{request.user.age}}
+						{% else %}
+							<span class="missing">missing</span>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="title">Gender:</td>
+					<td>
+						{% if request.user.gender %}
+							{{request.user.gender}}
+						{% else %}
+							<span class="missing">missing</span>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="title">Registration:</td>
+					<td>{{request.user.date_joined}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}

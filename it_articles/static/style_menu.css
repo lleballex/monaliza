@@ -1,0 +1,119 @@
+.menu {
+	background: #333;
+	width: 150px;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.menu .title {
+	padding: 10px;
+	position: relative;
+	text-align: center;
+}
+
+.menu .title:after {
+	content: "";
+	position: absolute;
+	background: #bbb;
+	top: 0;
+	left: 15px;
+	width: calc(100% - 30px);
+	height: 1px;
+}
+
+.menu .title a {
+	text-decoration: none;
+	color: #fff;
+	font-weight: 700;
+}
+
+.menu ul {
+	margin: 0;
+	padding: 0;
+}
+
+.menu .main_menu.user {
+	background: #d63031;
+}
+
+.menu .main_menu {
+	display: block;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: powderblue;
+	font-size: 15px;
+	padding: 10px;
+}
+
+.menu .main_menu:hover {
+	background: #666;
+}
+
+.menu .main_menu.user:hover {
+	background: #e55039/*#c23616;*/
+}
+
+.main_menu.active, .main_menu.active:hover, .main_menu.user.active, .main_menu.user.active:hover {
+	background: #0fbcf9;
+	color: #000;
+}
+
+.sub_menu {
+	max-height: 0;
+	transition: all .9s;
+	overflow: hidden;
+}
+
+.sub_menu a {
+	display: block;
+	font-size: 15px;
+	padding: 10px;
+	padding-left: 20px;
+	color: #ccc;
+	text-decoration: none;
+	position: relative;
+}
+
+.sub_menu a:before {
+	content: "";
+	position: absolute;
+	height: 100%;
+	width: 3px;
+	top: 0;
+	left: 0;
+	background: powderblue;
+	opacity: 0;
+	transition: .2s
+}
+
+.sub_menu:hover {
+	max-height: 200px;
+}
+
+.sub_menu a:hover:before {
+	opacity: 1;
+}
+
+.main_menu:hover ~ .sub_menu{
+	max-height: 300px;
+}
+
+.sub_menu.active {
+	max-height: 300px;
+}
+
+.sub_menu.active .active:after {
+	content: "";
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background: #fff;
+	left: calc(100% - 8px);
+	top: calc(50% - 8px);
+	transform: rotate(45deg);
+}

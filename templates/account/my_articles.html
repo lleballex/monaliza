@@ -1,0 +1,79 @@
+{% extends 'wrapper.html' %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'account/css/style_profile.css' %}">
+
+	<script>
+		function delete_article(id) {
+			if(confirm('Are you shure')) 
+				$('#delete-form-' + id).submit();
+		}
+	</script>
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">{{request.user}} - articles</div>
+
+{% endblock %}
+
+{% block content %}
+
+	<div class="content-container">
+
+	{% if articles %}
+		<div class="my_articles">
+			<ul>
+				<li><b>All articles</b>: {{all_articles}}</li>
+				<li><b>All likes</b>: {{likes}}</li>
+			</ul>
+			<a href="{% url 'account:new_article' %}">Create new</a>
+		</div>
+
+		<table class="all_articles">
+		<thead>
+			<tr>
+				<th id="articles_id">ID</th>
+				<th id="articles_date">Date</th>
+				<th id="articles_title">Title</th>
+				<th id="articles_language">Language</th>
+				<th>Likes</th>
+				<th id="articles_action">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article in articles %}
+				<tr>
+					<td class="{% if not article.is_available %}not-available-article{% endif %}">{{article.id}}</td>
+					<td>{{article.date|date:'d.m.y - h:m'}}</td>
+					<td class="a">{% if article.is_available %}<a href="{% url 'it_articles:detail' article.id %}">{{article.title|truncatechars:20}}</a>{% else %}<span class="not-available-title">{{article.title|truncatechars:20}}</span>{% endif %}</td>
+					<td>{{article.language|upper}}</td>
+					<td>{{article.likes}}</td>
+					<td class="a">
+						{% if article.is_available %}
+						<form id="delete-form-{{article.id}}" action="{% url 'account:delete_article' article.id %}" method="post">
+							{% csrf_token %}
+							<a href="{% url 'account:edit_article' article.id %}">Edit</a>/
+							<a href="javascript:void()" onclick="delete_article({{article.id}})">Delete</a>
+						</form>
+						{% else %}
+						<form id="delete-form-{{article.id}}" action="{% url 'account:delete_article' article.id %}" method="post">
+							{% csrf_token %}
+							<span class="not-available-title">Edit</span>/
+							<a href="javascript:void()" onclick="delete_article({{article.id}})">Delete</a>
+						</form>
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>	
+	{% else %}
+		You do not have any articles. Create the first?
+	{% endif %}
+	</div>
+
+{% endblock %}

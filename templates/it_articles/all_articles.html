@@ -1,0 +1,79 @@
+{% extends 'wrapper.html' %}
+
+{% block top_title %}
+
+	IT articles
+
+{% endblock %}
+
+{% block content %}
+
+	<script>
+		$(function() {
+			$('.like').on('click', function() {
+				if($(this).css('color') != 'rgb(255, 0, 0)')
+					$(this).css('color', 'rgb(255, 0, 0)');
+				else
+					$(this).css('color', 'rgb(102, 102, 102)');
+			});
+		});
+	</script>
+
+	<div class="articles new">
+		<div class="articles-container">
+			{% for article in articles %}
+				{% if not request.GET.language or article.language == request.GET.language %}
+					<div class="article">
+						{% load static %}
+						<a href="{% url 'it_articles:detail' article.id %}"><img src="{% static 'mona.png' %}" alt="{{article.title}} - Picture is not found" class="img"></a>
+						<div class="prev-description">
+						<div class="article-description">
+							<div class="article-words">
+								<div class="article-title">
+									<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
+								</div>
+								<div class="article-user">{{article.user}}</div>
+							</div>
+							<div class="article-numbers">
+								<div class="likes">
+									<i class="fa fa-thumbs-up like" aria-hidden="true"></i>{{article.likes}}
+								</div>
+								<i class="fa fa-bookmark" aria-hidden="true"></i>
+							</div>
+						</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	<div class="articles popular">
+		<div class="articles-container">
+			{% for article in articles_popular %}
+				{% if not request.GET.language or article.language == request.GET.language %}
+					<div class="article">
+						{% load static %}
+						<a href="{% url 'it_articles:detail' article.id %}"><img src="{% static 'mona.png' %}" alt="{{article.title}} - Picture is not found" class="img"></a>
+						<div class="prev-description">
+						<div class="article-description">
+							<div class="article-words">
+								<div class="article-title">
+									<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
+								</div>
+								<div class="article-user">{{article.user}}</div>
+							</div>
+							<div class="article-numbers">
+								<div class="likes">
+									<i class="like" class="fa fa-thumbs-up" aria-hidden="true">ss</i>{{article.likes}}
+								</div>
+								<i class="fa fa-bookmark" aria-hidden="true"></i>
+							</div>
+						</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+
+{% endblock %}

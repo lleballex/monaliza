@@ -1,0 +1,15 @@
+{% extends 'start_page/wrapper.html' %}
+
+{% block top %}
+
+	<div class="top-intro">
+		Welcome to Monaliza
+	</div>
+	<div class="top-buttons">
+		<a id="sign-in-btn" href="{% url 'account:login' %}">Sign in</a>
+		<span class="top-btns-or">or</span>
+		<a href="{% url 'account:register' %}">Sign up</a>
+	</div>
+	end
+
+{% endblock %}

@@ -1,0 +1,192 @@
+.article-content {
+	color: #000;
+	font-weight: 300;
+	margin: 10px;
+	border: 1px solid orange;
+}
+
+.code {
+	background: #f5f2f0;
+	border: 1px solid #aaa;
+	overflow: auto;
+	max-height: 350px;
+	font-size: 17px;
+	padding: 10px;
+	color: #777;
+	line-height: 25px;
+}
+
+.comments {
+	display: flex;
+	flex-direction: column;
+}
+
+.comments .title {
+	font-size: 23px;
+	font-weight: 500;
+	position: relative;
+	align-self: flex-start;
+}
+
+.comments .title:after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 2px;
+	bottom: -3px;
+	left: 0;
+	background: #000;
+}
+
+.take-comment-form {
+	margin: 20px 0;
+	display: flex;
+}
+
+.take-comment-form input[type="text"] {
+	font-size: 18px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 7px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border: 2px solid #ccc;
+	font-family: 'Montserrat';
+	width: 100%;
+}
+
+.take-comment-form input[type="submit"] {
+	border: 2px solid #ccc;
+	margin-left: -2px;
+	background: #fff;
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: 300;
+	padding: 0 10px;
+	transition: .2s all;
+}
+
+.take-comment-form input[type="submit"]:hover {
+	cursor: pointer;
+	background: #f1f2f6;
+}
+
+.take-comment-form input:focus {
+	outline: none;
+}
+
+.comments ul {
+	margin: 10px 0 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.comments li {
+	margin-bottom: 15px;
+	position: relative;
+	display: flex;
+}
+
+.comments li img, .comments .take-comment-form img {
+	min-width: 40px;
+	min-height: 40px;
+	max-width: 40px;
+	max-height: 40px;
+	background: red;
+	align-self: flex-start;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+.comments .comment {
+	width: 100%;
+}
+
+.comments .comment .user {
+	color: #1e3799;
+	font-weight: 500;
+	font-size: 15px;
+	margin-bottom: 5px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.comments .comment .user>div {
+	display: flex;
+}
+
+.comments .comment .date {
+	color: #888;
+	font-size: 13px;
+	font-weight: 500;
+	align-self: flex-end;
+	padding-left: 15px;
+}
+
+.comments .comment .user .fa-times {
+	display: none;
+	color: #aaa;
+	font-size: 16px;
+}
+
+.comments .comment .user .fa-times:hover {
+	cursor: pointer;
+	color: #888;
+}
+
+.comments li:hover .comment .user .fa-times {
+	display: block;
+}
+
+.comments .comment .text {
+	font-size: 16px;
+}
+
+/*language-html*/
+.language-html .doctype {
+	color: #999;
+}
+
+.language-html .tag {
+	color: #A00000;
+}
+
+.language-html .attr_name {
+	color: #690;
+}
+
+.language-html .attr_value {
+	color: #07a;
+}
+
+.language-html .text {
+	color: #000;
+}
+
+
+/*language-css*/
+.language-css .class {
+	color: #690;
+}
+
+.language-css .tag {
+	color: #A00000;
+}
+
+.language-css .attr_name {
+	color: #690;
+}
+
+.language-css .attr_value {
+	color: #07a;
+}
+
+.language-css .text {
+	color: #000;
+}
+
+.language-css .num {
+	color: #9400d3;
+} 

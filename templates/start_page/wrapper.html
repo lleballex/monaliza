@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Monaliza</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'start_page/css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'start_page/css/style_top.css' %}">
+	{% block staticfiles %}{% endblock %}
+</head>
+<body>
+	<div class="top">
+		<div class="container">
+			<div class="top-bar">
+				<div class="top-logo">
+					<a href="{% url 'start_page:main_view' %}">Monaliza</a>
+				</div>			
+				<div class="top-menu">
+					<ul>
+						<li><a href="{% url 'it_articles:articles_all' %}">IT Articles</a></li>			
+						<li><a href="http://localhost:8000/studying">Studying</a></li>
+						<li><a href="#">About</a></li>
+					</ul>
+				</div>
+			</div>
+			{% block top %}
+			{% endblock %}
+		</div>
+	</div>
+</body>
+</html>

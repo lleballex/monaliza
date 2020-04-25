@@ -1,0 +1,41 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+
+	{% if update %}
+		{{article.title|truncatechars:10}} - update article
+	{% else %}
+		New article
+	{% endif %}
+
+{% endblock %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_new.css' %}">
+
+{% endblock %}
+
+{% block top %}
+
+	{% if update %}
+		<div class="top_intro">Update article</div>
+	{% else %}
+		<div class="top_intro">Create new article</div>
+	{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+	<form method="post" class="new-article-form">
+		{% for field in form %}
+			{% csrf_token %}
+			{{field.label_tag}}
+			{{field}}
+		{% endfor %}
+		<input type="submit" value="{% if update %}Save{% else %}Create{% endif %}">
+	</form>
+
+{% endblock %}

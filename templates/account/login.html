@@ -1,0 +1,31 @@
+{% extends 'start_page/wrapper.html' %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'account/css/style.css' %}">
+
+{% endblock %}
+
+{% block title %}
+
+	Login
+
+{% endblock %}
+
+{% block top %}
+
+	<form method="post" class="user-form">
+		<div class="title">Sign in</div>
+		{% csrf_token %}
+		{% for field in form %}
+			{{field}}
+		{% endfor %}
+		{% for error in form.non_field_errors %}
+			<nav class="error">{{error}}</nav>
+		{% endfor %}
+		<input type="submit" value="Sign in">
+		<div class="url"><a href="{% url 'account:register' %}">Create account</a></div>
+	</form>
+
+{% endblock %}
