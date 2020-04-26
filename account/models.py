@@ -54,3 +54,9 @@ class User(AbstractBaseUser):
 
 	def has_module_perms(self, app_label):
 		return True
+
+class Notification(models.Model):
+	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	text = models.CharField(max_length = 1000)
+	date = models.DateTimeField(auto_now = True)
+	new = models.BooleanField(default = False)

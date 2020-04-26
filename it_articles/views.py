@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, CreateView
 from django.urls import reverse_lazy, reverse
+from django.http.response import HttpResponse
+import json
 
 from .models import *
 from .forms import *
@@ -62,3 +64,31 @@ class SearchView(View):
 			'articles': Article.objects.filter(title__contains = (request.GET.get('text')))
 		}
 		return render(request, 'it_articles/all_articles.html', context)
+
+class Check(View):
+	def get(self, request, pk):
+		text = request.GET.get('text')
+		comment = Comment()
+		comment.user = request.user
+		comment.text = text
+		comment.article = Article.objects.get(id = pk)
+		comment.save()
+		context = {
+			'text': comment.text,
+			'date': comment.date.strftime('%B %d, %H:%M'),
+			'id': comment.id,
+		}
+		return HttpResponse(json.dumps(context))
+
+class DeleteComment(View):
+	def get(self, request, pk):
+		id = request.GET.get('id')
+		try:
+			comment = Comment.objects.get(id = id)
+			if comment.user == request.user:
+				comment.delete()
+				return HttpResponse('200')
+			else:
+				return HttpResponse('403')
+		except:
+			return HttpResponse('404')

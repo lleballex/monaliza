@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 
 from .forms import *
-from .models import User
+from .models import User, Notification
 from it_articles.models import Article
 from .utils import *
 
@@ -116,5 +116,13 @@ class DeleteArticleView(MessagesMixin, DeleteView):
 	success_url = reverse_lazy('account:my_articles')
 
 class NotificationsView(View):
+	def get(self, request):
+		print('f')
+		context = {
+			'notifications': Notification.objects.filter(user = request.user)
+		}
+		return render(request, 'account/notifications.html', context)
+
+class FavouriteView(View):
 	def get(self, request):
 		return render(request, 'account/profile.html')

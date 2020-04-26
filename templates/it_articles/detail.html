@@ -25,23 +25,54 @@
 {% block content %}
 
 	<script>
-		/*$(function() {
-			$('.fa-times').on('click', function() {
-				alert($(this).attr('id'));
-				
+		$(function() {
+			$('#comment-text').keyup(function(event) {
+				if(event.keyCode == 13)
+					send_comment();
 			});
-		});*/
-		function qqq(num) {
-			{% for comment in comments %}
-				{% if comment.id == 48 %}
-				alert({{comment.user.username}});
+		});
 
-				{% else %}
-				alert({{comment.id}});
-				{% endif %}
-			{% endfor %}
+		function send_comment() {
+			var text = $('#comment-text').val().replace(/ +/g, ' ').trim();
+			if(text != '') {
+			$.ajax({
+				type: 'get',
+				url: 'check/',
+				data: {
+					'text': text,
+				}, 
+				dataType: 'text',
+				cache: false,
+				success: function(data) {
+					context = JSON.parse(data);
+					var username = '{{request.user.username}}';
+					var comment = $('<li id="comment-' + context.id + '"><img src="' + "{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" + '"><div class="comment"><div class="user"><div><div>' + username + '</div><div class="date">' + context.date + '</div></div><i class="fa fa-times" aria-hidden="true" onclick="delete_comment(' + context.id + ')"></i></div><div class="text">' + context.text + '</div></div></li>');
+					$('.comments ul').prepend(comment);
+					$('#comment-text').val('');
+				}
+			});
+			}
 		}
 
+		function delete_comment(id) {
+			if(confirm('Are you shure')) {
+			$.ajax({
+				type: 'GET',
+				url: 'delete_comment/',
+				data: {
+					'id': id,
+				},
+				dataType: 'text',
+				cache: false,
+				success: function(data) {
+					if(data == '200') {
+						$('#comment-' + id).css('display', 'none');
+					} else 
+						alert('Error - ' + data);
+				}
+			});
+		}
+		}
 	</script>
 
 	<div class="content-container">
@@ -50,24 +81,23 @@
 	</div>
 	<div class="comments">
 		<div class="title">Comments ({{article.comments.all.count}})</div>
-		<form method="post" class="take-comment-form">
-			{% csrf_token %}
-			<img src="{% if comment.user.image %}{{comment.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="d">
-			<input name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">
-			<input type="submit" value="Send">
-		</form>
+		<div class="take-comment-form">
+			<img src="{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
+			<input id="comment-text" name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">
+			<input type="submit" value="Send" onclick="send_comment()">
+			</div>
 		<ul>
 			{% for comment in comments %}
-				<li>
+				<li id="comment-{{comment.id}}">
 					<img src="{% if comment.user.image %}{{comment.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
 					<div class="comment">
 						<div class="user">
 							<div>
 								<div>{{comment.user}}</div>
-								<div class="date">{{comment.date}}</div>
+								<div class="date">{{comment.date|date:'F d, G:m'}}</div>
 							</div>
 							{% if comment.user == request.user %}
-								<i id="{{comment.id}}" class="fa fa-times" aria-hidden="true" onclick="qqq(1)"></i>
+								<i class="fa fa-times" aria-hidden="true" onclick="delete_comment({{comment.id}})"></i>
 							{% endif %}
 						</div>
 						<div class="text">{{comment.text}}</div>
