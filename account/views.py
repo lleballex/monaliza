@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 
 from .forms import *
-from .models import User, Notification
+from .models import User, Notification, FavouriteArticle
 from it_articles.models import Article
 from .utils import *
 
@@ -125,4 +125,7 @@ class NotificationsView(View):
 
 class FavouriteView(View):
 	def get(self, request):
-		return render(request, 'account/profile.html')
+		context = {
+			'articles': FavouriteArticle.objects.filter(user = request.user),
+		}
+		return render(request, 'account/favourite.html', context)

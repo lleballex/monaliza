@@ -37,7 +37,7 @@
 			if(text != '') {
 			$.ajax({
 				type: 'get',
-				url: 'check/',
+				url: "{% url 'it_articles:send_comment' article.id %}",
 				data: {
 					'text': text,
 				}, 
@@ -49,6 +49,7 @@
 					var comment = $('<li id="comment-' + context.id + '"><img src="' + "{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" + '"><div class="comment"><div class="user"><div><div>' + username + '</div><div class="date">' + context.date + '</div></div><i class="fa fa-times" aria-hidden="true" onclick="delete_comment(' + context.id + ')"></i></div><div class="text">' + context.text + '</div></div></li>');
 					$('.comments ul').prepend(comment);
 					$('#comment-text').val('');
+					$('#articles-count').text(Number($('#articles-count').text()) + 1);
 				}
 			});
 			}
@@ -67,6 +68,7 @@
 				success: function(data) {
 					if(data == '200') {
 						$('#comment-' + id).css('display', 'none');
+						$('#articles-count').text(Number($('#articles-count').text()) - 1);
 					} else 
 						alert('Error - ' + data);
 				}
@@ -80,7 +82,7 @@
 		{{article.text|safe}}
 	</div>
 	<div class="comments">
-		<div class="title">Comments ({{article.comments.all.count}})</div>
+		<div class="title">Comments (<span id="articles-count">{{article.comments.all.count}}</span>)</div>
 		<div class="take-comment-form">
 			<img src="{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
 			<input id="comment-text" name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">

@@ -1,5 +1,3 @@
-#pip install Pillow
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
@@ -60,3 +58,10 @@ class Notification(models.Model):
 	text = models.CharField(max_length = 1000)
 	date = models.DateTimeField(auto_now = True)
 	new = models.BooleanField(default = False)
+
+from it_articles.models import Article
+
+class FavouriteArticle(models.Model):
+	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'favourite_article')
+	article = models.ForeignKey(Article, on_delete = models.CASCADE, related_name = 'favourite_article')
+	date = models.DateTimeField(auto_now = True)

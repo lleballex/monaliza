@@ -6,10 +6,46 @@
 
 {% endblock %}
 
+{% block staticfiles %}
+
+	<style>
+		.notifications-list {
+			list-style: none;
+			padding: 0;
+		}
+
+		.notifications-list li {
+			border: 2px solid #aaa;
+			border-radius: 5px;
+			margin-bottom: 10px;
+			padding: 15px;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.notifications-list span {
+			border: 1px solid red;
+			align-self: center;
+		}
+	</style>
+
+{% endblock %}
+
 {% block content %}
 
 	<div class="content-container">
-		je;;
+		{% if notifications %}
+			<ul class="notifications-list">
+				{% for notification in notifications %}
+					<li>
+						{{notification.text}} - {{notification.date}}
+						<span class="close"><i class="fa fa-times" aria-hidden="true"></i></span>
+					</li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			You do not have any notifications
+		{% endif %}
 	</div>
 
 {% endblock %}

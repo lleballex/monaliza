@@ -9,14 +9,25 @@
 {% block content %}
 
 	<script>
-		$(function() {
-			$('.like').on('click', function() {
-				if($(this).css('color') != 'rgb(255, 0, 0)')
-					$(this).css('color', 'rgb(255, 0, 0)');
-				else
-					$(this).css('color', 'rgb(102, 102, 102)');
+		function like(id) {
+			$.ajax({
+				type: 'get',
+				url: "{% url 'it_articles:like_article' %}",
+				data: {
+					'id': id,
+				},
+				dataType: 'text',
+				success: function(data) {
+					if(data == 'EXIST') {
+						$('#like-' + id).css('color', '#666');
+						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) - 1);
+					} else if(data = 'DOES_NOT_EXIST') {
+						$('#like-' + id).css('color', 'red');
+						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) + 1);
+					}
+				},
 			});
-		});
+		}
 	</script>
 
 	<div class="articles new">
@@ -35,8 +46,8 @@
 								<div class="article-user">{{article.user}}</div>
 							</div>
 							<div class="article-numbers">
-								<div class="likes">
-									<i class="fa fa-thumbs-up like" aria-hidden="true"></i>{{article.likes}}
+								<div class="likes" id="like-{{article.id}}" onclick="like({{article.id}})">
+									<i class="fa fa-thumbs-up like" aria-hidden="true"></i><span>{{article.likes}}</span>
 								</div>
 								<i class="fa fa-bookmark" aria-hidden="true"></i>
 							</div>
@@ -47,7 +58,7 @@
 			{% endfor %}
 		</div>
 	</div>
-	<div class="articles popular">
+	<!--<div class="articles popular">
 		<div class="articles-container">
 			{% for article in articles_popular %}
 				{% if not request.GET.language or article.language == request.GET.language %}
@@ -63,8 +74,8 @@
 								<div class="article-user">{{article.user}}</div>
 							</div>
 							<div class="article-numbers">
-								<div class="likes">
-									<i class="like" class="fa fa-thumbs-up" aria-hidden="true">ss</i>{{article.likes}}
+								<div class="likes" id="like-{{article.id}}" onclick="like({{article.id}})">
+									<i class="like" class="fa fa-thumbs-up" aria-hidden="true">ss</i><span>{{article.likes}}</span>
 								</div>
 								<i class="fa fa-bookmark" aria-hidden="true"></i>
 							</div>
@@ -74,6 +85,6 @@
 				{% endif %}
 			{% endfor %}
 		</div>
-	</div>
+	</div>-->
 
 {% endblock %}

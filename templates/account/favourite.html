@@ -1,0 +1,13 @@
+{% extends 'wrapper.html' %}
+
+{% block content %}
+
+	<div class="content-container">
+		{% for article in articles %}
+			{{article.article.title}} <br>
+		{% empty %}
+			NOT
+		{% endfor %}
+	</div>
+
+{% endblock %}

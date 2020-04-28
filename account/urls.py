@@ -11,5 +11,6 @@ urlpatterns = [
 	path('myarticles/new/', views.NewArticleView.as_view(), name = 'new_article'),
 	path('myarticles/edit/<int:pk>/', views.EditArticleView.as_view(), name = 'edit_article'),
 	path('myarticles/delete/<int:pk>/', views.DeleteArticleView.as_view(), name = 'delete_article'),
-	path('notifications', views.NotificationsView.as_view(), name = 'notifications'),
+	path('notifications/', views.NotificationsView.as_view(), name = 'notifications'),
+	path('favourite/', views.FavouriteView.as_view(), name = 'favourite'),
 ]

@@ -4,7 +4,8 @@ from django.urls import reverse_lazy, reverse
 from django.http.response import HttpResponse
 import json
 
-from .models import *
+from .models import Article, Comment
+from account.models import FavouriteArticle
 from .forms import *
 from account.utils import MessagesMixin
 
@@ -65,7 +66,7 @@ class SearchView(View):
 		}
 		return render(request, 'it_articles/all_articles.html', context)
 
-class Check(View):
+class SendComment(View):
 	def get(self, request, pk):
 		text = request.GET.get('text')
 		comment = Comment()
@@ -92,3 +93,23 @@ class DeleteComment(View):
 				return HttpResponse('403')
 		except:
 			return HttpResponse('404')
+
+class LikeArticle(View):
+	def get(self, request):
+		id = request.GET.get('id')
+		try:
+			article = Article.objects.get(id = id)
+			fav_article = FavouriteArticle.objects.get(article = article)
+			fav_article.delete()
+			article.likes -= 1
+			article.save()
+			return HttpResponse('EXIST')
+		except:
+			article = Article.objects.get(id = id)
+			fav_article = FavouriteArticle()
+			fav_article.article = article
+			fav_article.user = request.user
+			fav_article.save()
+			article.likes += 1
+			article.save()
+			return HttpResponse('DOES_NOT_EXIST')
