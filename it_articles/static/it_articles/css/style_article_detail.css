@@ -3,6 +3,7 @@
 	font-weight: 300;
 	margin: 10px;
 	border: 1px solid orange;
+	line-height: 24px;
 }
 
 .code {
@@ -12,7 +13,7 @@
 	max-height: 350px;
 	font-size: 17px;
 	padding: 10px;
-	color: #777;
+	color: #111;
 	line-height: 25px;
 }
 
@@ -143,7 +144,35 @@
 	font-size: 16px;
 }
 
+
+.post-header {
+	font-size: 27px;
+	font-weight: 400;
+	display: block;
+	margin: 10px 0 10px;
+}
+
+.post-word {
+	padding: 0 5px;
+	border-radius: 3px;
+	background: #7ed6df;
+	border: 1px solid #22a6b3;
+	font-weight: 400;
+}
+
+.post-small-code {
+	padding: 0 5px;
+	border-radius: 3px;
+	background: #30336b;
+	color: #fff;
+	border: 1px solid #130f40;
+}
+
 /*language-html*/
+.language-html {
+	color: #777;
+}
+
 .language-html .doctype {
 	color: #999;
 }
@@ -166,6 +195,10 @@
 
 
 /*language-css*/
+.language-css {
+	color: #777;
+}
+
 .language-css .class {
 	color: #690;
 }
@@ -189,3 +222,9 @@
 .language-css .num {
 	color: #9400d3;
 } 
+
+
+/*language-cmd*/
+.language-cmd .comment {
+	color: #888;
+}
