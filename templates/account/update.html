@@ -15,7 +15,15 @@
 
 {% block content %}
 
-	<form method="post" class="user-update-form">
+	<style>
+		input[type="file"] {
+			background-color: red;
+			border: 1px solid blue;
+
+		}
+	</style>
+
+	<form method="post" class="user-update-form" enctype="multipart/form-data">
 		{% csrf_token %}
 		{% for field in form %}
 			{{field.label_tag}}

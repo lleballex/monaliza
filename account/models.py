@@ -53,11 +53,17 @@ class User(AbstractBaseUser):
 	def has_module_perms(self, app_label):
 		return True
 
+	def get_absolute_url(self):
+		return '/account/profiles/%i/' % self.id
+
 class Notification(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE)
 	text = models.CharField(max_length = 1000)
 	date = models.DateTimeField(auto_now = True)
 	new = models.BooleanField(default = False)
+
+	def get_absolute_url(self):
+		return '/notifications/' + str(self.id) + '/'
 
 from it_articles.models import Article
 

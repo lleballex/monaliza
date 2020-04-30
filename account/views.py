@@ -69,7 +69,7 @@ class SettingsView(MessagesMixin, View):
 	def post(self, request):
 		right_username = request.user.username
 		right_email = request.user.email
-		form = UserUpdateForm(request.POST, instance = request.user)
+		form = UserUpdateForm(request.POST, request.FILES, instance = request.user)
 		if form.is_valid():
 			form.save()
 			self.set_success_msg('Profile was successfule updated')
