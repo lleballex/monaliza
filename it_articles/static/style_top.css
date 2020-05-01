@@ -13,10 +13,17 @@
 }
 
 .top_user {
-	font-size: 20px;
+	text-align: right;
+	padding-right: 20px;
+	font-size: 18px;
 	padding-top: 10px;
-	color: #ccc;
+	color: #ddd;
 	text-transform: none;
+}
+
+.top_user a {
+	color: #fed330;
+	text-decoration: none;
 }
 
 .top_menu {

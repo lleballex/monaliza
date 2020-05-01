@@ -1,12 +1,12 @@
 $(function() {
-	$('html').niceScroll({
+	/*$('html').niceScroll({
 		cursorborder: 'none',
 		cursorwidth: '8px',
 		cursoropacitymin: '0.5',
 		railpadding: {top: 4, right: 4, left: 0, bottom: 4},
 		bouncescroll: true,
 		cursorcolor: "#666",
-	});
+	});*/
 
 	$('.top_menu .btn').on('click', function() {
 		$('.top_menu .btn').attr('class', 'btn');

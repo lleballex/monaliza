@@ -2,17 +2,47 @@
 	color: #000;
 	font-weight: 300;
 	line-height: 24px;
+	margin-bottom: 30px;
 }
 
 .code {
 	background: #f5f2f0;
-	border: 1px solid #aaa;
+	border: 1px solid #000;
 	overflow: auto;
 	max-height: 350px;
 	font-size: 17px;
 	padding: 10px;
 	color: #111;
+	border-radius: 5px;
 	line-height: 25px;
+
+	color: #fff;
+	background: #333;
+}
+
+.post-info {
+	margin-top: 30px;
+	list-style: none;
+	padding: 10px;
+	border-top: 1px solid #999;
+	border-bottom: 1px solid #999;
+}
+
+.post-info li {
+	display: inline-block;
+	margin-right: 30px;
+}
+
+.post-info .fa {
+	padding-right: 10px;
+}
+
+.post-info .is_liked {
+	color: #eb2f06;
+}
+
+.post-info .post-like:hover {
+	cursor: pointer;
 }
 
 .comments {
@@ -163,6 +193,7 @@
 	background: #7ed6df;
 	border: 1px solid #22a6b3;
 	font-weight: 400;
+	font-size: 17px;
 }
 
 .post-strong {
@@ -175,6 +206,7 @@
 	background: #30336b;
 	color: #fff;
 	border: 1px solid #130f40;
+	font-size: 17px;
 }
 
 .article-content a {
@@ -245,13 +277,14 @@
 }
 
 .language-cmd .paste {
-	color: #07a;
+	color: #3498db;
+	font-style: italic;
 }
 
 
 /* language-python */
 .language-python .sign {
-	color: #A00000;
+	color: #e84118;
 }
 
 .language-python .function {
@@ -259,5 +292,5 @@
 }
 
 .language-python .string {
-	color: #f39c12;
+	color: #fbc531;
 }

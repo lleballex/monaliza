@@ -6,7 +6,7 @@
 	display: block;
 }
 
-.articles-container {
+/*.articles-container {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -111,4 +111,119 @@
 .article-numbers .fa-bookmark {
 	font-size: 21px;
 	margin-right: -10px;
+}*/
+
+.articles-container ul {
+	padding: 0;
+	list-style: none;
+}
+
+.article {
+	border-bottom: 1px solid #aaa;
+	color: #000;
+	padding-bottom: 40px;
+	margin-bottom: 40px;
+}
+
+.articles-container .article-user {
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.articles-container .article-title {
+	font-size: 27px;
+	margin-bottom: 20px;
+}
+
+.articles-container .article-title a {
+	text-decoration: none;
+	color: #000;
+	transition: .2s all;
+}
+
+.articles-container .article-title a:hover {
+	color: #12CBC4;
+}
+
+.articles-container .article-text {
+	font-size: 17px;
+	margin-bottom: 15px;
+}
+
+.btn-read-more {
+	color: #0984e3;
+	font-size: 17px;
+	padding: 10px 20px;
+	border: 2px solid #0984e3;
+	border-radius: 5px;
+	display: inline-block;
+	text-decoration: none;
+	transition: .2s all;
+	font-weight: 500;
+}
+
+.articles-container .article-bottom {
+	display: flex;
+	justify-content: space-between;
+}
+
+.btn-read-more:hover {
+	background: #0984e3;
+	color: #fff;
+}
+
+.article-bottom .article-info {
+	list-style: none;
+	padding: 0;
+	border: 2px solid #8c7ae6;
+	border-radius: 5px;
+	padding: 10px 30px;
+	font-size: 17px;
+	margin: 0;
+	display: flex;
+	font-weight: 500;
+}
+
+.article-bottom .article-info li {
+	margin-left: 40px;
+}
+
+.article-bottom .article-info .fa {
+	padding-right: 7px;
+	/*color: #000;   /*2f3640*/
+}
+
+.article-info li.first-li {
+	margin-left: 0;
+}
+
+.article-info li.is_liked {
+	color: #eb2f06;
+}
+
+.article-info .like-article:hover {
+	cursor: pointer;
+}
+
+.articles-container .user-img {
+	min-width: 27px;
+	min-height: 27px;
+	max-width: 27px;
+	max-height: 27px;
+	border-radius: 3px;
+}
+
+.articles-container .user-a {
+	text-decoration: none;
+	font-weight: 600;
+	padding-left: 10px;
+	padding-right: 4px;
+	color: #05c46b;
+	transition: .2s all;
+}
+
+.articles-container .user-a:hover {
+	color: #0be881;
 }

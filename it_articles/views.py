@@ -29,10 +29,13 @@ class DetailArticleView(DetailView):
 
 class DetailArticleView(MessagesMixin, View):
 	def get(self, request, pk):
+		article = Article.objects.get(id = pk, is_available = True)
 		context = {
-			'article': Article.objects.get(id = pk, is_available = True),
+			'article': article,
 			'comments': Article.objects.get(id = pk, is_available = True).comments.order_by('-date'),
 		}
+		article.views += 1;
+		article.save()
 		return render(request, 'it_articles/detail.html', context)
 
 	def post(self, request, pk):

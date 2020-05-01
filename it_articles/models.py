@@ -14,10 +14,14 @@ class Article(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'articles')
 	date = models.DateTimeField(auto_now = True)
 	likes = models.IntegerField(default = 0)
+	views = models.IntegerField(default = 0)
 	is_available = models.BooleanField(default = False)
-
+	
 	def __str__(self):
 		return self.title
+
+	def get_absolute_url(self):
+		return '/itarticles/detail/%i' % self.id
 
 class Comment(models.Model):
 	article = models.ForeignKey(Article, on_delete = models.CASCADE, related_name = 'comments')

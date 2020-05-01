@@ -97,6 +97,10 @@ class NewArticleView(MessagesMixin, CreateView):
 		self.object = form.save(commit = False)
 		self.object.user = self.request.user
 		self.object.save()
+		notification = Notification()
+		notification.user = User.objects.get(is_superuser = True)
+		notification.text = self.object.user.username + ' created an article - ' + self.object.title
+		notification.save()
 		return super().form_valid(form)
 
 class EditArticleView(MessagesMixin, UpdateView):

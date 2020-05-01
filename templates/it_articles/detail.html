@@ -1,4 +1,5 @@
 {% extends 'wrapper.html' %}
+{% load it_articles_tags %}
 
 {% block title %}
 
@@ -10,6 +11,28 @@
 
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
+	<script>
+		function like(id) {
+			$.ajax({
+				type: 'get',
+				url: "{% url 'it_articles:like_article' %}",
+				data: {
+					'id': id,
+				},	
+				dataType: 'text',
+				success: function(data) {
+					$('#like-' + id).toggleClass('is_liked')
+					if(data == 'EXIST') {
+						$('#like-' + id + ' .fa').attr('class', 'fa fa-heart-o');
+						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) - 1);
+					} else if(data = 'DOES_NOT_EXIST') {
+						$('#like-' + id + ' .fa').attr('class', 'fa fa-heart');
+						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) + 1);
+					}
+				},
+			});
+		}
+	</script>
 
 {% endblock %}
 
@@ -17,7 +40,9 @@
 
 	<div class="top_intro">
 		{{article.title}}
-		<!--<div class="top_user">{{article.user}}</div>-->
+		<div class="top_user">
+			<a href="{% url 'account:profile' %}">{{article.user}}</a> - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
+		</div>
 	</div>
 
 {% endblock %}
@@ -76,10 +101,17 @@
 		}
 		}
 	</script>
-
+	
 	<div class="content-container">
 	<div class="article-content">
 		{{article.text|safe}}
+		<ul class="post-info">
+			<li id="like-{{article.id}}" class="post-like {% is_liked request.user article %}" onclick="like({{article.id}})">
+				<i class="fa {% is_liked_fa_heart request.user article %}" aria-hidden="true"></i> 
+				<span>{{article.likes}}</span>
+			</li>
+			<li><i class="fa fa-eye" aria-hidden="true"></i> {{article.views}}</li>
+		</ul>
 	</div>
 	<div class="comments">
 		<div class="title">Comments (<span id="articles-count">{{article.comments.all.count}}</span>)</div>

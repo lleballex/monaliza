@@ -56,18 +56,20 @@ class User(AbstractBaseUser):
 	def get_absolute_url(self):
 		return '/account/profiles/%i/' % self.id
 
+	def get_favourites_articles(self):
+		return self.favourite_articles.all
+
 class Notification(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE)
 	text = models.CharField(max_length = 1000)
 	date = models.DateTimeField(auto_now = True)
-	new = models.BooleanField(default = False)
+	new = models.BooleanField(default = True)
 
 	def get_absolute_url(self):
 		return '/notifications/' + str(self.id) + '/'
 
 from it_articles.models import Article
-
 class FavouriteArticle(models.Model):
-	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'favourite_article')
-	article = models.ForeignKey(Article, on_delete = models.CASCADE, related_name = 'favourite_article')
+	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'favourite_articles')
+	article = models.ForeignKey(Article, on_delete = models.CASCADE, related_name = 'favourite_articles')
 	date = models.DateTimeField(auto_now = True)

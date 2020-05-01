@@ -40,7 +40,7 @@
 			</li>
 			<li>
 				{% url 'it_articles:articles_all' as url_articles_all %}
-				<a class="main_menu {% if request.path == url_articles_all %}active{% endif %}" href="{% url 'it_articles:articles_all' %}">It articles</a>
+				<a class="main_menu {% if request.path == url_articles_all %}active{% endif %}" href="{% url 'it_articles:articles_all' %}">Posts</a>
 				<div class="sub_menu {% if request.path == url_articles_all %}active{% endif %}">
 					<a class="{% if request.path == url_articles_all and request.GET.language == 'cpp' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=cpp">C++</a>
 					<a class="{% if request.path == url_articles_all and request.GET.language == 'python' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=python">Python</a>
@@ -63,13 +63,13 @@
 				<div class="top_intro">
 					{% block top_title %}PROJECTS{% endblock %}
 				</div>
-				<div class="top_menu">
+				<!--<div class="top_menu">
 					<ul>
 						<li><input class="btn active" id="articles_new" type="button" id="new_works" value='New works'></li>
 						<li><input class="btn" id="articles_popular" type="button" id="popular_works" value='Popular works'></li>
 						<li><input class="btn" type="button" id="also" value='Also'></li>
 					</ul>
-				</div>
+				</div>-->
 			{% endblock %}
 		</div>
 		<div class="content">
