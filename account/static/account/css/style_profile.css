@@ -102,9 +102,8 @@
 /*   STYLE_PROFILE.CSS    */
 
 .user-top {
-	border: 1px solid red;
 	position: relative;
-	height: 120px;
+	height: 150px;
 	margin-right: 20px;
 }
 

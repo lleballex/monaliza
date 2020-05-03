@@ -18,6 +18,8 @@ from django.urls import path, include
 from monaliza import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
+
 from account.sitemap import UserSitemap, NotificationSitemap
 from it_articles.sitemap import ArticlesSitemap, ItArticlesIndexSitemap
 from account.sitemap import AccountIndexSitemap
@@ -35,5 +37,6 @@ urlpatterns = [
     path('', include('start_page.urls')),
     path('account/', include('account.urls')),
     path('posts/', include('it_articles.urls')),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', TemplateView.as_view(template_name = 'robots.txt', content_type='text/plain')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
