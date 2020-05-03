@@ -21,7 +21,7 @@ class Article(models.Model):
 		return self.title
 
 	def get_absolute_url(self):
-		return '/itarticles/detail/%i' % self.id
+		return '/posts/detail/%i' % self.id
 
 class Comment(models.Model):
 	article = models.ForeignKey(Article, on_delete = models.CASCADE, related_name = 'comments')

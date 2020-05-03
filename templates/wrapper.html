@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>{% block title %}Monaliza{% endblock %}</title>
 	{% load static %}
+	<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'style.css' %}">
 	<link rel="stylesheet" href="{% static 'style_menu.css' %}">
@@ -29,12 +30,13 @@
 				{% else %}
 					{% url 'account:profile' as url_profile %}
 					{% url 'account:my_articles' as url_my_articles %}
-					<a class="main_menu user {% if url_profile in request.path or url_my_articles in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
-					<div class="sub_menu {% if url_profile in request.path or url_my_articles in request.path %}active{% endif %}">
+					{% url 'account:notifications' as url_notifications %}
+					<a class="main_menu user {% if url_profile in request.path or url_my_articles in request.path or url_notifications in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
+					<div class="sub_menu {% if url_profile in request.path or url_my_articles in request.path or url_notifications in request.path %}active{% endif %}">
 						{% url 'account:settings' as url_settings %}
 						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}">Settings</a>
-						<a href="{% url 'account:my_articles' %}" class="{% if request.path == url_my_articles %}active{% endif %}">My articles</a>
-						<a href="{% url 'account:notifications' %}">Notifications</a>
+						<a href="{% url 'account:my_articles' %}" class="{% if url_my_articles in request.path %}active{% endif %}">My articles</a>
+						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}">Notifications</a>
 					</div>
 				{% endif %}
 			</li>

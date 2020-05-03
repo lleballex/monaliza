@@ -19,12 +19,15 @@ from monaliza import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from account.sitemap import UserSitemap, NotificationSitemap
-from it_articles.sitemap import ArticlesSitemap
+from it_articles.sitemap import ArticlesSitemap, ItArticlesIndexSitemap
+from account.sitemap import AccountIndexSitemap
 
 sitemaps = {
     #'users': UserSitemap,
     #'notifications': NotificationSitemap,
     'articles': ArticlesSitemap,
+    'it_articles_pages': ItArticlesIndexSitemap,
+    'account_pages': AccountIndexSitemap,
 }
 
 urlpatterns = [

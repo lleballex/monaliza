@@ -92,7 +92,7 @@
 				cache: false,
 				success: function(data) {
 					if(data == '200') {
-						$('#comment-' + id).css('display', 'none');
+						$('#comment-' + id).remove();
 						$('#articles-count').text(Number($('#articles-count').text()) - 1);
 					} else 
 						alert('Error - ' + data);

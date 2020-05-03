@@ -22,10 +22,10 @@ class AllArticlesView(View):
 		}
 		return render(request, 'it_articles/all_articles.html', context)
 
-class DetailArticleView(DetailView):
+'''class DetailArticleView(DetailView):
 	template_name = 'it_articles/detail.html'
 	model = Article
-	context_object_name = 'article'
+	context_object_name = 'article'''
 
 class DetailArticleView(MessagesMixin, View):
 	def get(self, request, pk):

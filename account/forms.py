@@ -32,7 +32,7 @@ class UserLoginForm(AuthenticationForm, forms.ModelForm):
 class UserUpdateForm(forms.ModelForm):
 	class Meta:
 		model = User
-		fields = ['username', 'email', 'first_name', 'last_name', 'age', 'gender', 'image']
+		fields = ['username', 'email', 'first_name', 'last_name', 'age', 'gender']
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -43,7 +43,7 @@ class UserUpdateForm(forms.ModelForm):
 		self.fields['age'].widget.attrs['placeholder'] = 'Your age'
 		self.fields['username'].widget.attrs['placeholder'] = 'Your username'
 		self.fields['email'].widget.attrs['placeholder'] = 'Your email'
-		self.fields['image'].widget.attrs['enctype'] = 'multipart/form-data'
+		#self.fields['image'].widget.attrs['enctype'] = 'multipart/form-data'
 
 
 class NewArticleForm(forms.ModelForm):

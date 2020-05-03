@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
+from django.http.response import HttpResponse
 
 from .forms import *
 from .models import User, Notification, FavouriteArticle
@@ -46,15 +47,18 @@ class MyArticlesView(MessagesMixin, View):
 		#self.set_error_msg('sdf')
 		likes = 0
 		all_articles = 0
+		views = 0
 		articles = Article.objects.filter(user = request.user)
 		for article in articles:
 			likes += article.likes
+			views += article.views
 			all_articles += 1
 
 		context = {
 			'articles': articles.order_by('-id'),
 			'likes': likes,
 			'all_articles': all_articles,
+			'views': views,
 		}
 
 		return render(request, 'account/my_articles.html', context)
@@ -121,11 +125,28 @@ class DeleteArticleView(MessagesMixin, DeleteView):
 
 class NotificationsView(View):
 	def get(self, request):
-		print('f')
 		context = {
-			'notifications': Notification.objects.filter(user = request.user)
+			'notifications': Notification.objects.filter(user = request.user),
 		}
 		return render(request, 'account/notifications.html', context)
+
+class SetNotificationsNotNew(View):
+	def get(self, request):
+		for notification in Notification.objects.filter(user = request.user):
+			if notification.new:
+				notification.new = False
+				notification.save()
+		return HttpResponse('200')
+
+class DeleteNotification(View):
+	def get(self, request):
+		try:
+			id = request.GET.get('id')
+			notification = Notification.objects.get(id = id)
+			notification.delete()
+			return HttpResponse('200')
+		except:
+			return HttpResponse('404')
 
 class FavouriteView(View):
 	def get(self, request):

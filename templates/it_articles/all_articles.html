@@ -67,60 +67,12 @@
 						</ul>
 					</div>
 				</li>
-					<!--<div class="article">
-						{% load static %}
-						<a href="{% url 'it_articles:detail' article.id %}"><img src="{% static 'mona.png' %}" alt="{{article.title}} - Picture is not found" class="img"></a>
-						<div class="prev-description">
-						<div class="article-description">
-							<div class="article-words">
-								<div class="article-title">
-									<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
-								</div>
-								<div class="article-user">{{article.user}}</div>
-							</div>
-							<div class="article-numbers">
-								<div class="likes" id="like-{{article.id}}" onclick="like({{article.id}})">
-									<i class="fa fa-thumbs-up like" aria-hidden="true"></i><span>{{article.likes}}</span>
-								</div>
-								<i class="fa fa-comments"></i>{{article.comments.all.count}}
-								<i class="fa fa-bookmark" aria-hidden="true"></i>
-							</div>
-						</div>
-						</div>
-					</div>-->
+					
 				{% endif %}
 			{% endfor %}
 			</ul>
 		</div>
 	</div>
-</div>
-	<!--<div class="articles popular">
-		<div class="articles-container">
-			{% for article in articles_popular %}
-				{% if not request.GET.language or article.language == request.GET.language %}
-					<div class="article">
-						{% load static %}
-						<a href="{% url 'it_articles:detail' article.id %}"><img src="{% static 'mona.png' %}" alt="{{article.title}} - Picture is not found" class="img"></a>
-						<div class="prev-description">
-						<div class="article-description">
-							<div class="article-words">
-								<div class="article-title">
-									<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
-								</div>
-								<div class="article-user">{{article.user}}</div>
-							</div>
-							<div class="article-numbers">
-								<div class="likes" id="like-{{article.id}}" onclick="like({{article.id}})">
-									<i class="like" class="fa fa-thumbs-up" aria-hidden="true">ss</i><span>{{article.likes}}</span>
-								</div>
-								<i class="fa fa-bookmark" aria-hidden="true"></i>
-							</div>
-						</div>
-						</div>
-					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
-	</div>-->
+	</div>
 
 {% endblock %}

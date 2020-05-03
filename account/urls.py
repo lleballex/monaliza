@@ -12,5 +12,7 @@ urlpatterns = [
 	path('myarticles/edit/<int:pk>/', views.EditArticleView.as_view(), name = 'edit_article'),
 	path('myarticles/delete/<int:pk>/', views.DeleteArticleView.as_view(), name = 'delete_article'),
 	path('notifications/', views.NotificationsView.as_view(), name = 'notifications'),
+	path('notifications/set_notifications_not_new/', views.SetNotificationsNotNew.as_view(), name = 'set_notifications_not_new'),
+	path('notifications/delete_notification/', views.DeleteNotification.as_view(), name = 'delete_notification'),
 	path('favourite/', views.FavouriteView.as_view(), name = 'favourite'),
 ]

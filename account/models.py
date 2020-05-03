@@ -61,6 +61,7 @@ class User(AbstractBaseUser):
 
 class Notification(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	title = models.CharField(max_length = 300)
 	text = models.CharField(max_length = 1000)
 	date = models.DateTimeField(auto_now = True)
 	new = models.BooleanField(default = True)

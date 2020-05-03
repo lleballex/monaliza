@@ -29,6 +29,7 @@
 			<ul>
 				<li><b>All articles</b>: {{all_articles}}</li>
 				<li><b>All likes</b>: {{likes}}</li>
+				<li><b>All views</b>: {{views}}</li>
 			</ul>
 			<a href="{% url 'account:new_article' %}">Create new</a>
 		</div>
@@ -72,7 +73,9 @@
 		</tbody>
 	</table>	
 	{% else %}
-		You do not have any articles. Create the first?
+		<div class="information">
+			You do not have any articles. <a href="{% url 'account:new_article' %}">Create the first?</a>
+		</div>
 	{% endif %}
 	</div>
 
