@@ -32,8 +32,34 @@
 
 	<script>
 		$(function() {
-			$('.new-article-form textarea').keyup(function(event) {
-				var val = $(this).val();
+			$('.help-buttons input').on('click', function() {
+				var prev_val = $('.new-article-form textarea').val();
+				var new_val = '';
+
+				switch($(this).attr('id')) {
+				case 'help-btn-title':
+					new_val = '**заголовок**';
+					break;
+				case 'help-btn-code':
+					new_val = '`код`';
+					break;	
+				case 'help-btn-code-small':
+					new_val = '~код~';
+					break;
+				case 'help-btn-word':
+					new_val = '|выделение|';
+					break;
+				case 'help-btn-link':
+					new_val = '^адресс^ссылка^';
+					break;
+				}
+
+				$('.new-article-form textarea').val(prev_val + new_val);
+			});
+		});
+
+		function new_text() {
+			var val = $('.new-article-form textarea').val();
 				var lang_python = false;
 				var lang_cmd = false;
 				var small_code = false;
@@ -104,33 +130,7 @@
 							$('#post-view').append(val[i]);
 					}
 				}
-			});
-
-			$('.help-buttons input').on('click', function() {
-				var prev_val = $('.new-article-form textarea').val();
-				var new_val = '';
-
-				switch($(this).attr('id')) {
-				case 'help-btn-title':
-					new_val = '**заголовок**';
-					break;
-				case 'help-btn-code':
-					new_val = '`код`';
-					break;	
-				case 'help-btn-code-small':
-					new_val = '~код~';
-					break;
-				case 'help-btn-word':
-					new_val = '|выделение|';
-					break;
-				case 'help-btn-link':
-					new_val = '^адресс^ссылка^';
-					break;
-				}
-
-				$('.new-article-form textarea').val(prev_val + new_val);
-			});
-		});
+		}
 	</script>
 
 	<div class="content-container">
@@ -142,7 +142,7 @@
 			{{field}}
 		{% endfor %}
 		<input type="submit" value="{% if update %}Save{% else %}Create{% endif %}">
-		<label>Так будет выглядеть ваш пост:</label>
+		<label>Так будет выглядеть ваш пост:</label><input type="button" value="Обновить" onclick="new_text()">
 		<div id="post-view" class="article-content"></div>
 	</div>
 	</form>
