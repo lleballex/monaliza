@@ -13,6 +13,9 @@
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
 	<script>
 		function like(id) {
+			{% if not request.user.is_authenticated %}
+				alert('Для того, чтобы ставить лайки, необходимо авторизоваться');
+			{% else %}
 			$.ajax({
 				type: 'get',
 				url: "{% url 'it_articles:like_article' %}",
@@ -31,6 +34,7 @@
 					}
 				},
 			});
+			{% endif %}
 		}
 	</script>
 
@@ -58,6 +62,9 @@
 		});
 
 		function send_comment() {
+			{% if not request.user.is_authenticated %}
+				alert('Для комментирования постов необходимо авторизоваться');
+			{% else %}
 			var text = $('#comment-text').val().replace(/ +/g, ' ').trim();
 			if(text != '') {
 			$.ajax({
@@ -78,6 +85,7 @@
 				}
 			});
 			}
+			{% endif %}
 		}
 
 		function delete_comment(id) {
@@ -114,7 +122,7 @@
 		</ul>
 	</div>
 	<div class="comments">
-		<div class="title">Comments (<span id="articles-count">{{article.comments.all.count}}</span>)</div>
+		<div class="title">Комментарии (<span id="articles-count">{{article.comments.all.count}}</span>)</div>
 		<div class="take-comment-form">
 			<img src="{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
 			<input id="comment-text" name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">

@@ -23,6 +23,11 @@ class UserRegisterView(CreateView):
 		password = form.cleaned_data['password1']
 		auth_user = authenticate(username = username, password = password)
 		login(self.request, auth_user)
+		notification = Notification()
+		notification.title = 'Добро пожаловать!'
+		notification.text = 'Поздравляем с успешной регистрацией. На этом сайте вы сможете читать различные интересные статьи, и даже писать свои, оставлять комментарии, ставить лайки и много другое. Также в разделе Q&A можно оставлять свои вопросы, если вы что-то не понимаете, а другие пользователи будут на них отвечать. Если вопросов у вас нет, помогайте другим с их проблемами. Желаем удачи и продуктивной работы!'
+		notification.user = auth_user
+		notification.save()
 		return form_valid
 
 class UserLoginView(LoginView):
@@ -97,9 +102,70 @@ class NewArticleView(MessagesMixin, CreateView):
 	success_url = reverse_lazy('account:my_articles')
 	success_msg = 'The article was successfuly created. Please wait for verification'
 
+	def post_text(self, text):
+		new_text = ''
+		python = False
+		small_code = False
+		post_word = False
+		link = [False, False]
+		header = [False, False]
+
+		for i in range(len(text)):
+			if text[i] == '`':
+				if not python:
+					python = True
+					new_text += '<pre class="code"><code class="language-python">'
+				else:
+					python = False
+					new_text += '</code></pre>'
+			elif text[i] == '~':
+				if not small_code:
+					small_code = True
+					new_text += '<span class="post-small-code">'
+				else:
+					small_code = False
+					new_text += '</span>'
+			elif text[i] == '|':
+				if not post_word:
+					post_word = True
+					new_text += '<span class="post-word">'
+				else:
+					post_word = False
+					new_text += '</span>'
+			elif text[i] == '^':
+				if not link[0]:
+					link[0] = True
+					link[1] = True
+					new_text += '<a href="'
+				elif link[1]:
+					new_text += '">'
+					link[1] = False
+				else:
+					link[0] = False
+					new_text += '</a>'
+			elif (not header[0] and (text[i] == '*' and i != len(text) - 1 and text[i + 1] == '*')) or (header[0] and not header[1] and text[i] == '*' and text[i - 1] == '*') or (header[0] and header[1] and text[i] == '*' and text[i - 1] == '*'):
+				print()
+				if not header[0]:
+					header[0] = True
+				elif header[0] and not header[1]:
+					header[1] = True
+					new_text += '<span class="post-header">'
+				else:
+					header[0] = False
+					header[1] = False
+					new_text += '</span>'
+			elif header[0] and header[1] and text[i] == '*' and text[i + 1] == '*':
+				pass
+			else:
+				new_text += text[i]
+
+		return new_text
+
 	def form_valid(self, form):
 		self.object = form.save(commit = False)
 		self.object.user = self.request.user
+		self.object.text = self.post_text(self.object.text)
+		self.object.is_available = True
 		self.object.save()
 		notification = Notification()
 		notification.user = User.objects.get(is_superuser = True)

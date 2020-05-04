@@ -9,12 +9,13 @@
 
 {% block title %}
 
-	Login
+	Monaliza - вход
 
 {% endblock %}
 
 {% block top %}
 
+	<div class="top">
 	<form method="post" class="user-form">
 		<div class="title">Sign in</div>
 		{% csrf_token %}
@@ -25,7 +26,8 @@
 			<nav class="error">{{error}}</nav>
 		{% endfor %}
 		<input type="submit" value="Sign in">
-		<div class="url"><a href="{% url 'account:register' %}">Create account</a></div>
+		<div class="url"><a href="{% url 'account:register' %}">Создать аккаунт</a></div>
 	</form>
+	</div>
 
 {% endblock %}

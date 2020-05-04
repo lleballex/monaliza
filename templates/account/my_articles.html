@@ -16,7 +16,7 @@
 
 {% block top %}
 
-	<div class="top_intro">{{request.user}} - articles</div>
+	<div class="top_intro">Мои посты</div>
 
 {% endblock %}
 
@@ -27,22 +27,22 @@
 	{% if articles %}
 		<div class="my_articles">
 			<ul>
-				<li><b>All articles</b>: {{all_articles}}</li>
-				<li><b>All likes</b>: {{likes}}</li>
-				<li><b>All views</b>: {{views}}</li>
+				<li><b>Всего постов</b>: {{all_articles}}</li>
+				<li><b>Всего лайков</b>: {{likes}}</li>
+				<li><b>Всего просмотров</b>: {{views}}</li>
 			</ul>
-			<a href="{% url 'account:new_article' %}">Create new</a>
+			<a href="{% url 'account:new_article' %}">Создать новый пост</a>
 		</div>
 
 		<table class="all_articles">
 		<thead>
 			<tr>
 				<th id="articles_id">ID</th>
-				<th id="articles_date">Date</th>
-				<th id="articles_title">Title</th>
-				<th id="articles_language">Language</th>
-				<th>Likes</th>
-				<th id="articles_action">Action</th>
+				<th id="articles_date">Дата</th>
+				<th id="articles_title">Название</th>
+				<th id="articles_language">Язык</th>
+				<th>Лайки</th>
+				<th id="articles_action">Действие</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -57,14 +57,14 @@
 						{% if article.is_available %}
 						<form id="delete-form-{{article.id}}" action="{% url 'account:delete_article' article.id %}" method="post">
 							{% csrf_token %}
-							<a href="{% url 'account:edit_article' article.id %}">Edit</a>/
-							<a href="javascript:void()" onclick="delete_article({{article.id}})">Delete</a>
+							<a href="{% url 'account:edit_article' article.id %}">Изменить</a>/
+							<a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
 						</form>
 						{% else %}
 						<form id="delete-form-{{article.id}}" action="{% url 'account:delete_article' article.id %}" method="post">
 							{% csrf_token %}
-							<span class="not-available-title">Edit</span>/
-							<a href="javascript:void()" onclick="delete_article({{article.id}})">Delete</a>
+							<span class="not-available-title">Изменить</span>/
+							<a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
 						</form>
 						{% endif %}
 					</td>
@@ -74,7 +74,7 @@
 	</table>	
 	{% else %}
 		<div class="information">
-			You do not have any articles. <a href="{% url 'account:new_article' %}">Create the first?</a>
+			У вас пока нет постов. <a href="{% url 'account:new_article' %}">Создать первый?</a>
 		</div>
 	{% endif %}
 	</div>

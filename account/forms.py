@@ -50,3 +50,14 @@ class NewArticleForm(forms.ModelForm):
 	class Meta:
 		model = Article
 		fields = ['title', 'text', 'language']
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['text'].help_text = '''<ul class="help-buttons">
+			<li><input id="help-btn-title" type="button" value="Заголовок"></li>
+			<li><input id="help-btn-code" type="button" value="Большой код"></li>
+			<li><input id="help-btn-code-small" type="button" value="Маленький код"></li>
+			<li><input id="help-btn-word" type="button" value="Выделение"></li>
+			<li><input id="help-btn-link" type="button" value="Адрес"></li>
+		</ul>'''
+

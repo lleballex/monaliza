@@ -1,5 +1,4 @@
-.new-article-form {
-	margin: 20px;
+.new-article-form {	
 	padding-bottom: 20px;
 }
 
@@ -20,6 +19,7 @@
 
 .new-article-form input[type="text"], .new-article-form textarea {
 	width: calc(100% - 20px);
+	margin-top: 7px;
 }
 
 .new-article-form textarea {
@@ -33,7 +33,6 @@
 
 .new-article-form label {
 	color: #0abde3;
-	margin-bottom: 10px;
 }
 
 .new-article-form input[type="submit"] {
@@ -45,6 +44,7 @@
 	transition: .3s;
 	font-size: 16px;
 	transition: .2s all;
+	margin-bottom: 20px;
 }
 
 .new-article-form input[type="submit"]:hover {
@@ -55,4 +55,60 @@
 .new-article-form input[type="submit"]:focus {
 	outline: none;
 	box-shadow: 0 0 1px 2px #95afc0;
+}
+
+#post-view {
+	border-radius: 5px;
+	border: 1px solid #bbb;
+	padding: 6px 10px;
+	margin-bottom: 20px;
+	transition: .2s all;
+	margin-top: 7px;
+}
+
+.field-help-text {
+	color: #777;
+	font-size: 15px;
+	margin: 10px 0;
+}
+
+.help-buttons {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+}
+
+.help-buttons li {
+	display: inline-block;
+	width: 100%;
+}
+
+.help-buttons input {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #05c46b;
+	background: #0be881;
+	color: #fff;
+	transition: .2s all;
+	font-weight: 600;
+}
+
+.help-buttons input:hover {
+	cursor: pointer;
+	background: #05c46b;
+}
+
+.help-buttons input:focus {
+	outline: none;
+}
+
+#help-btn-title {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#help-btn-link {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
 }

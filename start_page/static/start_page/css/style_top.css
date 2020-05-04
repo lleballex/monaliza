@@ -1,5 +1,6 @@
 .top {
 	background: #444;
+	padding-bottom: 50px;
 }
 
 .top-bar {
@@ -103,7 +104,8 @@
 
 .top-buttons {
 	text-align: center;
-	margin-bottom: 90px;
+	/*margin-bottom: 90px;*/
+	padding-bottom: 90px;
 }
 
 .top-buttons a{

@@ -11,6 +11,9 @@
 
 	<script>
 		function like(id) {
+			{% if not request.user.is_authenticated %}
+				alert('Для того, чтобы ставить лайки, необходимо авторизоваться');
+			{% else %}
 			$.ajax({
 				type: 'get',
 				url: "{% url 'it_articles:like_article' %}",
@@ -29,6 +32,7 @@
 					}
 				},
 			});
+			{% endif %}
 		}
 	</script>
 
@@ -57,7 +61,7 @@
 						{% endwith %}
 					</div>
 					<div class="article-bottom">
-						<a href="{% url 'it_articles:detail' article.id %}" class="btn-read-more">Read more</a>
+						<a href="{% url 'it_articles:detail' article.id %}" class="btn-read-more">Читать далее</a>
 						<ul class="article-info">
 							<li class="first-li like-article {% is_liked request.user article %}" id="like-{{article.id}}" onclick="like({{article.id}})">
 								<i class="fa {% is_liked_fa request.user article %}"></i><span>{{article.likes}}</span>

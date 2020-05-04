@@ -2,7 +2,13 @@
 
 {% block title %}
 
-	Notifications
+	{{request.user}} - уведомления
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">Все уведомления</div>
 
 {% endblock %}
 
@@ -106,6 +112,11 @@
 				dataType: 'text',
 				success: function(data) {
 					$('#notification-' + id).remove();
+
+					if($('.notifications-list').children().length == 0) {
+						$('.notifications-list').after('<div class="information">Эта страница пуста, потому что у вас еще нет никаких уведомлений</div>');
+						$('.notifications-list').remove();
+					}
 				}
 			});
 		}
@@ -124,16 +135,16 @@
 						<div class="notification-date">{{notification.date}}</div>
 						<div class="notification-title">
 							<div class="new-notification {% if notification.new %}new{% endif %}"></div>
-							<div class="title">The title of notifications</div>
+							<div class="title">{{notification.title}}</div>
 							<div class="delete-notification"><i class="fa fa-trash" onclick="delete_notification({{notification.id}})"></i></div>
 						</div>
-						<div class="notification-text">{{notification.text}}</div>
+						<div class="notification-text">{{notification.text|safe}}</div>
 					</li>
 				{% endfor %}
 			</ul>
 		{% else %}
 			<div class="information">
-				This page is empty because you do not have any notifications now.
+				Эта страница пуста, потому что у вас еще нет никаких уведомлений
 			</div>
 		{% endif %}
 	</div>

@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="{% static 'start_page/css/style_top.css' %}">
 	{% block staticfiles %}{% endblock %}
 </head>
-<body>
+<body style="background: #444">
 	<div class="top">
 		<div class="container">
 			<div class="top-bar">
@@ -20,9 +20,10 @@
 				</div>			
 				<div class="top-menu">
 					<ul>
-						<li><a href="{% url 'it_articles:articles_all' %}">IT Articles</a></li>			
-						<li><a href="http://localhost:8000/studying">Studying</a></li>
-						<li><a href="#">About</a></li>
+						<li><a href="{% url 'it_articles:articles_all' %}">Posts</a></li>			
+						{% if request.user.is_authenticated %}
+							<li><a href="{% url 'account:profile' %}">Profile</a></li>		
+						{% endif %}
 					</ul>
 				</div>
 			</div>

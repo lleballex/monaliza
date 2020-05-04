@@ -29,10 +29,13 @@ class AllArticlesView(View):
 
 class DetailArticleView(MessagesMixin, View):
 	def get(self, request, pk):
-		article = Article.objects.get(id = pk, is_available = True)
+		if request.user.is_superuser:
+			article = Article.objects.get(id = pk)
+		else:
+			article = Article.objects.get(id = pk, is_available = True)
 		context = {
 			'article': article,
-			'comments': Article.objects.get(id = pk, is_available = True).comments.order_by('-date'),
+			'comments': Article.objects.get(id = pk).comments.order_by('-date'),
 		}
 		article.views += 1;
 		article.save()

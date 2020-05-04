@@ -23,9 +23,9 @@
 		<ul>
 			<li>
 				{% if not request.user.is_authenticated %}
-					<a class="main_menu user" href="{% url 'account:login' %}">Sign in</a>
+					<a class="main_menu user" href="{% url 'account:login' %}">Вход</a>
 					<div class="sub_menu">
-						<a href="{% url 'account:register' %}">Sign up</a>
+						<a href="{% url 'account:register' %}">Регистрация</a>
 					</div>
 				{% else %}
 					{% url 'account:profile' as url_profile %}
@@ -34,36 +34,33 @@
 					<a class="main_menu user {% if url_profile in request.path or url_my_articles in request.path or url_notifications in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
 					<div class="sub_menu {% if url_profile in request.path or url_my_articles in request.path or url_notifications in request.path %}active{% endif %}">
 						{% url 'account:settings' as url_settings %}
-						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}">Settings</a>
-						<a href="{% url 'account:my_articles' %}" class="{% if url_my_articles in request.path %}active{% endif %}">My articles</a>
-						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}">Notifications</a>
+						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}">Настройки</a>
+						<a href="{% url 'account:my_articles' %}" class="{% if url_my_articles in request.path %}active{% endif %}">Мои посты</a>
+						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}">Уведомления</a>
 					</div>
 				{% endif %}
 			</li>
 			<li>
 				{% url 'it_articles:articles_all' as url_articles_all %}
-				<a class="main_menu {% if request.path == url_articles_all %}active{% endif %}" href="{% url 'it_articles:articles_all' %}">Posts</a>
+				<a class="main_menu {% if request.path == url_articles_all %}active{% endif %}" href="{% url 'it_articles:articles_all' %}">Посты</a>
 				<div class="sub_menu {% if request.path == url_articles_all %}active{% endif %}">
 					<a class="{% if request.path == url_articles_all and request.GET.language == 'cpp' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=cpp">C++</a>
 					<a class="{% if request.path == url_articles_all and request.GET.language == 'python' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=python">Python</a>
 					<a class="{% if request.path == url_articles_all and request.GET.language == 'web' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=web">Web</a>
 				</div>
 			</li>
-			<li><a class="main_menu" href="http://localhost:8000/articles">IT articles</a></li>
-			<li><a class="main_menu" href="http://localhost:8000/studying">Studying</a></li>
-			<li><a class="main_menu" href="http://localhost:8000/about">About</a></li>
 		</ul>
 		<div class="title"><a href="{% url 'start_page:main_view' %}">Monaliza</a></div>
 	</div>
-	<form class="search" method="get" action="{% url 'it_articles:search' %}">
+	<!--<form class="search" method="get" action="{% url 'it_articles:search' %}">
 		<input type="text" name="text">
 		<input type="submit" value="Search">
-	</form>
+	</form>-->
 	<div class="container">
 		<div class="top">
 			{% block top %}
 				<div class="top_intro">
-					{% block top_title %}PROJECTS{% endblock %}
+					{% block top_title %}Все посты{% endblock %}
 				</div>
 				<!--<div class="top_menu">
 					<ul>

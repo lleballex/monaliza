@@ -3,9 +3,9 @@
 {% block title %}
 
 	{% if update %}
-		{{article.title|truncatechars:10}} - update article
+		{{article.title|truncatechars:10}} - редактирование поста
 	{% else %}
-		New article
+		{{request.user}} - новый пост
 	{% endif %}
 
 {% endblock %}
@@ -14,28 +14,137 @@
 
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_new.css' %}">
+	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
 
 {% endblock %}
 
 {% block top %}
 
 	{% if update %}
-		<div class="top_intro">Update article</div>
+		<div class="top_intro">Редактирование поста</div>
 	{% else %}
-		<div class="top_intro">Create new article</div>
+		<div class="top_intro">Новый пост</div>
 	{% endif %}
 
 {% endblock %}
 
 {% block content %}
 
+	<script>
+		$(function() {
+			$('.new-article-form textarea').keyup(function(event) {
+				var val = $(this).val();
+				var lang_python = false;
+				var lang_cmd = false;
+				var small_code = false;
+				var word = false;
+				var link = [false, false];
+				var header = false;
+				$('#post-view').text('');
+				for(var i = 0; i < val.length; i++) {
+					if(val[i] == '`') {
+						if(!lang_python) {
+							lang_python = true;
+							$('#post-view').append('<pre class="code"><code class="language-python">');
+						} else {
+							lang_python = false;
+							$('#post-view').append('</a');
+						}
+					} else if(val[i] == '~') {
+						if(!small_code) {
+							small_code = true;
+							$('#post-view').append('<span class="post-small-code">');
+						} else {
+							small_code = false;
+							$('#post-view').append('</span>');
+						}
+					} else if(val[i] == '|') {
+						if(!word) {
+							word = true;
+							$('#post-view').append('<span class="post-word">');
+						} else {
+							word = false;
+							$('#post-view').append('</span>');
+						}
+					} else if(val[i] == '^') {
+						if(!link[0]) {
+							link[0] = true;
+							link[1] = true;
+							$('#post-view').append('<a>');
+						} else if(link[1]) {
+							link[1] = false
+						} else {
+							link[0] = false;
+							$('#post-view').append('</a>');
+						}
+					} else if(val[i] == '*' && val[i + 1] == '*') {
+						i++;
+						if(!header) {
+							header = true;
+							$('#post-view').append('<span class="post-header">');
+						} else {
+							header = false;
+							$('#post-view').append('</span>');
+						}
+					} else {
+						if(lang_python) {
+							$('#post-view').children().eq($('#post-view').children().length - 1).children(0).append(val[i]);
+						} else if(small_code || word || header) {
+							$('#post-view').children().eq($('#post-view').children().length - 1).append(val[i]);
+						} else if(link[0]) {
+							if(link[1]) {
+								prev = $('#post-view').children().eq($('#post-view').children().length - 1).attr('href');
+								if(!prev)
+									prev = '';
+								$('#post-view').children().eq($('#post-view').children().length - 1).attr('href', prev + val[i]);
+							} else {
+								$('#post-view').children().eq($('#post-view').children().length - 1).append(val[i]);
+							}
+						} else
+							$('#post-view').append(val[i]);
+					}
+				}
+			});
+
+			$('.help-buttons input').on('click', function() {
+				var prev_val = $('.new-article-form textarea').val();
+				var new_val = '';
+
+				switch($(this).attr('id')) {
+				case 'help-btn-title':
+					new_val = '**заголовок**';
+					break;
+				case 'help-btn-code':
+					new_val = '`код`';
+					break;	
+				case 'help-btn-code-small':
+					new_val = '~код~';
+					break;
+				case 'help-btn-word':
+					new_val = '|выделение|';
+					break;
+				case 'help-btn-link':
+					new_val = '^адресс^ссылка^';
+					break;
+				}
+
+				$('.new-article-form textarea').val(prev_val + new_val);
+			});
+		});
+	</script>
+
+	<div class="content-container">
 	<form method="post" class="new-article-form">
 		{% for field in form %}
 			{% csrf_token %}
 			{{field.label_tag}}
+			<div class="field-help-text">{{field.help_text|safe}}</div>
 			{{field}}
 		{% endfor %}
 		<input type="submit" value="{% if update %}Save{% else %}Create{% endif %}">
+		<label>Так будет выглядеть ваш пост:</label>
+		<div id="post-view" class="article-content"></div>
+	</div>
 	</form>
 
 {% endblock %}
