@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'account',
     'start_page',
     'it_articles',
+    'qna',
 ]
 
 MIDDLEWARE = [

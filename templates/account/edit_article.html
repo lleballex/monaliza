@@ -38,19 +38,19 @@
 
 				switch($(this).attr('id')) {
 				case 'help-btn-title':
-					new_val = '**заголовок**';
+					new_val = '<span class="post-header">ЗАГОЛОВОК</span>';
 					break;
 				case 'help-btn-code':
-					new_val = '`код`';
+					new_val = '<pre class="code"><code class="language-python">КОД</code></pre>';
 					break;	
 				case 'help-btn-code-small':
-					new_val = '~код~';
+					new_val = '<span class="post-small-code">КОД</span>';
 					break;
 				case 'help-btn-word':
-					new_val = '|выделение|';
+					new_val = '<span class="post-word">ВЫДЕЛЕНИЕ</span>';
 					break;
 				case 'help-btn-link':
-					new_val = '^адресс^ссылка^';
+					new_val = '<a href="АДРЕС">ССЫЛКА</a>';
 					break;
 				}
 
@@ -130,6 +130,12 @@
 							$('#post-view').append(val[i]);
 					}
 				}
+
+		}
+
+		function get_text() {
+			var text = val = $('.new-article-form textarea').val();
+			$('#post-view').html('<pre>' + text + '</pre>');
 		}
 	</script>
 
@@ -142,7 +148,7 @@
 			{{field}}
 		{% endfor %}
 		<input type="submit" value="{% if update %}Save{% else %}Create{% endif %}">
-		<label>Так будет выглядеть ваш пост:</label><input type="button" value="Обновить" onclick="new_text()">
+		<label>Так будет выглядеть ваш пост:</label><input type="button" value="Обновить" onclick="get_text()">
 		<div id="post-view" class="article-content"></div>
 	</div>
 	</form>

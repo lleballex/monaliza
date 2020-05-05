@@ -49,6 +49,10 @@
 					<a class="{% if request.path == url_articles_all and request.GET.language == 'web' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=web">Web</a>
 				</div>
 			</li>
+			<li>
+				{% url 'qna:all_questions' as url_qna %}
+				<a href="{% url 'qna:all_questions' %}" class="main_menu {% if url_qna in request.path %}active{% endif %}">Q&A</a>
+			</li>
 		</ul>
 		<div class="title"><a href="{% url 'start_page:main_view' %}">Monaliza</a></div>
 	</div>
@@ -56,6 +60,87 @@
 		<input type="text" name="text">
 		<input type="submit" value="Search">
 	</form>-->
+
+	
+	<style>
+		.search-form {
+			margin-left: 165px;
+			margin-right: 15px;
+			display: flex;
+			padding: 9px 15px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			box-shadow: 0 0 3px 0 #ccc;
+			transition: .2s all;
+			position: relative;
+		}
+
+		.search-form input[type="text"] {
+			width: 100%;
+			border: none;
+			background: none;
+			font-family: 'Montserrat';
+			font-size: 14px;
+			color: #444;
+			padding-right: 15px;
+		}
+
+		.search-form input[type="text"]:focus {
+			outline: none;
+		}
+
+		.search-form i {
+			border: none;
+			background: none;
+			padding: 0;
+			color: powderblue;
+			font-size: 17px;
+			transition: .3s all;
+			position: absolute;
+			right: 15px;
+		}
+	
+		.search-form i:hover {
+			cursor: pointer;
+		}
+
+		#btn-2 {
+			transform: scale(0);
+			right: 17px;
+		}		
+	</style>
+	<script>
+		$(function() {
+			$('#btn-2').on('click', function() {
+				$('.search-form input').val('');
+				$('#btn-1').css('transform', 'scale(1)');
+				$('#btn-2').css('transform', 'scale(0)');
+			});
+			$('#btn-1').on('click', function() {
+				$('.search-form input').focus();
+			});	
+			$('.search-form input[type="text"]').focus(function() {
+				$('.search-form').css('box-shadow', '0 0 5px 2px #bbb');
+				$('#btn-1').css('transform', 'scale(0)');
+				$('#btn-2').css('transform', 'scale(1)');
+			});
+			$('.search-form input[type="text"]').blur(function() {
+				var val = $('.search-form input').val();
+				if(val.split() == '') {
+					$('#btn-1').css('transform', 'scale(1)');
+					$('#btn-2').css('transform', 'scale(0)');
+				}
+				$('.search-form').css('box-shadow', '0 0 3px 0 #ccc');
+			});		
+		});
+	</script>
+	<form class="search-form">
+		<input type="text" placeholder="Поиск по сайту">
+		<i class="fa fa-close" id="btn-2"></i>
+		<i class="fa fa-search" id="btn-1"></i>
+	</form>
+
+
 	<div class="container">
 		<div class="top">
 			{% block top %}

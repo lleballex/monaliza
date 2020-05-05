@@ -12,7 +12,7 @@ class Article(models.Model):
 	text = models.TextField()
 	language = models.CharField(max_length = 30, choices = LANGUAGE)
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'articles')
-	date = models.DateTimeField(auto_now = True)
+	date = models.DateTimeField(auto_now_add = True)
 	likes = models.IntegerField(default = 0)
 	views = models.IntegerField(default = 0)
 	is_available = models.BooleanField(default = False)

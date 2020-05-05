@@ -164,7 +164,7 @@ class NewArticleView(MessagesMixin, CreateView):
 	def form_valid(self, form):
 		self.object = form.save(commit = False)
 		self.object.user = self.request.user
-		self.object.text = self.post_text(self.object.text)
+		#self.object.text = self.post_text(self.object.text)
 		self.object.is_available = True
 		self.object.save()
 		notification = Notification()
