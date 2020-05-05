@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'start_page',
     'it_articles',
     'qna',
+    'search',
 ]
 
 MIDDLEWARE = [

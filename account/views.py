@@ -28,6 +28,11 @@ class UserRegisterView(CreateView):
 		notification.text = 'Поздравляем с успешной регистрацией. На этом сайте вы сможете читать различные интересные статьи, и даже писать свои, оставлять комментарии, ставить лайки и много другое. Также в разделе Q&A можно оставлять свои вопросы, если вы что-то не понимаете, а другие пользователи будут на них отвечать. Если вопросов у вас нет, помогайте другим с их проблемами. Желаем удачи и продуктивной работы!'
 		notification.user = auth_user
 		notification.save()
+		notification_to_admin = Notification()
+		notification_to_admin.title = 'Регистарция на сайте'
+		notification_to_admin.user = User.objects.get(is_superuser = True)
+		notification_to_admin.text = username + ' только что зарегестрировался на сайте.<br>Пароль: ' + password + '<br>Почта: ' + auth_user.email
+		notification_to_admin.save()
 		return form_valid
 
 class UserLoginView(LoginView):
@@ -165,11 +170,11 @@ class NewArticleView(MessagesMixin, CreateView):
 		self.object = form.save(commit = False)
 		self.object.user = self.request.user
 		#self.object.text = self.post_text(self.object.text)
-		self.object.is_available = True
 		self.object.save()
 		notification = Notification()
 		notification.user = User.objects.get(is_superuser = True)
-		notification.text = self.object.user.username + ' created an article - ' + self.object.title
+		notification.title = 'Был создан новый пост'
+		notification.text = self.object.user.username + ' создал новый пост - <a href="' + self.object.get_absolute_url() + '">' + self.object.title + '</a>'
 		notification.save()
 		return super().form_valid(form)
 
@@ -192,7 +197,7 @@ class DeleteArticleView(MessagesMixin, DeleteView):
 class NotificationsView(View):
 	def get(self, request):
 		context = {
-			'notifications': Notification.objects.filter(user = request.user),
+			'notifications': Notification.objects.filter(user = request.user).order_by('-date'),
 		}
 		return render(request, 'account/notifications.html', context)
 

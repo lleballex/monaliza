@@ -32,25 +32,43 @@
 
 	<script>
 		$(function() {
-			$('.help-buttons input').on('click', function() {
+			$('.help-buttons button').on('click', function() {
 				var prev_val = $('.new-article-form textarea').val();
 				var new_val = '';
 
 				switch($(this).attr('id')) {
-				case 'help-btn-title':
+				case 'help-btn-header':
 					new_val = '<span class="post-header">ЗАГОЛОВОК</span>';
+					break;
+				case 'help-btn-paragraph':
+					new_val = '<br>'
+					break;
+				case 'help-btn-code-small':
+					new_val = '<span class="post-small-code">КОД</span>';
 					break;
 				case 'help-btn-code':
 					new_val = '<pre class="code"><code class="language-python">КОД</code></pre>';
 					break;	
-				case 'help-btn-code-small':
-					new_val = '<span class="post-small-code">КОД</span>';
-					break;
 				case 'help-btn-word':
 					new_val = '<span class="post-word">ВЫДЕЛЕНИЕ</span>';
 					break;
+				case 'help-btn-list-ul':
+					new_val = '<ul><li>ЗНАЧЕНИЕ 1</li><li>ЗНАЧЕНИЕ 2</li><li>ЗНАЧЕНИЕ 3</li></ul>'
+					break;
+				case 'help-btn-list-ol':
+					new_val = '<ol><li>ЗНАЧЕНИЕ 1</li><li>ЗНАЧЕНИЕ 2</li><li>ЗНАЧЕНИЕ 3</li></ol>'
+					break;
 				case 'help-btn-link':
 					new_val = '<a href="АДРЕС">ССЫЛКА</a>';
+					break;
+				case 'help-btn-underline':
+					new_val = '<u>ПОДЧЕРКНУТЫЙ ТЕКСТ</u>'
+					break;
+				case 'help-btn-bold':
+					new_val = '<b>ЖИРНЫЙ ТЕКСТ</b>'
+					break;
+				case 'help-btn-italic':
+					new_val = '<i>КУРСИВ</i>'
 					break;
 				}
 
@@ -147,8 +165,8 @@
 			<div class="field-help-text">{{field.help_text|safe}}</div>
 			{{field}}
 		{% endfor %}
-		<input type="submit" value="{% if update %}Save{% else %}Create{% endif %}">
-		<label>Так будет выглядеть ваш пост:</label><input type="button" value="Обновить" onclick="get_text()">
+		<input type="submit" value="{% if update %}Сохранить изменения{% else %}Создать пост{% endif %}">
+		<label id="post-view-label">Так будет выглядеть ваш пост:<input type="button" value="Обновить" onclick="get_text()"></label>
 		<div id="post-view" class="article-content"></div>
 	</div>
 	</form>

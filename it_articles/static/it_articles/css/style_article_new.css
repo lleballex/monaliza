@@ -84,31 +84,56 @@
 	width: 100%;
 }
 
-.help-buttons input {
+.help-buttons button {
 	width: 100%;
-	padding: 8px;
 	border: 1px solid #05c46b;
 	background: #0be881;
 	color: #fff;
-	transition: .2s all;
-	font-weight: 600;
+	padding: 8px;
+	font-size: 15px;
 }
 
-.help-buttons input:hover {
+.help-buttons button:hover {
 	cursor: pointer;
 	background: #05c46b;
 }
 
-.help-buttons input:focus {
+.help-buttons button:focus {
 	outline: none;
 }
 
-#help-btn-title {
+#help-btn-header {
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
 
-#help-btn-link {
+#help-btn-italic {
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
+}
+
+#post-view-label {
+	margin-top: -10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+#post-view-label input {
+	border: 1px solid #05c46b;
+	background: #0be881;
+	color: #fff;
+	padding: 8px;
+	font-size: 15px;
+	transition: .2s all;
+	border-radius: 5px;
+}
+
+#post-view-label input:hover {
+	background: #05c46b;
+	cursor: pointer;
+}
+
+#post-view-label input:focus {
+	outline: none;
 }
