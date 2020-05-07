@@ -10,7 +10,6 @@ class Article(models.Model):
 
 	title = models.CharField(max_length = 100)
 	text = models.TextField()
-	language = models.CharField(max_length = 30, choices = LANGUAGE)
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'articles')
 	date = models.DateTimeField(auto_now_add = True)
 	likes = models.IntegerField(default = 0)

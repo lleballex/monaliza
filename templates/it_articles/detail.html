@@ -11,47 +11,7 @@
 
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
-	<script>
-		function like(id) {
-			{% if not request.user.is_authenticated %}
-				alert('Для того, чтобы ставить лайки, необходимо авторизоваться');
-			{% else %}
-			$.ajax({
-				type: 'get',
-				url: "{% url 'it_articles:like_article' %}",
-				data: {
-					'id': id,
-				},	
-				dataType: 'text',
-				success: function(data) {
-					$('#like-' + id).toggleClass('is_liked')
-					if(data == 'EXIST') {
-						$('#like-' + id + ' .fa').attr('class', 'fa fa-heart-o');
-						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) - 1);
-					} else if(data = 'DOES_NOT_EXIST') {
-						$('#like-' + id + ' .fa').attr('class', 'fa fa-heart');
-						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) + 1);
-					}
-				},
-			});
-			{% endif %}
-		}
-	</script>
-
-{% endblock %}
-
-{% block top %}
-
-	<div class="top_intro">
-		{{article.title}}
-		<div class="top_user">
-			<a href="{% url 'account:profile' %}">{{article.user}}</a> - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
-		</div>
-	</div>
-
-{% endblock %}
-
-{% block content %}
+	<script src="{% static 'it_articles/js/script.js' %}"></script>
 
 	<script>
 		$(function() {
@@ -67,48 +27,63 @@
 			{% else %}
 			var text = $('#comment-text').val().replace(/ +/g, ' ').trim();
 			if(text != '') {
-			$.ajax({
-				type: 'get',
-				url: "{% url 'it_articles:send_comment' article.id %}",
-				data: {
-					'text': text,
-				}, 
-				dataType: 'text',
-				cache: false,
-				success: function(data) {
-					context = JSON.parse(data);
-					var username = '{{request.user.username}}';
-					var comment = $('<li id="comment-' + context.id + '"><img src="' + "{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" + '"><div class="comment"><div class="user"><div><div>' + username + '</div><div class="date">' + context.date + '</div></div><i class="fa fa-times" aria-hidden="true" onclick="delete_comment(' + context.id + ')"></i></div><div class="text">' + context.text + '</div></div></li>');
-					$('.comments ul').prepend(comment);
-					$('#comment-text').val('');
-					$('#articles-count').text(Number($('#articles-count').text()) + 1);
-				}
-			});
+				$.ajax({
+					type: 'get',
+					url: "{% url 'it_articles:send_comment' article.id %}",
+					data: {
+						'text': text,
+					}, 
+					dataType: 'text',
+					cache: false,
+					success: function(data) {
+						context = JSON.parse(data);
+						var username = '{{request.user.username}}';
+						var comment = $('<li id="comment-' + context.id + '"><img src="' + "{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" + '"><div class="comment"><div class="user"><div><div>' + username + '</div><div class="date">' + context.date + '</div></div><i class="fa fa-times" aria-hidden="true" onclick="delete_comment(' + context.id + ')"></i></div><div class="text">' + context.text + '</div></div></li>');
+						$('.comments ul').prepend(comment);
+						$('#comment-text').val('');
+						$('#articles-count').text(Number($('#articles-count').text()) + 1);
+					}
+				});
 			}
 			{% endif %}
 		}
 
 		function delete_comment(id) {
 			if(confirm('Are you shure')) {
-			$.ajax({
-				type: 'GET',
-				url: 'delete_comment/',
-				data: {
-					'id': id,
-				},
-				dataType: 'text',
-				cache: false,
-				success: function(data) {
-					if(data == '200') {
-						$('#comment-' + id).remove();
-						$('#articles-count').text(Number($('#articles-count').text()) - 1);
-					} else 
-						alert('Error - ' + data);
-				}
-			});
-		}
+				$.ajax({
+					type: 'GET',
+					url: 'delete_comment/',
+					data: {
+						'id': id,
+					},
+					dataType: 'text',
+					cache: false,
+					success: function(data) {
+						if(data == '200') {
+							$('#comment-' + id).remove();
+							$('#articles-count').text(Number($('#articles-count').text()) - 1);
+						} else 
+							alert('Error - ' + data);
+					}
+				});
+			}
 		}
 	</script>
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">
+		{{article.title}}
+		<div class="top_user">
+			<a href="{% url 'search:user_page' article.user.username %}">{{article.user}}</a> - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block content %}
 	
 	<div class="content-container">
 	<div class="article-content">

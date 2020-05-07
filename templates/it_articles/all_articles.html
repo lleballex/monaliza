@@ -9,32 +9,8 @@
 
 {% block staticfiles %}
 
-	<script>
-		function like(id) {
-			{% if not request.user.is_authenticated %}
-				alert('Для того, чтобы ставить лайки, необходимо авторизоваться');
-			{% else %}
-			$.ajax({
-				type: 'get',
-				url: "{% url 'it_articles:like_article' %}",
-				data: {
-					'id': id,
-				},	
-				dataType: 'text',
-				success: function(data) {
-					$('#like-' + id).toggleClass('is_liked')
-					if(data == 'EXIST') {
-						$('#like-' + id + ' .fa').attr('class', 'fa fa-thumbs-o-up');
-						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) - 1);
-					} else if(data = 'DOES_NOT_EXIST') {
-						$('#like-' + id + ' .fa').attr('class', 'fa fa-thumbs-up');
-						$('#like-' + id + ' span').text(Number($('#like-' + id + ' span').text()) + 1);
-					}
-				},
-			});
-			{% endif %}
-		}
-	</script>
+	{% load static %}
+	<script src="{% static 'it_articles/js/script.js' %}"></script>
 
 {% endblock %}
 
@@ -49,7 +25,7 @@
 				<li class="article">
 					<div class="article-user">
 						{% load static %}
-						<img src="{% static 'account/images/user_2.png' %}" alt="" class="user-img"><a href="{% url 'account:profile' %}" class="user-a">{{article.user.username}} </a>
+						<img src="{% static 'account/images/user_2.png' %}" alt="" class="user-img"><a href="{% url 'search:user_page' article.user.username %}" class="user-a">{{article.user.username}} </a>
 						 - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
 					</div>
 					<div class="article-title">
@@ -63,7 +39,8 @@
 					<div class="article-bottom">
 						<a href="{% url 'it_articles:detail' article.id %}" class="btn-read-more">Читать далее</a>
 						<ul class="article-info">
-							<li class="first-li like-article {% is_liked request.user article %}" id="like-{{article.id}}" onclick="like({{article.id}})">
+							{% url 'it_articles:like_article' as url_article_like %}
+							<li class="first-li like-article {% is_liked request.user article %}" id="like-{{article.id}}" onclick="{% if not request.user.is_authenticated %}alert('Для того, чтобы ставить лайки, необходимо авторизоваться');{% else %}like({{article.id}}, '{{url_article_like}}'){% endif %}">
 								<i class="fa {% is_liked_fa request.user article %}"></i><span>{{article.likes}}</span>
 							</li>
 							<li><i class="fa fa-eye"></i>   {{article.views}}

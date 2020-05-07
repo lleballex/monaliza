@@ -19,4 +19,6 @@ $(function() {
 			$('.articles.popular').css('display', 'block');
 		}
 	});
+
+
 });

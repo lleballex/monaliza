@@ -1,0 +1,144 @@
+{% extends 'wrapper.html' %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'account/css/style_user_update.css' %}">
+	<link rel="stylesheet" href="{% static 'account/css/style_profile.css' %}">
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="user-top">
+		{% load static %}
+		<img src="{% if user.image %}{{user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="sdfsf" class="user-img">
+	</div>
+
+{% endblock %}
+
+{% block content %}
+	
+	<div class="content-container">
+		<div class="user-info">
+			<div class="username">{{user.username}}</div>
+			<ul class="statistic">
+				<li>
+					<div class="number">{{user.articles.all.count}}</div>
+					<div class="word">Посты</div>
+				</li>
+				<li>
+					<div class="number">{{user.questions.all.count}}</div>
+					<div class="word">Вопросы</div>
+				</li>
+				<li>
+					<div class="number">{{user.answers.all.count}}</div>
+					<div class="word">Ответы</div>	
+				</li>
+				<li>
+					<div class="number">10</div>
+					<div class="word">Рейтинг</div>	
+				</li>
+				</ul>
+		</div>
+		<div class="user-content">
+			<div class="user-content-stroke">
+				<div class="user-content-content">
+					<div class="user-content-title"><a href="sfsf">Вопросы</a></div>
+					{% if user.questions.count != 0 %}
+						<ul>
+							{% for question in user.questions.all|slice:':5' %}
+								<li>
+									<a href="{% url 'it_articles:detail' question.id %}">{{question.title}}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						Этот пользователь еще ничего не спрашивал
+					{% endif %}
+				</div>
+				<div class="user-content-content">
+					<div class="user-content-title"><a href="f">Ответы</a></div>
+					{% if user.answers.count != 0 %}
+						<ul>
+							{% for answer in user.answers.all|slice:':5' %}
+								<li>
+									<a href="{% url 'it_articles:detail' question.id %}">{{answer.question.title}}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						Этот пользователь еще не успел ответить ни на один вопрос
+					{% endif %}
+				</div>
+			</div>
+			<div class="user-content-stroke">
+				<div class="user-content-content">
+					<div class="user-content-title"><a href="f">Статьи</a></div>
+					{% if user.articles.count != 0 %}
+						<ul>
+							{% for article in user.articles.all %}
+								<li>
+									<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						У этого пользователя еще нет ни одного поста
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+		.user-content-stroke {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 20px;
+		}
+
+		.user-content-content {
+			width: calc(100% / 2 - 20px);
+		}
+
+		.user-content-title {
+			font-size: 20px;
+			font-weight: 700;
+			border-bottom: 1px solid #aaa;
+			padding-bottom: 5px;
+		}
+
+		.user-content-title a {
+			text-decoration: none;
+			color: #8e44ad;
+			transition: .2s all;
+		}
+
+		.user-content-title a:hover {
+			color: #a55eea;
+		}
+
+		.user-content ul {
+			padding-left: 15px;
+			margin: 10px 0 0;
+			list-style: none;
+		}
+
+		.user-content li {
+			padding-bottom: 5px;
+			font-weight: 500;
+		}
+
+		.user-content li a {
+			color: #3742fa;
+			text-decoration: none;
+			transition: .1s all;
+		}
+
+		.user-content li a:hover {
+			color: #1e90ff;
+		}
+
+		</style>
+{% endblock %}

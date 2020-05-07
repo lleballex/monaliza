@@ -135,10 +135,11 @@
 		});
 	</script>
 	<form class="search-form" method="get" action="{% url 'search:search' %}">
-		<input name="text" type="text" placeholder="Поиск по сайту">
+		<input name="text" type="text" placeholder="Поиск по сайту" {% if request.GET.text != '' %}value="{{request.GET.text}}"{% endif %}>
 		<i class="fa fa-close" id="btn-2"></i>
 		<i class="fa fa-search" id="btn-1"></i>
-		<input name="model" type="hidden" value="{% if 'posts' in request.path %}post{% endif %}">
+		<input name="model" type="hidden" value="{% if 'posts' in request.path %}post{% elif 'account' in request.path or 'search/users' in request.path %}user{% else %}{{request.GET.model}}{% endif %}">
+		<input type="hidden" name="sort" value="{% if not request.GET.sort %}likes{% else %}{{request.GET.sort}}{% endif %}">
 	</form>
 
 

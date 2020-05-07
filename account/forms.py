@@ -49,7 +49,7 @@ class UserUpdateForm(forms.ModelForm):
 class NewArticleForm(forms.ModelForm):
 	class Meta:
 		model = Article
-		fields = ['title', 'text', 'language']
+		fields = ['title', 'text']
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -68,7 +68,6 @@ class NewArticleForm(forms.ModelForm):
 		</ul>'''
 		self.fields['text'].label = 'Содержание'
 		self.fields['title'].label = 'Название'
-		self.fields['language'].label = 'Язык программирования'
 		'''<ul class="help-buttons">
 			<li><input id="help-btn-title" type="button" value="Заголовок"></li>
 			<li><input id="help-btn-code" type="button" value="Большой код"></li>
