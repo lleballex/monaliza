@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, ListView
+from django.views.generic import View, ListView, DetailView
 from django.urls import reverse
+from django.http.response import HttpResponse
 
 from .models import Question, Answer
+from account.models import User
 
 def redirect_to_questions(request):
 	return redirect(reverse('qna:all_questions'))
@@ -12,3 +14,41 @@ class AllQuestionsView(ListView):
 	template_name = 'qna/all_questions.html'
 	context_object_name = 'questions'
 
+class DetailQuestionView(DetailView):
+	model = Question
+	template_name = 'qna/detail.html'
+	context_object_name = 'question'
+
+class SetAnswer(View):
+	def get(self, request, pk):
+		answer = Answer()
+		answer.user = request.user
+		answer.question = Question.objects.get(id = pk)
+		answer.text = request.GET.get('text')
+		answer.save()
+		return HttpResponse('200')
+
+class DeleteAnswer(View):
+	def get(self, request, pk):
+		answer = Answer.objects.get(id = request.GET.get('id'))
+		answer.delete()
+		return HttpResponse('200')
+
+class SetRightAnswer(View):
+	def get(self, request, pk):
+		question = Question.objects.get(id = pk)
+		for answer in question.answers.all():
+			if answer.is_right_answer:
+				answer.is_right_answer = False
+				answer.save()
+		right_answer = Answer.objects.get(id = request.GET.get('id'))
+		right_answer.is_right_answer = True
+		right_answer.save()
+		return HttpResponse('200')
+
+class DeleteRightAnswer(View):
+	def get(self, request, pk):
+		answer = Answer.objects.get(id = request.GET.get('id'), is_right_answer = True)
+		answer.is_right_answer = False
+		answer.save()
+		return HttpResponse('200')

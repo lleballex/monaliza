@@ -42,7 +42,7 @@
 				</ul>
 		</div>
 		<div class="user-content">
-			<div class="user-content-stroke">
+			
 				<div class="user-content-content">
 					<div class="user-content-title"><a href="sfsf">Вопросы</a></div>
 					{% if user.questions.count != 0 %}
@@ -54,7 +54,7 @@
 							{% endfor %}
 						</ul>
 					{% else %}
-						Этот пользователь еще ничего не спрашивал
+						<div class="user-content-empty">Этот пользователь еще ничего не спрашивал</div>
 					{% endif %}
 				</div>
 				<div class="user-content-content">
@@ -68,11 +68,10 @@
 							{% endfor %}
 						</ul>
 					{% else %}
-						Этот пользователь еще не успел ответить ни на один вопрос
+						<div class="user-content-empty">Этот пользователь еще не успел ответить ни на один вопрос</div>
 					{% endif %}
 				</div>
-			</div>
-			<div class="user-content-stroke">
+	
 				<div class="user-content-content">
 					<div class="user-content-title"><a href="f">Статьи</a></div>
 					{% if user.articles.count != 0 %}
@@ -84,22 +83,32 @@
 							{% endfor %}
 						</ul>
 					{% else %}
-						У этого пользователя еще нет ни одного поста
+						<div class="user-content-empty">У этого пользователя еще нет ни одного поста</div>
 					{% endif %}
 				</div>
-			</div>
+		
 		</div>
 	</div>
 
 	<style>
-		.user-content-stroke {
+		.user-content {
 			display: flex;
+			flex-wrap: wrap;
 			justify-content: space-between;
-			margin-bottom: 20px;
 		}
 
-		.user-content-content {
-			width: calc(100% / 2 - 20px);
+		@media screen and (max-width: 1240px) {
+			.user-content-content {
+				width: 100%;
+				margin-bottom: 20px;
+			}
+		}
+
+		@media screen and (min-width: 1240px) {
+			.user-content-content {
+				width: calc(100% / 2 - 20px);
+				margin-bottom: 20px;
+			}
 		}
 
 		.user-content-title {
@@ -138,6 +147,10 @@
 
 		.user-content li a:hover {
 			color: #1e90ff;
+		}
+
+		.user-content-empty {
+			padding: 10px 0 0 15px;
 		}
 
 		</style>

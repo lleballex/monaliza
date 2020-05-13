@@ -1,0 +1,285 @@
+.content-container {
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+.question-title {
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 15px;
+}
+
+.question-title div {
+	display: flex;
+	align-items: center;
+}
+
+		.question-title .user-img {
+			min-width: 35px;
+			min-height: 35px;
+			max-width: 35px;
+			max-height: 35px;
+			border-radius: 3px;
+		}
+
+		.question-title .user-a {
+			text-decoration: none;
+			font-weight: 600;
+			padding-left: 10px;
+			padding-right: 4px;
+			color: #05c46b;
+			transition: .2s all;
+		}
+			
+		.question-title .user-a:hover {
+			color: #0be881;
+		}
+
+		.question-title .question-views  {
+			position: relative;
+		}
+		
+		.question-title .question-views i {
+			padding-right: 10px;
+		}
+
+		.question-title .question-views:after {
+			content: "";
+			position: absolute;
+			height: 100%;
+			width: 1px;
+			background: #bbb;
+			left: -20px;
+			top: 0;
+		}
+
+
+.answers {
+	display: flex;
+	flex-direction: column;
+}
+
+.answers .title, .answer-form .title {
+	font-size: 23px;
+	font-weight: 500;
+	position: relative;
+	align-self: flex-start;
+	margin: 20px 0;
+}
+
+.answers .title:after, .answer-form .title:after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 2px;
+	bottom: -3px;
+	left: 0;
+	background: #000;
+}
+
+.right-answer:after {
+	content: "";
+	position: absolute;
+	width: calc(100% + 5px + 4px);
+	height: calc(100% + 5px + 4px);
+	left: -5px;
+	top: -5px;
+	background: rgb(179, 252, 154); /*204, 253, 187*/
+	border: 2px solid #c3e6cb;
+	background: #d4edda;
+	border-radius: 5px;
+	z-index: 1;
+}
+
+.answers ul {
+	margin: 10px 0 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.answers li {
+	margin-bottom: 15px;
+	position: relative;
+	display: flex;
+	position: relative;
+}
+
+.answers li>* {
+	z-index: 2;
+}
+
+.answers li img {
+	min-width: 35px;
+	min-height: 35px;
+	max-width: 35px;
+	max-height: 35px;
+	align-self: flex-start;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+.answers .answer {
+	width: 100%;
+}
+
+.answers .answer .user {
+	color: #1e3799;
+	font-weight: 500;
+	font-size: 15px;
+	margin-bottom: 5px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.answers .answer .user>div {
+	display: flex;
+}
+
+.answers .answer .date {
+	color: #888;
+	font-size: 13px;
+	font-weight: 500;
+	align-self: flex-end;
+	padding-left: 15px;
+}
+
+.answers .answer .user .fa {
+	display: none;
+	color: #aaa;
+	font-size: 16px;
+}
+
+.answers .answer .user .fa:hover {
+	cursor: pointer;
+	color: #888;
+}
+
+.answers li:hover .answer .user .fa {
+	display: block;
+}
+
+.answers .answer .text {
+	font-size: 16px;
+}
+
+.answer-form {
+	height: 400px;
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
+	border-top: 1px solid #ccc;
+}
+
+.answer-views {
+	background: #eee;
+	display: flex;
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
+	border-right: 1px solid #bbb;
+}
+
+.answer-views div {
+	width: 100%;
+	border-bottom: 1px solid #bbb;
+}
+
+.answer-views button {
+	background: #eee;
+	padding: 15px;
+	border: none;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+	text-transform: uppercase;
+}
+
+.answer-views .active {
+	background: #fff;
+	border-bottom: none;
+}
+
+.form-view, .answer-view {
+	display: none;
+}
+
+.form-view.active, .answer-view.active {
+	display: block;
+}
+
+.form-view {
+	border: 1px solid #bbb;
+	border-top: none;
+	height: 100%;
+}
+
+.form-view ul {
+	display: flex;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-bottom: 1px solid #bbb;
+}
+
+.form-view li {
+	width: 100%;
+	text-align: center;
+	background: #fff;
+}
+
+.form-view li button {
+	background: none;
+	border: none;
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+	font-size: 16px;
+	transition: .2s all;
+}
+
+.form-view li button:hover {
+	cursor: pointer;
+	background: #eee;
+}
+
+.form-view li button:focus {
+	outline: none;
+}
+
+.form-view textarea {
+	width: calc(100% - 20px);
+	height: calc(100% - 60px);
+	font-size: 16px;
+	padding: 10px;
+	border: none;
+}
+
+.answer-view {
+	border: 1px solid red;
+	height: 300px;
+	overflow: auto;
+}
+
+.answer-form input[type="button"] {
+	margin-top: 15px;
+	background: #00a8ff;
+	padding: 10px 15px;
+	border-radius: 5px;
+	border: 2px solid #0097e6;
+	color: #fff;
+	font-weight: 500;
+	font-size: 15px;
+	width: 150px;
+	text-align: center;
+	transition: .2s all;
+}
+
+.answer-form input[type="button"]:hover {
+	background: #0097e6;
+	cursor: pointer;
+}
+
+.answer-form input[type="button"]:focus {
+	outline: none;
+	box-shadow: 0 0 1px 4px #48dbfb;
+}

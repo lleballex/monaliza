@@ -1,0 +1,148 @@
+{% extends 'wrapper.html' %}
+
+{% block top %}
+
+	<div class="top_intro">{{question.title}}</div>
+
+{% endblock %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'qna/css/style_detail.css' %}">
+	<script src="{% static 'qna/js/script_detail.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<script>
+
+	function set_answer() {
+		var text = $('.form-view textarea').val();
+		$.ajax({
+			type: 'get',
+			url: "{% url 'qna:set_answer' question.id %}",
+			data: {
+				'text': text,
+			},
+			dataType: 'text',
+			success: function(data) {
+				if(data == '200') {
+					alert('Ваш ответ успешно отправлен');
+					$('.form-view textarea').val('');
+					{% load static %}
+					$('.answers ul').append('<li id="answer-{{comment.id}}" class="{% if answer.is_right_answer %}right-answer{% endif %}"><img src="' + "{% if user.image %}{{user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" + ' alt="Mona.png"><div class="answer"><div class="user"><div><div>{{request.user}}</div><div class="date">1111111</div></div>{% if request.user == question.user and question.user != request.user%}Отметить ответ решением{% elif request.user == question.user and question.user != request.user %}Это не решение{% elif answer.user == request.user %}<i class="fa fa-times" aria-hidden="true" onclick="delete_comment({{comment.id}})"></i>{% endif %}</div><div class="text">' + text + '</div></div></li>');
+				} else 
+					alert(data);
+			},
+		});
+	}
+
+</script>
+
+	<div class="content-container">
+		<div style="height: 300px; margin-left: 30px;">
+			<iframe data-aa="1388285" src="//ad.a-ads.com/1388285?size=250x250" scrolling="no" style="width:250px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+		</div>
+		<div>
+		<div class="question">
+			<div class="question-title">
+				{% load static %}
+				<div>
+					<img src="{% static 'account/images/user_2.png' %}" alt="" class="user-img"><a href="{% url 'search:user_page' question.user.username %}" class="user-a">{{question.user.username}} </a>
+					 - {{question.date|date:'d'}} of {{question.date|date:'F'}} at {{question.date|date:'G:m'}}
+				</div>
+				<div class="question-views">
+					<i class="fa fa-eye"></i>7654
+				</div>
+			</div>
+			<div class="question-text">
+				{{question.text}}
+			</div>
+		</div>
+		<div class="answers">
+			<div class="title">Ответы ({{question.answers.count}})</div>
+			<ul>
+				{% for answer in question.answers.all %}
+					<li id="answer-{{answer.id}}" class="{% if answer.is_right_answer %}right-answer{% endif %}">
+					<img src="{% if answer.user.image %}{{answer.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
+					<div class="answer">
+						<div class="user">
+							<div>
+								<div>{{answer.user}}</div>
+								<div class="date">{{answer.date|date:'F d, G:m'}}</div>
+							</div>
+							{% if request.user == answer.user %}
+								{% url 'qna:delete_answer' question.id as url_delete_answer %}
+								<i class="fa fa-times" aria-hidden="true" onclick="delete_answer({{answer.id}}, '{{url_delete_answer}}')"></i>
+							{% elif request.user == question.user and not answer.is_right_answer %}
+								{% url 'qna:set_right_answer' question.id as url_set_right_answer %}
+								<i class="fa fa-check" aria-hidden="true" onclick="set_right_answer({{answer.id}}, '{{url_set_right_answer}}', false)"></i>
+							{% elif request.user == question.user %}
+								{% url 'qna:delete_right_answer' question.id as url_delete_right_answer %}
+								<i class="fa fa-check" aria-hidden="true" onclick="set_right_answer({{answer.id}}, '{{url_delete_right_answer}}', true)"></i>
+							{% endif %}
+						</div>
+						<div class="text">{{answer.text|safe}}</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div class="answer-form">
+			<div class="title">
+				Оставить свой ответ
+			</div>
+			<div class="answer-views">
+				<button type="button" class="active">Редактор</button>
+				<button type="button" id="answer-form-view">Просмотр</button>
+				<div></div>
+			</div>
+			<div class="form-view active">
+				<ul class="help-buttons">
+					<li>
+						<button id="help-btn-header" type="button" title="Заголовок"><i class="fa fa-header"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-paragraph" type="button" title="Перенос строки"><i class="fa fa-paragraph"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-code-small" type="button" title="Однострочный код"><i class="fa fa-code"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-code" type="button" title="Многострочный код"><i class="fa fa-list-alt"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-word" type="button" title="Выделение"><i class="fa fa-pencil"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-list-ul" type="button" title="Ненумерованный список"><i class="fa fa-list-ul"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-list-ol" type="button" title="Нумерованный список"><i class="fa fa-list-ol"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-link" type="button" title="Ссылка"><i class="fa fa-link"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-underline" type="button" title="Подчеркнутый текст"><i class="fa fa-underline"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-bold" type="button" title="Жирный текст"><i class="fa fa-bold"></i></button>
+					</li>
+					<li>
+						<button id="help-btn-italic" type="button" title="Текст курсивом"><i class="fa fa-italic"></i></button>
+					</li>
+				</ul>
+				<textarea></textarea>
+			</div>
+			<div class="answer-view">
+				j
+			</div>
+			<input type="button" value="Отправить" onclick="set_answer()">
+		</div>
+		</div>
+	</div>
+
+{% endblock %}

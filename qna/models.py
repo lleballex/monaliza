@@ -7,10 +7,11 @@ class Question(models.Model):
 	text = models.TextField()
 	date = models.DateTimeField(auto_now_add = True)
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'questions')
+	is_solved = models.BooleanField(default = False)
 
 class Answer(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'answers')
 	question = models.ForeignKey(Question, on_delete = models.CASCADE, related_name = 'answers')
 	text = models.TextField()
 	date = models.DateTimeField(auto_now_add = True)
-	right_answer = models.BooleanField(default = False)
+	is_right_answer = models.BooleanField(default = False)

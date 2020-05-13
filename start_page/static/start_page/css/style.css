@@ -10,3 +10,7 @@ body {
 .container {
 	margin: 0 70px;
 }
+
+.hidden-ad {
+	display: none;
+}
