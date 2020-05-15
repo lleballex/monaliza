@@ -159,7 +159,6 @@ $(function() {
 			textarea.setRangeText(new_val, textarea.selectionStart, textarea.selectionEnd, "end");
 		else 
 			textarea.value = textarea.value.substr(0, start) + new_vals[0] + textarea.value.substr(start, end - start) + new_vals[1] + textarea.value.substr(end, textarea.value.length - end);
-		textarea.focus();
 	});
 });
 
