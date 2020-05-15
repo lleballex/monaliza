@@ -29,7 +29,7 @@
 			if(text != '') {
 				$.ajax({
 					type: 'get',
-					url: "{% url 'it_articles:send_comment' article.id %}",
+					url: "{% url 'posts:send_comment' article.id %}",
 					data: {
 						'text': text,
 					}, 
@@ -89,7 +89,8 @@
 	<div class="article-content">
 		{{article.text|safe}}
 		<ul class="post-info">
-			<li id="like-{{article.id}}" class="post-like {% is_liked request.user article %}" onclick="like({{article.id}})">
+			{% url 'posts:like_article' as url_article_like %}
+			<li id="like-{{article.id}}" class="post-like {% is_liked request.user article %}" onclick="{% if not request.user.is_authenticated %}alert('Для того, чтобы ставить лайки, необходимо авторизоваться');{% else %}like({{article.id}}, '{{url_article_like}}', true){% endif %}">
 				<i class="fa {% is_liked_fa_heart request.user article %}" aria-hidden="true"></i> 
 				<span>{{article.likes}}</span>
 			</li>

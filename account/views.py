@@ -11,6 +11,10 @@ from .models import User, Notification, FavouriteArticle
 from it_articles.models import Article
 from .utils import *
 
+class Redirect(View):
+	def get(self, request):
+		return redirect(reverse('account:profile'))
+
 class UserRegisterView(CreateView):
 	model = User
 	form_class = UserRegisterForm
@@ -50,29 +54,6 @@ class ProfileView(View):
 		}
 		return render(request, 'account/profile.html', context)
 
-class MyArticlesView(MessagesMixin, View):
-	def get(self, request):
-		#self.set_success_msg('qwertyu')
-		#self.set_success_msg('sdfsdfsdf')
-		#self.set_error_msg('sdf')
-		likes = 0
-		all_articles = 0
-		views = 0
-		articles = Article.objects.filter(user = request.user)
-		for article in articles:
-			likes += article.likes
-			views += article.views
-			all_articles += 1
-
-		context = {
-			'articles': articles.order_by('-id'),
-			'likes': likes,
-			'all_articles': all_articles,
-			'views': views,
-		}
-
-		return render(request, 'account/my_articles.html', context)
-
 class SettingsView(MessagesMixin, View):
 	def get(self, request):
 		context = {
@@ -100,99 +81,6 @@ class SettingsView(MessagesMixin, View):
 					self.set_error_msg('This email is alreade taken')
 		return redirect(reverse('account:settings'))
 
-class NewArticleView(MessagesMixin, CreateView):
-	template_name = 'account/edit_article.html'
-	model = Article
-	form_class = NewArticleForm
-	success_url = reverse_lazy('account:my_articles')
-	success_msg = 'The article was successfuly created. Please wait for verification'
-
-	def post_text(self, text):
-		new_text = ''
-		python = False
-		small_code = False
-		post_word = False
-		link = [False, False]
-		header = [False, False]
-
-		for i in range(len(text)):
-			if text[i] == '`':
-				if not python:
-					python = True
-					new_text += '<pre class="code"><code class="language-python">'
-				else:
-					python = False
-					new_text += '</code></pre>'
-			elif text[i] == '~':
-				if not small_code:
-					small_code = True
-					new_text += '<span class="post-small-code">'
-				else:
-					small_code = False
-					new_text += '</span>'
-			elif text[i] == '|':
-				if not post_word:
-					post_word = True
-					new_text += '<span class="post-word">'
-				else:
-					post_word = False
-					new_text += '</span>'
-			elif text[i] == '^':
-				if not link[0]:
-					link[0] = True
-					link[1] = True
-					new_text += '<a href="'
-				elif link[1]:
-					new_text += '">'
-					link[1] = False
-				else:
-					link[0] = False
-					new_text += '</a>'
-			elif (not header[0] and (text[i] == '*' and i != len(text) - 1 and text[i + 1] == '*')) or (header[0] and not header[1] and text[i] == '*' and text[i - 1] == '*') or (header[0] and header[1] and text[i] == '*' and text[i - 1] == '*'):
-				print()
-				if not header[0]:
-					header[0] = True
-				elif header[0] and not header[1]:
-					header[1] = True
-					new_text += '<span class="post-header">'
-				else:
-					header[0] = False
-					header[1] = False
-					new_text += '</span>'
-			elif header[0] and header[1] and text[i] == '*' and text[i + 1] == '*':
-				pass
-			else:
-				new_text += text[i]
-
-		return new_text
-
-	def form_valid(self, form):
-		self.object = form.save(commit = False)
-		self.object.user = self.request.user
-		#self.object.text = self.post_text(self.object.text)
-		self.object.save()
-		notification = Notification()
-		notification.user = User.objects.get(is_superuser = True)
-		notification.title = 'Был создан новый пост'
-		notification.text = self.object.user.username + ' создал новый пост - <a href="' + self.object.get_absolute_url() + '">' + self.object.title + '</a>'
-		notification.save()
-		return super().form_valid(form)
-
-class EditArticleView(MessagesMixin, UpdateView):
-	model = Article
-	form_class = NewArticleForm
-	template_name = 'account/edit_article.html'
-	success_url = reverse_lazy('account:my_articles')
-	success_msg = 'The article was successfuly updated'
-
-	def get_context_data(self, **kwargs):
-		kwargs['update'] = True
-		return super().get_context_data(**kwargs)
-
-class DeleteArticleView(MessagesMixin, DeleteView):
-	success_msg = 'The article was successfuly deleted'
-	model = Article
-	success_url = reverse_lazy('account:my_articles')
 
 class NotificationsView(View):
 	def get(self, request):

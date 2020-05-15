@@ -49,7 +49,7 @@
 						<ul>
 							{% for question in user.questions.all|slice:':5' %}
 								<li>
-									<a href="{% url 'it_articles:detail' question.id %}">{{question.title}}</a>
+									<a href="{% url 'qna:detail' question.id %}">{{question.title}}</a>
 								</li>
 							{% endfor %}
 						</ul>
@@ -63,7 +63,7 @@
 						<ul>
 							{% for answer in user.answers.all|slice:':5' %}
 								<li>
-									<a href="{% url 'it_articles:detail' question.id %}">{{answer.question.title}}</a>
+									<a href="{% url 'qna:detail' answer.question.id %}">{{answer.question.title}}</a>
 								</li>
 							{% endfor %}
 						</ul>
@@ -76,9 +76,9 @@
 					<div class="user-content-title"><a href="f">Статьи</a></div>
 					{% if user.articles.count != 0 %}
 						<ul>
-							{% for article in user.articles.all %}
+							{% for article in user.articles.all|slice:':5' %}
 								<li>
-									<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
+									<a href="{% url 'posts:detail' article.id %}">{{article.title}}</a>
 								</li>
 							{% endfor %}
 						</ul>

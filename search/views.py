@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.views.generic import View
 
 from it_articles.models import Article
+from qna.models import Question
 from account.models import User
+from account.utils import AccessMixin
 
 class SearchView(View):
 	def get(self, request):
@@ -11,28 +13,32 @@ class SearchView(View):
 		sort = request.GET.get('sort')
 		template_name = 'search/search_result.html'
 
-		context = {'articles': None, 'model': model,}
+		context = {'articles': None, 'questions': None, 'users': None, 'model': model,}
 
 		if model == 'post':
 			if sort == 'time':
-				context['articles'] = Article.objects.filter(title__contains = text).order_by('-date')
+				context['articles'] = Article.objects.filter(title__icontains = text).order_by('-date')
 			elif sort == 'likes':
-				context['articles'] = Article.objects.filter(title__contains = text).order_by('-date').order_by('-likes') 
+				context['articles'] = Article.objects.filter(title__icontains = text).order_by('-date').order_by('-likes') 
 			elif sort == 'views':
-				context['articles'] = Article.objects.filter(title__contains = text).order_by('-date').order_by('-views')
+				context['articles'] = Article.objects.filter(title__icontains = text).order_by('-date').order_by('-views')
+		elif model == 'question':
+			context['questions'] = Question.objects.filter(title__icontains = text).order_by('-date')
 		elif model == 'user':
 			#if sort == 'time':
-			context['users'] = User.objects.filter(username__contains = text)
+			context['users'] = User.objects.filter(username__icontains = text)
 			#else:
 			#	#context['articles'] = User.objects.filter(username_contains = text).order_by('-likes') 
 
 		return render(request, template_name, context)
 
-class UserView(View):
+class UserView(AccessMixin, View):
 	def get(self, request, username):
 		try:
 			user = User.objects.get(username = username)
-			context = {'user': user}
-			return render(request, 'search/user_page.html', context)
-		except:
-			return render(request, 'wrapper.html')
+		except User.DoesNotExist:
+			self.message = 'Данного пользователя не существует'
+			return self.mixin_render()
+		context = {'user': user}
+		return render(request, 'search/user_page.html', context)
+		

@@ -1,45 +1,165 @@
 $(function() {
 	$('.help-buttons button').on('click', function() {
-		var prev_val = $('.new-article-form textarea').val();
 		var new_val = '';
+		var new_vals = [];
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		var selection = false;
+
+		if(start != end)
+			selection = true;
 
 		switch($(this).attr('id')) {
 		case 'help-btn-header':
-			new_val = '<span class="post-header">ЗАГОЛОВОК</span>';
+			if(selection){
+				new_vals[0] = '<span class="post-header">';
+				new_vals[1] = '</span>'
+			} else
+				new_val = '<span class="post-header">ЗАГОЛОВОК</span>';
 			break;
 		case 'help-btn-paragraph':
-			new_val = '<br>'
+			if(selection) {
+				new_vals[0] = '<br>';
+				new_vals[1] = '';
+			} else
+				new_val = '<br>'
 			break;
 		case 'help-btn-code-small':
-			new_val = '<span class="post-small-code">КОД</span>';
+			if(selection) {
+				new_vals[0] = '<span class="post-small-code">';
+				new_vals[1] = '</span>'
+			} else {
+				code = prompt('То, что вы считаете кодом:');
+				if(!code)
+					code = 'КОД';
+				new_val = '<span class="post-small-code">' + code + '</span>';
+			}
 			break;
 		case 'help-btn-code':
-			new_val = '<pre class="code"><code class="language-python">КОД</code></pre>';
+			if(selection) {
+				new_vals[0] = '<pre class="code"><code class="langauge-python">'
+				new_vals[1] = '</code></pre>';
+			} else 
+				new_val = '<pre class="code"><code class="language-python">КОД</code></pre>';
 			break;	
 		case 'help-btn-word':
-			new_val = '<span class="post-word">ВЫДЕЛЕНИЕ</span>';
+			if(selection) {
+				new_vals[0] = '<span class="post-word">';
+				new_vals[1] = '</span>'
+			} else {
+				word = prompt('Что вы хотите выделить?');
+				if(!word)
+					word = 'ВЫДЕЛЕНИЕ';
+				new_val = '<span class="post-word">' + word + '</span>';
+			}
 			break;
 		case 'help-btn-list-ul':
-			new_val = '<ul><li>ЗНАЧЕНИЕ 1</li><li>ЗНАЧЕНИЕ 2</li><li>ЗНАЧЕНИЕ 3</li></ul>'
+			if(selection) {
+				new_vals[0] = '<li>';
+				new_vals[1] = '</li>';
+			} else {
+				new_val = '<ul>'
+				var num = prompt('Сколько значений необходимо создать в списке?');
+				for(var i = 0; i < num; i++)
+					new_val += '<li>ЗНАЧЕНИЕ ' + (i + 1) + '</li>';
+				new_val += '</ul>';
+			}
 			break;
 		case 'help-btn-list-ol':
-			new_val = '<ol><li>ЗНАЧЕНИЕ 1</li><li>ЗНАЧЕНИЕ 2</li><li>ЗНАЧЕНИЕ 3</li></ol>'
+			if(selection) {
+				new_vals[0] = '<li>';
+				new_vals[1] = '</li>'
+			} else {
+				new_val = '<ol>'
+				var num = prompt('Сколько значений необходимо создать в списке?');
+				for(var i = 0; i < num; i++)
+					new_val += '<li>ЗНАЧЕНИЕ ' + (i + 1) + '</li>';
+				new_val += '</ol>';
+			}
 			break;
 		case 'help-btn-link':
-			new_val = '<a href="АДРЕС">ССЫЛКА</a>';
+			if(selection) {
+				var addr = prompt('Какой будет адресс у этой ссылки?');
+				if(!addr)
+					addr = 'АДРЕСС';
+				new_vals[0] = '<a href="' + addr + '">';
+				new_vals[1] = '</a>';
+			} else {
+				var addr = prompt('Адресс ссылки:');
+				var link = prompt('Сама ссылка:');
+				if(!addr)
+					addr = 'АДРЕСС';
+				if(!link)
+					link = 'ССЫЛКА';
+				new_val = '<a href="' + addr + '">' + link + '</a>';
+			}
+			break;
+		case 'help-btn-image':
+			if(selection) {
+				var width = prompt('Ширина в пикселях (чтобы не менять ширину, ничего не вводите):');
+				var height = prompt('Высота в пикселях (чтобы не менять высоту, ничего не вводите):');
+				new_vals[0] = '<img src="';
+				new_vals[1] = '"';
+				if(width)
+					new_vals[1] += ' width="' + width + 'px"';
+				if(height)
+					new_vals[1] += ' height="' + height + 'px"';
+				new_vals[1] += '>';
+			} else {
+				var src = prompt('Адрес картинки: ');
+				var width = prompt('Ширина в пикселях (чтобы не менять ширину, ничего не вводите):');
+				var height = prompt('Высота в пикселях (чтобы не менять высоту, ничего не вводите):');
+				if(!src)
+					src = 'АДРЕСС';
+				new_val = '<img src="' + src + '"';
+				if(width)
+					new_val += ' width="' + width + 'px"';
+				if(height)
+					new_val += ' height="' + height + 'px"';
+				new_val += '>'
+			}
 			break;
 		case 'help-btn-underline':
-			new_val = '<u>ПОДЧЕРКНУТЫЙ ТЕКСТ</u>'
+			if(selection) {
+				new_vals[0] = '<u>';
+				new_vals[1] = '</u>';
+			} else {
+				text = prompt('То, что вы хотите подчеркнуть: ');
+				if(!text)
+					text = 'ПОДЧЕРКНУТЫЙ ТЕКСТ';
+				new_val = '<u>' + text + '</u>';
+			}
 			break;
 		case 'help-btn-bold':
-			new_val = '<b>ЖИРНЫЙ ТЕКСТ</b>'
+			if(selection) {
+				new_vals[0] = '<b>';
+				new_vals[1] = '</b>';
+			} else {
+				text = prompt('Что будет жирным текстом? ');
+				if(!text)
+					text = 'ЖИРНЫЙ ТЕКСТ';
+				new_val = '<b>' + text + '</b>';
+			}
 			break;
 		case 'help-btn-italic':
-			new_val = '<i>КУРСИВ</i>'
+			if(selection) {
+				new_vals[0] = '<i>';
+				new_vals[1] = '</i>';
+			} else {
+				text = prompt('Что быдет записано курсивом?');
+				if(!text)
+					text = 'КУРСИВ';
+				new_val = '<i>' + text + '</i>'
+			}
 			break;
 		}
 
-		$('.new-article-form textarea').val(prev_val + new_val);
+		
+		if(!selection)
+			textarea.setRangeText(new_val, textarea.selectionStart, textarea.selectionEnd, "end");
+		else 
+			textarea.value = textarea.value.substr(0, start) + new_vals[0] + textarea.value.substr(start, end - start) + new_vals[1] + textarea.value.substr(end, textarea.value.length - end);
+		textarea.focus();
 	});
 });
 

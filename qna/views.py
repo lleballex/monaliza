@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, ListView, DetailView
-from django.urls import reverse
+from django.views.generic import View, ListView, DetailView, CreateView
+from django.urls import reverse, reverse_lazy
 from django.http.response import HttpResponse
 
 from .models import Question, Answer
+from .forms import QuestionForm
 from account.models import User
 
-def redirect_to_questions(request):
-	return redirect(reverse('qna:all_questions'))
+class Redirect(View):
+	def get(self, request):
+		return redirect(reverse('qna:all_questions'))
 
 class AllQuestionsView(ListView):
 	queryset = Question.objects.order_by('-date')
@@ -52,3 +54,17 @@ class DeleteRightAnswer(View):
 		answer.is_right_answer = False
 		answer.save()
 		return HttpResponse('200')
+
+class MyQuestionsView(View):
+	def get(self, request):
+		questions = Question.objects.filter(user = request.user)
+		content = {
+			'questions': questions,
+		}
+		return render(request, 'qna/my_questions.html', content)
+
+class NewQuestionView(CreateView):
+	model = Question
+	form_class = QuestionForm
+	template_name = 'qna/update.html'
+	success_url = reverse_lazy('qna:all_questions')

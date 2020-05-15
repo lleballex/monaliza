@@ -28,43 +28,58 @@
 						<a href="{% url 'account:register' %}">Регистрация</a>
 					</div>
 				{% else %}
-					{% url 'account:profile' as url_profile %}
-					{% url 'account:my_articles' as url_my_articles %}
-					{% url 'account:notifications' as url_notifications %}
-					<a class="main_menu user {% if url_profile in request.path or url_my_articles in request.path or url_notifications in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
-					<div class="sub_menu {% if url_profile in request.path or url_my_articles in request.path or url_notifications in request.path %}active{% endif %}">
+					{% url 'account:account' as url_account %}
+					<a class="main_menu user {% if url_account in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
+					<div class="sub_menu {% if url_account in request.path %}active{% endif %}">
 						{% url 'account:settings' as url_settings %}
 						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}"><i class="fa fa-cog"></i> Настройки</a>
-						<a href="{% url 'account:my_articles' %}" class="{% if url_my_articles in request.path %}active{% endif %}"><i class="fa fa-list"></i> Мои посты</a>
+						{% url 'account:notifications' as url_notifications %}
 						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}"><i class="fa fa-bell"></i> Уведомления</a>
 					</div>
 				{% endif %}
 			</li>
 			<li>
-				{% url 'it_articles:articles_all' as url_articles_all %}
-				<a class="main_menu {% if request.path == url_articles_all %}active{% endif %}" href="{% url 'it_articles:articles_all' %}">Посты</a>
-				<div class="sub_menu {% if request.path == url_articles_all %}active{% endif %}">
-					<a class="{% if request.path == url_articles_all and request.GET.language == 'cpp' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=cpp">C++</a>
-					<a class="{% if request.path == url_articles_all and request.GET.language == 'python' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=python">Python</a>
-					<a class="{% if request.path == url_articles_all and request.GET.language == 'web' %}active{% endif %}" href="{% url 'it_articles:articles_all' %}?language=web">Web</a>
+				{% url 'posts:posts' as url_posts %}
+				<a class="main_menu {% if url_posts in request.path %}active{% endif %}" href="{% url 'posts:all_posts' %}">Посты</a>
+				<div class="sub_menu {% if url_posts in request.path %}active{% endif %}">
+					{% url 'posts:my_posts' as url_myposts %}
+					<a href="{% url 'posts:my_posts' %}" class="{% if request.path == url_myposts %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои посты</a>
+					{% url 'posts:new_post' as url_newpost %}
+					<a href="{% url 'posts:new_post' %}" class="{% if request.path == url_newpost %}active{% endif %}"><i class="fa fa-plus-circle"></i> Новый пост</a>
 				</div>
 			</li>
 			<li>
-				{% url 'qna:all_questions' as url_qna %}
+				{% url 'qna:qna' as url_qna %}
 				<a href="{% url 'qna:all_questions' %}" class="main_menu {% if url_qna in request.path %}active{% endif %}">Q&A</a>
+				<div class="sub_menu {% if url_qna in request.path %}active{% endif %}">
+					{% url 'qna:new_question' as url_myquestions %}
+					<a href="{% url 'qna:new_question' %}" class="{% if request.path == url_myquestions %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои вопросы</a>
+					{% url 'qna:new_question' as url_newquestion %}
+					<a href="{% url 'qna:new_question' %}" class="{% if request.path == url_newquestion %}active{% endif %}"><i class="fa fa-plus-circle"></i> Задать вопрос</a>
+				</div>
 			</li>
 		</ul>
 		<div class="title"><a href="{% url 'start_page:main_view' %}">Monaliza</a></div>
 	</div>
-	<!--<form class="search" method="get" action="{% url 'it_articles:search' %}">
-		<input type="text" name="text">
-		<input type="submit" value="Search">
-	</form>-->
 
 	
 	<style>
+		.menu .fa {
+			font-size: 13px;
+			padding-right: 7px;
+		}
+
+		.menu a {
+			display: flex;
+			align-items: center;
+		}
+		
+		.menu .title a {
+			display: block;
+		}
+
 		.search-form {
-			margin-left: 175px;
+			margin-left: 185px;
 			margin-right: 15px;
 			display: flex;
 			padding: 9px 15px;

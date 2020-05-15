@@ -8,23 +8,24 @@ body {
 }
 
 .container {
-	margin: 15px 15px 15px 175px;
-	width: calc(100% - 190px);
+	margin: 15px 15px 15px 185px;
+	width: calc(100% - 200px);
 	background: #f5f5f5;
 }
 
 .content-container {
 	margin: 20px;
 	padding-bottom: 20px;
-	/*border: 1px solid green;*/
 	color: #000;
 }
 
 .search {
 	text-align: right;
-	width: calc(100% - 180px);
+	width: calc(100% - 190px);
 	margin-left: 165px;
 	display: flex;
+	border: 1px solid red;
+	padding-top: 30px;
 }
 
 .search input {

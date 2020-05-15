@@ -1,0 +1,23 @@
+{% extends 'wrapper.html' %}
+
+{% block top %}
+
+	<div class="top_intro">
+		{{request.user}} - вопросы
+	</div>
+
+{% endblock %}
+
+{% block content %}
+
+	{% for question in questions %}
+		{{question.title}}
+	{% empty %}
+		<div class="content-container">
+			<div class="information">
+				Вы еще на задали ни один вопрос, но можете <a href="{% url 'qna:new_question' %}">спросить</a> что-нибудь прямо сейчас
+			</div>
+		</div>
+	{% endfor %}
+
+{% endblock %}

@@ -16,7 +16,7 @@
 			{% else %}
 			$.ajax({
 				type: 'get',
-				url: "{% url 'it_articles:like_article' %}",
+				url: "{% url 'posts:like_article' %}",
 				data: {
 					'id': id,
 				},	
@@ -157,7 +157,7 @@
 						 - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
 					</div>
 					<div class="article-title">
-						<a href="{% url 'it_articles:detail' article.id %}">{{article.title}}</a>
+						<a href="{% url 'posts:detail' article.id %}">{{article.title}}</a>
 					</div>
 					<div class="article-text">
 						{% with article.text|safe as text  %}
@@ -165,7 +165,7 @@
 						{% endwith %}
 					</div>
 					<div class="article-bottom">
-						<a href="{% url 'it_articles:detail' article.id %}" class="btn-read-more">Читать далее</a>
+						<a href="{% url 'posts:detail' article.id %}" class="btn-read-more">Читать далее</a>
 						<ul class="article-info">
 							<li class="first-li like-article {% is_liked request.user article %}" id="like-{{article.id}}" onclick="like({{article.id}})">
 								<i class="fa {% is_liked_fa request.user article %}"></i><span>{{article.likes}}</span>
@@ -184,7 +184,7 @@
 			<a href="{% url 'search:user_page' user.username %}">{{user.username}}</a> <br>
 		{% endfor %}
 	{% else %}
-		<div class="information">Поиск по запросу "{{request.GET.text}}" не дал результатов</div>
+		<div class="information">Поиск по запросу "{{request.GET.text}}" не дал результатов. Попробуйте пискать в других категориях</div>
 	{% endif %}
 
 	</div>

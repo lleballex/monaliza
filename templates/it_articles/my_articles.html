@@ -30,6 +30,7 @@
 				<li><b>Всего постов</b>: {{all_articles}}</li>
 				<li><b>Всего лайков</b>: {{likes}}</li>
 				<li><b>Всего просмотров</b>: {{views}}</li>
+				<li><b>Всего комментариев</b>: {{comments}}</li>
 			</ul>
 			<a href="{% url 'posts:new_post' %}">Создать новый пост</a>
 		</div>
@@ -40,7 +41,9 @@
 				<th id="articles_id">ID</th>
 				<th id="articles_date">Дата</th>
 				<th id="articles_title">Название</th>
-				<th>Лайки</th>
+				<th><i class="fa fa-thumbs-o-up"></i></th>
+				<th><i class="fa fa-comment-o"></i></th>
+				<th><i class="fa fa-eye"></i></th>
 				<th id="articles_action">Действие</th>
 			</tr>
 		</thead>
@@ -49,22 +52,15 @@
 				<tr>
 					<td class="{% if not article.is_available %}not-available-article{% endif %}">{{article.id}}</td>
 					<td>{{article.date|date:'d.m.y - h:m'}}</td>
-					<td class="a">{% if article.is_available %}<a href="{% url 'it_articles:detail' article.id %}">{{article.title|truncatechars:20}}</a>{% else %}<span class="not-available-title">{{article.title|truncatechars:20}}</span>{% endif %}</td>
+					<td><a href="{% url 'posts:detail' article.id %}">{{article.title|truncatechars:30}}</a></td>
 					<td>{{article.likes}}</td>
-					<td class="a">
-						{% if article.is_available %}
+					<td>{{article.comments.count}}</td>
+					<td>{{article.views}}</td>
+					<td>
 						<form id="delete-form-{{article.id}}" action="{% url 'posts:delete_post' article.id %}" method="post">
 							{% csrf_token %}
-							<a href="{% url 'account:edit_article' article.id %}">Изменить</a>/
-							<a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
+							<a href="{% url 'posts:edit_post' article.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
 						</form>
-						{% else %}
-						<form id="delete-form-{{article.id}}" action="{% url 'posts:delete_post' article.id %}" method="post">
-							{% csrf_token %}
-							<span class="not-available-title">Изменить</span>/
-							<a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
-						</form>
-						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}
@@ -72,7 +68,7 @@
 	</table>	
 	{% else %}
 		<div class="information">
-			У вас пока нет постов. <a href="{% url 'account:new_article' %}">Создать первый?</a>
+			У вас пока нет постов. <a href="{% url 'posts:new_post' %}">Создать первый?</a>
 		</div>
 	{% endif %}
 	</div>
