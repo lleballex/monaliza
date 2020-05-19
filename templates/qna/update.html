@@ -1,5 +1,86 @@
+{% extends 'wrapper.html' %}
+
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'qna/css/style_update.css' %}">
+	<script>
+		$(function() {
+			$('.new-question-form input[name="tags"]').attr('type', 'hidden');
+
+			$('#tags-input-input').keyup(function(event) {
+				if(event.keyCode == 32) {
+					var tag = $(this).val().trim();
+					$(this).val('');
+					$(this).before('<span>' + tag + '<i class="fa fa-times"></i></span>');
+					var prev_tags = $('.new-question-form input[name="tags"]').val();
+					$('.new-question-form input[name="tags"]').val(prev_tags + tag + ' ');
+				} else if(event.keyCode == 8) {
+					var tag = $(this).val();
+					if(!tag) {
+						if($(this).siblings().length > 0) {
+							var prev_tag = $(this).prev().text();
+							$(this).val(prev_tag);
+							$(this).prev().remove();
+
+							var tags = $('.new-question-form input[name="tags"]').val().trim().split(' ');
+							$('.new-question-form input[name="tags"]').val('');
+							for(var i = 0; i < tags.length - 1; i++)
+								$('.new-question-form input[name="tags"]').val(tags[i] + ' ');
+						}
+					}
+				}
+			});
+
+			$('.tags-input').on('click', 'span i', function() {
+				$(this).parent().remove();
+			});
+
+			$('#tags-input-input').focus(function() {
+				$(this).parent().css('box-shadow', '0 0 1px 2px #95afc0');
+			});
+
+			$('#tags-input-input').blur(function() {
+				$(this).parent().css('box-shadow', 'none');
+			});
+
+			$('.new-question-form').submit(function() {
+				tags = '';
+			});
+		});
+	</script>
+
+{% endblock %}
+
+{% block title %}
+
+	{{request.user}} - создание нового вопроса / Monaliza
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">Новый вопрос</div>
+
+{% endblock %}
+
 {% block content %}
 
-	{{form}}
+	<div class="content-container">
+		<form class="new-question-form" method="post">
+			{% for field in form %}
+				{% csrf_token %}
+				{{field.label_tag}}
+				<div class="field-help-text">{{field.help_text|safe}}</div>
+				{{field}}
+			{% endfor %}
+			<div class="tags-input">
+				<input type="text" id="tags-input-input">
+			</div>
+			<input type="submit" value="{% if update %}Сохранить изменения{% else %}Задать вопрос{% endif %}">
+			<label id="question-view-label">Так будет выглядеть ваш пост:<input type="button" value="Обновить" onclick="text_transform()"></label>
+			<div id="question-view" class="question-content"></div>
+		</form>
+	</div>
 
 {% endblock %}

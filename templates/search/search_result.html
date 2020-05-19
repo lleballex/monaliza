@@ -179,6 +179,10 @@
 			{% endfor %}
 			</ul>
 		</div>
+	{% elif questions %}
+		{% for question in questions %}
+			{{question.title}} <br>
+		{% endfor %}
 	{% elif users %}
 		{% for user in users %}
 			<a href="{% url 'search:user_page' user.username %}">{{user.username}}</a> <br>

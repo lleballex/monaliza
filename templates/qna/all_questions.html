@@ -1,4 +1,5 @@
 {% extends 'wrapper.html' %}
+{% load qna_tags %}
 
 {% block title %}
 
@@ -14,8 +15,112 @@
 
 {% block content %}
 
+	<style>
+.questions-container {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}		
+
+.questions-container .question {
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ccc;
+	display: flex;
+	justify-content: space-between;
+}
+
+.questions-container .question-title a {
+	text-decoration: none;
+	color: #2980b9;
+	font-size: 20px;
+	font-weight: 500;
+	transition: .2s all;
+}
+
+.questions-container .question-title a:hover {
+	color: #12CBC4;
+}
+
+.question-tags {
+	margin: 7px 0;
+}
+
+.question-tags span {
+	background: #c7ecee;
+	border-radius: 3px;
+	padding: 3px 5px;
+	color: #0984e3;
+	font-size: 14px;
+	margin-right: 7px;
+	font-weight: 450;
+}
+
+.questions-container .question-user {
+	font-size: 16px;
+}
+
+.questions-container .question-user a {
+	text-decoration: none;
+	color: #27ae60;
+	font-weight: 500;
+	transition: .2s all;
+}
+
+.questions-container .question-user a:hover {
+	color: #2ecc71;
+}
+
+.questions-container .question-information {
+	list-style: none;
+	margin: 0;
+	display: flex;
+	align-self: flex-start;
+	border: 2px solid #8c7ae6;
+	border-radius: 5px;
+	padding: 13px calc(30px - 20px) 13px 30px;
+	font-weight: 500;
+	font-size: 17px;
+}
+
+.question-information.solved-question {
+	color: #155724;
+	background: #d4edda;
+}
+
+.questions-container .question-information li {
+	margin-right: 30px;
+}
+
+.questions-container .question-information li .fa {
+	padding-right: 5px;
+}
+	</style>
+
 	<div class="content-container">
-		fsofjsf
+		<ul class="questions-container">
+			{% for question in questions %}
+				<li class="question">
+					<div>
+						<div class="question-title">
+							<a href="{% url 'qna:detail' question.id %}">{{question.title}}</a>
+						</div>
+						<div class="question-tags">
+							{% for tag in question.tags|to_array %}
+								<span>{{tag}}</span>
+							{% endfor %} 
+						</div>
+						<div class="question-user">
+							<a href="{% url 'search:user_page' question.user.username %}">{{question.user}}</a> - 11:49
+						</div>
+					</div>
+					<ul class="question-information {% if question.is_solved %}solved-question{% endif %}">
+						<li><i class="fa fa-eye"></i> 1</li>
+						<li><i class="fa {% if question.is_solved %}fa-check{% else %}fa-comment-o{% endif %}"></i>{{question.answers.count}}</li>
+					</ul>
+				</li>
+			{% endfor %}
+		</ul>
 	</div>
 
 {% endblock %}

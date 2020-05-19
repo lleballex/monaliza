@@ -1,5 +1,11 @@
 {% extends 'wrapper.html' %}
 
+{% block title %}
+
+	Мои вопросы
+
+{% endblock %}
+
 {% block top %}
 
 	<div class="top_intro">
@@ -11,7 +17,7 @@
 {% block content %}
 
 	{% for question in questions %}
-		{{question.title}}
+		{{question.title}} <br>
 	{% empty %}
 		<div class="content-container">
 			<div class="information">

@@ -5,7 +5,7 @@ from django.http.response import HttpResponse
 
 from .models import Question, Answer
 from .forms import QuestionForm
-from account.models import User
+from account.models import User, Notification
 
 class Redirect(View):
 	def get(self, request):
@@ -23,11 +23,17 @@ class DetailQuestionView(DetailView):
 
 class SetAnswer(View):
 	def get(self, request, pk):
+		question = Question.objects.get(id = pk)
 		answer = Answer()
 		answer.user = request.user
-		answer.question = Question.objects.get(id = pk)
+		answer.question = question
 		answer.text = request.GET.get('text')
 		answer.save()
+		'''if answer.user == question.user and not question.is_solved:
+			question.is_solved = True
+			question.save()
+			answer.is_right_answer = True
+			answer.save()'''
 		return HttpResponse('200')
 
 class DeleteAnswer(View):
@@ -46,6 +52,8 @@ class SetRightAnswer(View):
 		right_answer = Answer.objects.get(id = request.GET.get('id'))
 		right_answer.is_right_answer = True
 		right_answer.save()
+		question.is_solved = True
+		question.save()
 		return HttpResponse('200')
 
 class DeleteRightAnswer(View):
@@ -68,3 +76,15 @@ class NewQuestionView(CreateView):
 	form_class = QuestionForm
 	template_name = 'qna/update.html'
 	success_url = reverse_lazy('qna:all_questions')
+
+	def form_valid(self, form):
+		self.object = form.save(commit = False)
+		self.object.user = self.request.user
+		#self.object.text = self.post_text(self.object.text)
+		self.object.save()
+		notification = Notification()
+		notification.user = User.objects.get(is_superuser = True)
+		notification.title = 'Был задан новый вопрос'
+		notification.text = self.object.user.username + ' задал вопрос - <a href="' + self.object.title + '">' + self.object.title + '</a>'
+		notification.save()
+		return super().form_valid(form)
