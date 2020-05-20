@@ -45,7 +45,7 @@ class UserLoginView(LoginView):
 	success_url = reverse_lazy('start_page:main_view')
 
 	def get_success_url(self):
-		return reverse_lazy('it_articles:articles_all')
+		return reverse_lazy('account:profile')
 
 class ProfileView(View):
 	def get(self, request):

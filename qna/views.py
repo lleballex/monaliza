@@ -21,6 +21,11 @@ class DetailQuestionView(DetailView):
 	template_name = 'qna/detail.html'
 	context_object_name = 'question'
 
+	def get_template_names(self):
+		self.object.views += 1
+		self.object.save()
+		return [self.template_name]
+
 class SetAnswer(View):
 	def get(self, request, pk):
 		question = Question.objects.get(id = pk)

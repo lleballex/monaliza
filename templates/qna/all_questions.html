@@ -115,7 +115,7 @@
 						</div>
 					</div>
 					<ul class="question-information {% if question.is_solved %}solved-question{% endif %}">
-						<li><i class="fa fa-eye"></i> 1</li>
+						<li><i class="fa fa-eye"></i> {{question.views}}</li>
 						<li><i class="fa {% if question.is_solved %}fa-check{% else %}fa-comment-o{% endif %}"></i>{{question.answers.count}}</li>
 					</ul>
 				</li>
