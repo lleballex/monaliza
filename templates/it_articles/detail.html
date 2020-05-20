@@ -70,6 +70,71 @@
 		}
 	</script>
 
+	<style>
+.post-settings {
+	position: absolute;
+	top: 2px;
+	right: 10px;
+	text-align: right;
+	overflow: hidden;
+}	
+
+.post-settings-btn {
+	font-size: 23px;
+}
+
+.post-settings-btn:hover {
+	cursor: pointer;
+}
+
+.post-settings-btn:hover ~ .post-settings-menu, .post-settings-menu:hover {
+	max-height: 100px;
+	opacity: 1;
+}
+
+.post-settings-menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	max-height: 0;
+	opacity: 0;
+	background: #fff;
+	border-radius: 5px;
+	padding: 2px 5px;
+	font-size: 14px;
+	border: 2px solid #227093;
+	transition: .3s all;
+}
+
+.post-settings-menu a {
+	text-decoration: none;
+	color: powderblue;
+	transition: .1s all;
+}
+
+.post-settings-menu a:hover {
+	color: #00a8ff;
+}
+
+.post-settings-menu input {
+	border: none;
+	background: none;
+	color: powderblue;
+	font-size: 15px;
+	padding: 0;
+}
+
+.post-settings-menu input:hover {
+	color: #00a8ff;
+	cursor: pointer;
+}
+
+.post-settings-menu input:focus {
+	outline: none;
+}
+
+</style>
+
 {% endblock %}
 
 {% block top %}
@@ -80,6 +145,18 @@
 			<a href="{% url 'search:user_page' article.user.username %}">{{article.user}}</a> - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
 		</div>
 	</div>
+	{% if request.user.is_superuser or request.user == article.user %}
+		<div class="post-settings">
+			<i class="fa fa-ellipsis-h post-settings-btn"></i>
+			<ul class="post-settings-menu">
+				<li><a href="{% url 'posts:edit_post' article.id %}">Редактировать</a></li>
+				<li><form action="{% url 'posts:delete_post' article.id %}" method="post">{% csrf_token %}<input type="submit" value="Удалить"></form></li>
+				{% if request.user.is_superuser %}
+				<li><a href="{% if article.is_available %}{% url 'posts:set_post_available' article.id %}?is_available=false{% else %}{% url 'posts:set_post_available' article.id %}?is_available=true{% endif %}">{% if article.is_available %}Не проверено{% else %}Проверено{% endif %}</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	{% endif %}
 
 {% endblock %}
 

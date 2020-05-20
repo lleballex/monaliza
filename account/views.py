@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, View, UpdateView, ListView, DeleteView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
@@ -46,6 +46,9 @@ class UserLoginView(LoginView):
 
 	def get_success_url(self):
 		return reverse_lazy('account:profile')
+
+class UserLogout(LogoutView):
+	next_page = reverse_lazy('posts:all_posts')
 
 class ProfileView(View):
 	def get(self, request):

@@ -36,6 +36,8 @@
 						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}"><i class="fa fa-cog"></i> Настройки</a>
 						{% url 'account:notifications' as url_notifications %}
 						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}"><i class="fa fa-bell"></i> Уведомления</a>
+						{% url 'account:logout' as url_logout %}
+						<a href="{% url 'account:logout' %}" class="{% if request.path == url_logout %}active{% endif %}"><i class="fa fa-sign-out"></i> Выйти</a>
 					</div>
 				{% endif %}
 			</li>
@@ -43,20 +45,24 @@
 				{% url 'posts:posts' as url_posts %}
 				<a class="main_menu {% if url_posts in request.path %}active{% endif %}" href="{% url 'posts:all_posts' %}">Посты</a>
 				<div class="sub_menu {% if url_posts in request.path %}active{% endif %}">
+					{% if request.user.is_authenticated %}
 					{% url 'posts:my_posts' as url_myposts %}
 					<a href="{% url 'posts:my_posts' %}" class="{% if request.path == url_myposts %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои посты</a>
 					{% url 'posts:new_post' as url_newpost %}
 					<a href="{% url 'posts:new_post' %}" class="{% if request.path == url_newpost %}active{% endif %}"><i class="fa fa-plus-circle"></i> Новый пост</a>
+					{% endif %}
 				</div>
 			</li>
 			<li>
 				{% url 'qna:qna' as url_qna %}
 				<a href="{% url 'qna:all_questions' %}" class="main_menu {% if url_qna in request.path %}active{% endif %}">Q&A</a>
 				<div class="sub_menu {% if url_qna in request.path %}active{% endif %}">
+					{% if request.user.is_authenticated %}
 					{% url 'qna:my_questions' as url_myquestions %}
 					<a href="{% url 'qna:my_questions' %}" class="{% if request.path == url_myquestions %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои вопросы</a>
 					{% url 'qna:new_question' as url_newquestion %}
 					<a href="{% url 'qna:new_question' %}" class="{% if request.path == url_newquestion %}active{% endif %}"><i class="fa fa-plus-circle"></i> Задать вопрос</a>
+					{% endif %}
 				</div>
 			</li>
 		</ul>
@@ -154,7 +160,7 @@
 		<input name="text" type="text" placeholder="Поиск по сайту" {% if request.GET.text != '' %}value="{{request.GET.text}}"{% endif %}>
 		<i class="fa fa-close" id="btn-2"></i>
 		<i class="fa fa-search" id="btn-1"></i>
-		<input name="model" type="hidden" value="{% if 'posts' in request.path %}post{% elif 'account' in request.path or 'search/users' in request.path %}user{% else %}{{request.GET.model}}{% endif %}">
+		<input name="model" type="hidden" value="{% if 'posts' in request.path %}post{% elif 'questions' in request.path %}question{% elif 'account' in request.path or 'search/users' in request.path %}user{% else %}{{request.GET.model}}{% endif %}">
 		<input type="hidden" name="sort" value="{% if not request.GET.sort %}likes{% else %}{{request.GET.sort}}{% endif %}">
 	</form>
 

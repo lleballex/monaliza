@@ -69,13 +69,30 @@ class DetailArticleView(AccessMixin, MessagesMixin, View):
 					self.set_error_msg('You writed the bad word')
 		return redirect(reverse('it_articles:detail', kwargs = {'pk': pk}))
 
+class SetPostAvailable(View):
+	def get(self, request, pk):
+		post = Article.objects.get(id = pk)
+		notification = Notification()
+		notification.user = post.user
+		notification.title = 'Проверка поста'
+		if request.GET.get('is_available') == 'true':
+			post.is_available = True
+			notification.text = 'Ваш пост <a href="' + post.get_absolute_url() + '">' + post.title + '</a> был успешно проверен. Теперь он доступен и для других пользователей'
+		elif request.GET.get('is_available') == 'false':
+			post.is_available = False
+			notification.text = 'Ваш пост <a href="' + post.get_absolute_url() + '">' + post.title + '</a> был заблокирован для других пользователей после проверки'
+		post.save()
+		notification.save()
+		print(post)
+		print(pk)
+		return redirect(reverse('posts:detail', kwargs = {'pk': pk}))
 
-class SearchView(View):
+'''class SearchView(View):
 	def get(self, request):
 		context = {
 			'articles': Article.objects.filter(title__contains = (request.GET.get('text')))
 		}
-		return render(request, 'it_articles/all_articles.html', context)
+		return render(request, 'it_articles/all_articles.html', context)'''
 
 class SendComment(View):
 	def get(self, request, pk):

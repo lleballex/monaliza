@@ -6,6 +6,7 @@ urlpatterns = [
 	path('', views.Redirect.as_view(), name = 'account'),
 	path('register/', views.UserRegisterView.as_view(), name = 'register'),
 	path('login/', views.UserLoginView.as_view(), name = 'login'),
+	path('logout/', views.UserLogout.as_view(), name = 'logout'),
 	path('profile/', views.ProfileView.as_view(), name = 'profile'),
 	path('profile/settings', views.SettingsView.as_view(), name = 'settings'),	
 	path('notifications/', views.NotificationsView.as_view(), name = 'notifications'),

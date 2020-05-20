@@ -1,5 +1,6 @@
 {% extends 'wrapper.html' %}
 {% load it_articles_tags %}
+{% load qna_tags %}
 
 {% block top %}
 
@@ -8,6 +9,11 @@
 {% endblock %}
 
 {% block staticfiles %}
+
+	{% load static %}
+	{% if questions %}
+		<link rel="stylesheet" href="{% static 'qna/css/style_questions.css' %}">
+	{% endif %}
 
 	<script>
 		function like(id) {
@@ -79,9 +85,8 @@
 		.search-sort {
 			display: flex;
 			text-align: center;
-			display: flex;
 			flex-direction: column;
-			margin-top: 10px;
+			margin: 30px 0 30px;
 		}
 
 		.search-sort ul {
@@ -180,9 +185,29 @@
 			</ul>
 		</div>
 	{% elif questions %}
-		{% for question in questions %}
-			{{question.title}} <br>
-		{% endfor %}
+		<ul class="questions-container">
+			{% for question in questions %}
+				<li class="question">
+					<div>
+						<div class="question-title">
+							<a href="{% url 'qna:detail' question.id %}">{{question.title}}</a>
+						</div>
+						<div class="question-tags">
+							{% for tag in question.tags|to_array %}
+								<span>{{tag}}</span>
+							{% endfor %} 
+						</div>
+						<div class="question-user">
+							<a href="{% url 'search:user_page' question.user.username %}">{{question.user}}</a> - 11:49
+						</div>
+					</div>
+					<ul class="question-information {% if question.is_solved %}solved-question{% endif %}">
+						<li><i class="fa fa-eye"></i> {{question.views}}</li>
+						<li><i class="fa {% if question.is_solved %}fa-check{% else %}fa-comment-o{% endif %}"></i>{{question.answers.count}}</li>
+					</ul>
+				</li>
+			{% endfor %}
+		</ul>
 	{% elif users %}
 		{% for user in users %}
 			<a href="{% url 'search:user_page' user.username %}">{{user.username}}</a> <br>
