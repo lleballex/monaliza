@@ -56,7 +56,90 @@
 			{% endfor %}
 			</ul>
 		</div>
+		<div class="posts-menu">
+			<ul>
+				{% for i in articles.count|get_menu:request.GET.page %}
+					<li {% if request.GET.page == i %}class="active"{% endif %}>
+						<a href="?page={{i}}">{{i}}</a>
+					</li>
+				{% endfor %}
+				<!--<li {% if request.GET.page == '1' or not request.GET.page %}class="active"{% endif %}><a href="?page=1">1</a></li>
+				<li {% if request.GET.page == '2' %}class="active"{% endif %}><a href="?page=2">2</a></li>
+				<li {% if request.GET.page == '3' %}class="active"{% endif %}><a href="?page=3">3</a></li>
+				<li {% if request.GET.page == '4' %}class="active"{% endif %}><a href="?page=4">4</a></li>
+				<li {% if request.GET.page == '5' %}class="active"{% endif %}><a href="?page=5">5</a></li>
+				<li {% if request.GET.page == '6' %}class="active"{% endif %}><a href="?page=6">6</a></li>
+				<li {% if request.GET.page == '7' %}class="active"{% endif %}><a href="?page=7">7</a></li>
+				<li {% if request.GET.page == '8' %}class="active"{% endif %}><a href="?page=8">8</a></li>
+				<li {% if request.GET.page == '9' %}class="active"{% endif %}><a href="?page=9">9</a></li>
+				<li {% if request.GET.page == '10' %}class="active"{% endif %}><a href="?page=10">10</a></li>-->
+			</ul>
+		</div>
 	</div>
 	</div>
+
+	<style>
+		
+.posts-menu {
+	display: flex;
+}
+
+.posts-menu ul {
+	list-style: none;
+	padding: 0;
+	margin: 0 auto;
+	display: flex;
+	text-align: center;
+	background: #444;
+}
+
+.posts-menu li {
+	width: 40px;
+	padding: 2px 0;
+	position: relative;
+	transition: .2s all;
+}
+
+.posts-menu li:hover {
+	background: #666;
+}
+
+.posts-menu li:after {
+	content: "";
+	position: absolute;
+	width: 1px;
+	height: calc(100% - 10px);
+	top: 5px;
+	left: -1px;
+	background: #bbb;
+	transition: .2s all;
+}
+
+.posts-menu li:hover:after, .posts-menu li:hover + li:after {
+	height: 100%;
+	top: 0;
+}
+
+.posts-menu li:nth-child(1):after {
+	display: none;
+}
+
+.posts-menu .active, .posts-menu .active:hover {
+	background: #0fbcf9;
+}
+
+.posts-menu .active:after, .posts-menu .active + li:after {
+	background: #fff;
+	height: 100%;
+	top: 0;
+}
+
+.posts-menu a {
+	text-decoration: none;
+	display: block;
+	color: #fff;
+}
+		
+	</style>
 
 {% endblock %}

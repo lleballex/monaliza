@@ -15,8 +15,18 @@ class Redirect(View):
 
 class AllArticlesView(View):
 	def get(self, request):
+		articles = Article.objects.filter(is_available = True).order_by('-date')
+		page = request.GET.get('page')
+		count = 10
+
+		if not page:
+			page = 1
+		else:
+			page = int(page)
+		articles = articles[(page - 1) * count:page * count]
+	
 		context = {
-			'articles': Article.objects.filter(is_available = True).order_by('-date'),
+			'articles': articles,
 			'articles_popular': Article.objects.order_by('-likes'),
 		}
 		return render(request, 'it_articles/all_articles.html', context)
