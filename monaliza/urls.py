@@ -41,4 +41,5 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name = 'robots.txt', content_type='text/plain')),
+    path('all_ad', TemplateView.as_view(template_name = 'all_ad.html')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -11,6 +11,7 @@ urlpatterns = [
 	path('send_comment/<int:pk>', views.SendComment.as_view(), name = 'send_comment'),
 	path('detail/<int:pk>/delete_comment/', views.DeleteComment.as_view(), name = 'delete_comment'),
 	path('like_article', views.LikeArticle.as_view(), name = 'like_article'),
+	path('favourite/', views.FavouritePostsView.as_view(), name = 'favourite'),
 	path('myposts/', views.MyArticlesView.as_view(), name = 'my_posts'),
 	path('myposts/new/', views.NewArticleView.as_view(), name = 'new_post'),
 	path('myposts/edit/<int:pk>/', views.EditArticleView.as_view(), name = 'edit_post'),

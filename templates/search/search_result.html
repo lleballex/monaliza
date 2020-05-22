@@ -130,6 +130,108 @@
 		.search-sort .active a {
 			color: #8e44ad;
 		}
+
+
+.user-list {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.user-list .user {
+	width: 100%;
+	display: flex;
+	margin-bottom: 20px;
+}
+
+.user-list .user img {
+	width: 40px;
+	height: 40px;
+	margin-right: 20px;
+}
+
+.user-list .user > a {
+	align-self: center;
+	text-decoration: none;
+	color: #5f27cd;
+	font-weight: 500;
+	position: relative;
+	z-index: 1;
+}
+
+.user-list .user > a:after {
+	content: "";
+	background: #feca57;
+	border-radius: 5px;
+	width: calc(100% + 10px);
+	height: calc(100% + 8px);
+	top: -4px;
+	left: -5px;
+	position: absolute;
+	opacity: 0;
+	transition: .3s all;
+	z-index: -1;
+}
+
+.user-list .user > a:hover:after {
+	opacity: 0.6;
+}
+
+.user .user-info {
+	display: flex;
+	list-style: none;
+	padding: 0 0 0 20px;
+	margin: 0;
+	height: 100%;
+	align-self: center;
+}
+
+.user-info li {
+	text-align: center;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	padding: 0 10px;
+	transition: .2s all;
+	position: relative;
+	z-index: 1;
+}
+
+.user-info li:nth-child(2) {
+	border: none;
+}
+
+.user-info li:after {
+	content: "";
+	background: #feca57;
+	border-radius: 5px;
+	width: calc(100% + 10px);
+	height: calc(100% + 8px);
+	top: -4px;
+	left: -5px;
+	position: absolute;
+	opacity: 0;
+	transition: .3s all;
+	z-index: -1;
+}
+
+.user-info li:hover {
+	cursor: pointer;
+}
+
+.user-info li:hover:after {
+	opacity: 0.6;
+}
+
+.user-info .number {
+	font-size: 19px;
+	padding-bottom: 1px;
+}
+
+.user-info .word {
+	font-size: 11px;
+}
 	</style>
 
 	<div class="search-filters">
@@ -209,9 +311,29 @@
 			{% endfor %}
 		</ul>
 	{% elif users %}
-		{% for user in users %}
-			<a href="{% url 'search:user_page' user.username %}">{{user.username}}</a> <br>
-		{% endfor %}
+		<ul class="user-list">
+			{% for user in users %}
+				<li class="user">
+					{% load static %}
+					<img src="{% static 'account/images/user_2.png' %}" alt="">
+					<a href="{% url 'search:user_page' user.username %}">{{user.username}}</a>
+					<ul class="user-info">
+						<li>
+							<div class="number">{{user.articles.count}}</div>
+							<div class="word">Посты</div>
+						</li>
+						<li>
+							<div class="number">{{user.questions.count}}</div>
+							<div class="word">Вопросы</div>
+						</li>
+						<li>
+							<div class="number">{{user.answers.count}}</div>
+							<div class="word">Ответы</div>
+						</li>
+					</ul>
+				</li>
+			{% endfor %}
+		</ul>
 	{% else %}
 		<div class="information">Поиск по запросу "{{request.GET.text}}" не дал результатов. Попробуйте пискать в других категориях</div>
 	{% endif %}

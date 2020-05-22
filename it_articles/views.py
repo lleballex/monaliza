@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import View, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http.response import HttpResponse
 import json
@@ -142,7 +142,17 @@ class LikeArticle(View):
 			article.save()
 			return HttpResponse('DOES_NOT_EXIST')
 
+class FavouritePostsView(ListView):
+	template_name = 'it_articles/all_articles.html'
+	context_object_name = 'articles'
 
+	def get_queryset(self):
+		fav_articles = FavouriteArticle.objects.filter(user = self.request.user)
+		articles = []
+		for article in fav_articles:
+			articles.append(article.article)
+		return articles
+		
 class MyArticlesView(AccessMixin, MessagesMixin, View):
 	def get(self, request):
 		if not request.user.is_authenticated:
