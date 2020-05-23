@@ -36,7 +36,8 @@ def is_liked_fa_heart(user, article):
 
 def get_menu(objects_count, page):
 	on_page = 10
-	objects_count = Article.objects.all().count()
+	#objects_count = Article.objects.all().count()
+	objects_count = int(objects_count)
 	menu = []
 	menu_count = 9
 	menu_max = ceil(objects_count / on_page)

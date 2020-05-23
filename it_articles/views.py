@@ -16,6 +16,7 @@ class Redirect(View):
 class AllArticlesView(View):
 	def get(self, request):
 		articles = Article.objects.filter(is_available = True).order_by('-date')
+		articles_count = articles.count()
 		page = request.GET.get('page')
 		count = 10
 
@@ -27,7 +28,8 @@ class AllArticlesView(View):
 	
 		context = {
 			'articles': articles,
-			'articles_popular': Article.objects.order_by('-likes'),
+			'articles_count': articles_count,
+			#'articles_popular': Article.objects.order_by('-likes'),
 		}
 		return render(request, 'it_articles/all_articles.html', context)
 

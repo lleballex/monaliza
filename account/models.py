@@ -60,7 +60,7 @@ class User(AbstractBaseUser):
 		return self.favourite_articles.all
 
 class Notification(models.Model):
-	user = models.ForeignKey(User, on_delete = models.CASCADE)
+	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'notifications')
 	title = models.CharField(max_length = 300)
 	text = models.CharField(max_length = 1000)
 	date = models.DateTimeField(auto_now = True)
