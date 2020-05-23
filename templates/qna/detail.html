@@ -73,16 +73,19 @@
 								<div>{{answer.user}}</div>
 								<div class="date">{{answer.date|date:'F d, G:m'}}</div>
 							</div>
-							{% if request.user == answer.user %}
-								{% url 'qna:delete_answer' question.id as url_delete_answer %}
-								<i class="fa fa-times" aria-hidden="true" onclick="delete_answer({{answer.id}}, '{{url_delete_answer}}')"></i>
-							{% elif request.user == question.user and not answer.is_right_answer %}
+							<div>
+							{% if request.user == question.user and not answer.is_right_answer %}
 								{% url 'qna:set_right_answer' question.id as url_set_right_answer %}
 								<i class="fa fa-check" aria-hidden="true" onclick="set_right_answer({{answer.id}}, '{{url_set_right_answer}}', false)"></i>
 							{% elif request.user == question.user %}
 								{% url 'qna:delete_right_answer' question.id as url_delete_right_answer %}
 								<i class="fa fa-check" aria-hidden="true" onclick="set_right_answer({{answer.id}}, '{{url_delete_right_answer}}', true)"></i>
 							{% endif %}
+							{% if request.user == answer.user %}
+								{% url 'qna:delete_answer' question.id as url_delete_answer %}
+								<i class="fa fa-times" aria-hidden="true" onclick="delete_answer({{answer.id}}, '{{url_delete_answer}}')" style="padding-left: 5px;"></i>
+							{% endif %}
+							</div>
 						</div>
 						<div class="text">{{answer.text|safe}}</div>
 					</div>

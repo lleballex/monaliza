@@ -33,7 +33,7 @@
 					<a class="main_menu user {% if url_account in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
 					<div class="sub_menu {% if url_account in request.path %}active{% endif %}">
 						{% url 'account:settings' as url_settings %}
-						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}"><i class="fa fa-cog"></i> Настройки</a>
+						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}">{% if request.user.notifications.count > 0 %}{{request.user.notifications.count}}{% endif %}<i class="fa fa-cog"></i> Настройки</a>
 						{% url 'account:notifications' as url_notifications %}
 						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}"><i class="fa fa-bell"></i> Уведомления</a>
 						{% url 'account:logout' as url_logout %}

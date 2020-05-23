@@ -58,11 +58,19 @@
 		</div>
 		<div class="posts-menu">
 			<ul>
-				{% for i in articles.count|get_menu:request.GET.page %}
+				{% if request.GET.page %}
+				{% for i in articles_count|get_menu:request.GET.page %}
 					<li {% if request.GET.page == i %}class="active"{% endif %}>
 						<a href="?page={{i}}">{{i}}</a>
 					</li>
 				{% endfor %}
+				{% else %}
+				{% for i in articles_count|get_menu:1 %}
+					<li {% if '1' == i %}class="active"{% endif %}>
+						<a href="?page={{i}}">{{i}}</a>
+					</li>
+				{% endfor %}
+				{% endif %}
 				<!--<li {% if request.GET.page == '1' or not request.GET.page %}class="active"{% endif %}><a href="?page=1">1</a></li>
 				<li {% if request.GET.page == '2' %}class="active"{% endif %}><a href="?page=2">2</a></li>
 				<li {% if request.GET.page == '3' %}class="active"{% endif %}><a href="?page=3">3</a></li>
