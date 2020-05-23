@@ -1,0 +1,1 @@
+web: gunicorn monaliza.wsgi --log-file -
