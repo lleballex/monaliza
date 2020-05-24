@@ -17,6 +17,9 @@
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
 	<script src="{% static 'it_articles/js/script_post_update.js' %}"></script>
 
+	<link rel="stylesheet" href="{% static 'style_modal.css' %}">
+	<script src="{% static 'script_modal.js' %}"></script>
+
 {% endblock %}
 
 {% block top %}
@@ -44,5 +47,28 @@
 		<div id="post-view" class="article-content"></div>
 	</div>
 	</form>
+
+	<div class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-main">
+					Введите данные
+				</div>
+				<button><i class="fa fa-times"></i></button>
+			</div>
+			<div class="modal-body">
+				<!--<label>Адрес страницы</label>
+				<input type="text">
+				<label>Ссылка</label>
+				<input type="text">-->
+			</div>
+			<div class="modal-footer">
+				<button class="modal-quit-btn">Отмена</button>
+				<button class="modal-save-btn">Продолжить</button>
+			</div>
+		</div>
+	</div>
+
+	<button class="start-modal-btn">start btn</button>
 
 {% endblock %}

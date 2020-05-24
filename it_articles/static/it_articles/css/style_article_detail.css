@@ -215,6 +215,13 @@
 	text-decoration: none;
 }
 
+.article-content img {
+	max-width: 100%;
+	margin: 10px auto;
+	border-radius: 5px;
+	display: block;
+}
+
 /*language-html*/
 .language-html {
 	color: #777;
