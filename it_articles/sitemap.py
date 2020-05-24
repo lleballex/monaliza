@@ -15,7 +15,7 @@ class ItArticlesIndexSitemap(Sitemap):
 	priority = 0.9
 
 	def items(self):
-		return['it_articles:articles_all', 'start_page:main_view']
+		return['posts:all_posts', 'start_page:main_view']
 
 	def location(self, item):
 		return reverse(item)

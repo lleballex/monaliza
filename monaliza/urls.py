@@ -20,13 +20,12 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
-from account.sitemap import UserSitemap, NotificationSitemap
+from account.sitemap import UserSitemap
 from it_articles.sitemap import ArticlesSitemap, ItArticlesIndexSitemap
 from account.sitemap import AccountIndexSitemap
 
 sitemaps = {
-    #'users': UserSitemap,
-    #'notifications': NotificationSitemap,
+    'users': UserSitemap,
     'articles': ArticlesSitemap,
     'it_articles_pages': ItArticlesIndexSitemap,
     'account_pages': AccountIndexSitemap,
