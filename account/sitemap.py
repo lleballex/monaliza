@@ -8,7 +8,7 @@ class AccountIndexSitemap(Sitemap):
 	priority = 0.9
 
 	def items(self):
-		return ['account:login', 'account:register', 'account:profile', 'account:settings', 'account:my_articles']
+		return ['account:login', 'account:register']
 
 	def location(self, item):
 		return reverse(item)
@@ -20,12 +20,5 @@ class UserSitemap(Sitemap):
 	def items(self):
 		return User.objects.all()
 
-	def lastmod(self, obj):
-		return obj.date_joined
-
-class NotificationSitemap(Sitemap):
-	changefreq = 'weekly'
-	priority = 0.9
-
-	def items(self):
-		return Notification.objects.all()
+	def location(self, item):
+		return reverse('search:user_page', kwargs = {'username': item.username})
