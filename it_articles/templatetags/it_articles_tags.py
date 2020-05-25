@@ -62,3 +62,18 @@ def get_menu(objects_count, page):
 
 register.filter('get_menu', get_menu)
 
+def without_html(text):
+	new_text = ''
+	tag = False
+	for i in text:
+		if i == '<' and not tag:
+			tag = True
+		if not tag:
+			new_text += i
+		elif i == '>' and tag:
+			tag = False
+
+	return new_text
+
+register.filter('without_html', without_html)
+

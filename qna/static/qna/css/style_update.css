@@ -40,6 +40,7 @@
 	background: #fff;
 	transition: .2s all;
 	align-items: center;
+	position: relative;
 }
 
 .tags-input span {
@@ -71,6 +72,41 @@
 	box-shadow: none;
 }
 
+#tags-input-input:focus + .tags-list {
+	max-height: 100px;
+	opacity: 1;
+}
+
+.tags-list:active {
+	max-height: 100px;
+	opacity: 1;
+}
+
+.tags-list {
+	display: flex;
+	position: absolute;  
+	flex-wrap: wrap;
+	overflow: auto;
+	left: 5px; 
+	top: 37px;
+	width: calc(100% - 26px);
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	background: #fff;
+	padding: 8px;
+	max-height: 0;
+	opacity: 0;
+	transition: .2s opacity;
+	transition: .2s max-height;
+}
+
+.tags-list span {
+	margin: 0 20px 0 0;
+}
+
+.tags-list span:hover {
+	cursor: pointer;
+}
 
 .new-question-form label {
 	color: #0abde3;

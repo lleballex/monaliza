@@ -30,12 +30,13 @@
 					</div>
 				{% else %}
 					{% url 'account:account' as url_account %}
-					<a class="main_menu user {% if url_account in request.path %}active{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
-					<div class="sub_menu {% if url_account in request.path %}active{% endif %}">
+					{% url 'account:profile' as url_profile %}
+					<a class="main_menu user {% if url_account in request.path %}active{% endif %} {% if url_profile == request.path %}active-2{% endif %}" href="{% url 'account:profile' %}">{{request.user}}</a>
+					<div class="sub_menu {% if url_account in request.path or request.user.get_nnc > 0 %}active{% endif %}">
 						{% url 'account:settings' as url_settings %}
-						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}">{% if request.user.notifications.count > 0 %}{{request.user.notifications.count}}{% endif %}<i class="fa fa-cog"></i> Настройки</a>
+						<a href="{% url 'account:settings' %}" class="{% if request.path == url_settings %}active{% endif %}"><i class="fa fa-cog"></i> Настройки</a>
 						{% url 'account:notifications' as url_notifications %}
-						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}"><i class="fa fa-bell"></i> Уведомления</a>
+						<a href="{% url 'account:notifications' %}" class="{% if request.path == url_notifications %}active{% endif %}"><i class="fa fa-bell"></i> Уведомления{% if request.user.get_nnc > 0 %}<span class="user-nnc">{{request.user.get_nnc}}</span>{% endif %}</a>
 						{% url 'account:logout' as url_logout %}
 						<a href="{% url 'account:logout' %}" class="{% if request.path == url_logout %}active{% endif %}"><i class="fa fa-sign-out"></i> Выйти</a>
 					</div>
@@ -43,7 +44,8 @@
 			</li>
 			<li>
 				{% url 'posts:posts' as url_posts %}
-				<a class="main_menu {% if url_posts in request.path %}active{% endif %}" href="{% url 'posts:all_posts' %}">Посты</a>
+				{% url 'posts:all_posts' as url_allposts %}
+				<a class="main_menu {% if url_posts in request.path %}active{% endif %} {% if url_allposts == request.path %}active-2{% endif %}" href="{% url 'posts:all_posts' %}">Посты</a>
 				<div class="sub_menu {% if url_posts in request.path %}active{% endif %}">
 					{% if request.user.is_authenticated %}
 					{% url 'posts:my_posts' as url_myposts %}
@@ -55,7 +57,8 @@
 			</li>
 			<li>
 				{% url 'qna:qna' as url_qna %}
-				<a href="{% url 'qna:all_questions' %}" class="main_menu {% if url_qna in request.path %}active{% endif %}">Q&A</a>
+				{% url 'qna:all_questions' as url_allquestions %}
+				<a href="{% url 'qna:all_questions' %}" class="main_menu {% if url_qna in request.path %}active{% endif %} {% if url_allquestions == request.path %}active-2{% endif %}">Q&A</a>
 				<div class="sub_menu {% if url_qna in request.path %}active{% endif %}">
 					{% if request.user.is_authenticated %}
 					{% url 'qna:my_questions' as url_myquestions %}
@@ -71,6 +74,18 @@
 
 	
 	<style>
+		.user-nnc {
+			position: absolute;
+			left: 12px;
+			top: 0;
+			color: #fff;
+			font-size: 13px;
+			border-radius: 3px;
+			border: 1px solid #333;
+			padding: 0 3px 1px 3px;
+			background: #e74c3c;
+		}
+
 		.menu .fa {
 			font-size: 13px;
 			padding-right: 7px;
