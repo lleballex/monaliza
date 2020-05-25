@@ -48,6 +48,7 @@
 	color: powderblue;
 	font-size: 15px;
 	padding: 10px;
+	position: relative;
 }
 
 .menu .main_menu:hover {
@@ -107,7 +108,7 @@
 	max-height: 300px;
 }
 
-.sub_menu.active .active:after {
+.sub_menu.active .active:after, .main_menu.active.active-2:after {
 	content: "";
 	position: absolute;
 	width: 16px;

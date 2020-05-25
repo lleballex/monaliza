@@ -23,3 +23,8 @@ class Answer(models.Model):
 	text = models.TextField()
 	date = models.DateTimeField(auto_now_add = True)
 	is_right_answer = models.BooleanField(default = False)
+
+class Tag(models.Model):
+	tag = models.CharField(max_length = 50)
+	posts = models.IntegerField(default = 0)
+	questions = models.IntegerField(default = 0)

@@ -3,7 +3,7 @@ from django.views.generic import View, ListView, DetailView, CreateView
 from django.urls import reverse, reverse_lazy
 from django.http.response import HttpResponse
 
-from .models import Question, Answer
+from .models import Question, Answer, Tag
 from .forms import QuestionForm
 from account.models import User, Notification
 
@@ -93,3 +93,7 @@ class NewQuestionView(CreateView):
 		notification.text = self.object.user.username + ' задал вопрос - <a href="' + self.object.title + '">' + self.object.title + '</a>'
 		notification.save()
 		return super().form_valid(form)
+
+	def get_context_data(self, **kwargs):
+		kwargs['tags'] = Tag.objects.all()
+		return super().get_context_data(**kwargs)

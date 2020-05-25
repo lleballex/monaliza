@@ -59,6 +59,9 @@ class User(AbstractBaseUser):
 	def get_favourites_articles(self):
 		return self.favourite_articles.all
 
+	def get_nnc(self):
+		return self.notifications.filter(new = True).count()
+
 class Notification(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'notifications')
 	title = models.CharField(max_length = 300)
