@@ -10,6 +10,7 @@
 
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'qna/css/style_detail.css' %}">
+	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
 	<script src="{% static 'qna/js/script_detail.js' %}"></script>
 
 {% endblock %}
@@ -58,7 +59,7 @@
 				</div>
 			</div>
 			<div class="question-text">
-				{{question.text}}
+				{{question.text|safe}}
 			</div>
 		</div>
 		<div class="answers">

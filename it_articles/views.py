@@ -6,6 +6,7 @@ import json
 
 from .models import Article, Comment
 from account.models import FavouriteArticle, Notification, User
+from qna.models import Tag
 from .forms import *
 from account.utils import MessagesMixin, AccessMixin
 
@@ -213,6 +214,10 @@ class NewArticleView(MessagesMixin, CreateView):
 		notification.save()
 		return super().form_valid(form)
 
+	def get_context_data(self, **kwargs):
+		kwargs['tags'] = Tag.objects.all()
+		return super().get_context_data(**kwargs)
+
 class EditArticleView(AccessMixin, MessagesMixin, UpdateView):
 	model = Article
 	form_class = NewArticleForm
@@ -238,6 +243,7 @@ class EditArticleView(AccessMixin, MessagesMixin, UpdateView):
 			self.status_code = 403
 			self.access_mixin = True
 		kwargs['update'] = True
+		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
 class DeleteArticleView(MessagesMixin, DeleteView):

@@ -18,7 +18,7 @@ from django.urls import path, include
 from monaliza import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 from account.sitemap import UserSitemap
 from it_articles.sitemap import ArticlesSitemap, ItArticlesIndexSitemap
@@ -38,6 +38,7 @@ urlpatterns = [
     path('posts/', include('it_articles.urls')),
     path('qna/', include('qna.urls')),
     path('search/', include('search.urls')),
+    path('favicon.ico/', RedirectView.as_view(url = '/static/favicon.ico', permanent = True), name = 'favicon'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name = 'robots.txt', content_type='text/plain')),
     path('all_ad', TemplateView.as_view(template_name = 'all_ad.html')),

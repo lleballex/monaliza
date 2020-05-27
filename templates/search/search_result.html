@@ -85,7 +85,7 @@
 		.search-sort {
 			display: flex;
 			text-align: center;
-			flex-direction: column;
+			justify-content: space-between;
 			margin: 30px 0 30px;
 		}
 
@@ -93,7 +93,6 @@
 			list-style: none;
 			padding: 0;
 			margin: 0;
-			align-self: flex-end;
 			display: flex;
 		}
 
@@ -245,6 +244,9 @@
 	<div class="content-container">
 		{% if articles or questions %}
 		<div class="search-sort">
+			<div class="tags">
+				hgello
+			</div>
 			<ul>
 				<li class="{% if request.GET.sort == 'views' or request.GET.sort == '' %}active{% endif %}" id="search-sort-btn-views"><a href="{% url 'search:search' %}?model={{request.GET.model}}&text={{request.GET.text}}&sort=views">по просмотрам</a></li>
 				<li class="{% if request.GET.sort == 'likes' or request.GET.sort == '' %}active{% endif %}"><a href="{% url 'search:search' %}?model={{request.GET.model}}&text={{request.GET.text}}&sort=likes">по лайкам</a></li>

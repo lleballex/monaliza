@@ -5,7 +5,7 @@ from it_articles.models import Article
 class NewArticleForm(forms.ModelForm):
 	class Meta:
 		model = Article
-		fields = ['title', 'text']
+		fields = ['title', 'text', 'tags']
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
