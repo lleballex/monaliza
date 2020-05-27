@@ -4,76 +4,95 @@
 
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'qna/css/style_update.css' %}">
+	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
+	<script src="{% static 'it_articles/js/script_post_update.js' %}"></script>
 	<script>
+		var all_tags = [];
+		{% for tag in tags %}
+			all_tags.push('{{tag.tag}}');
+		{% endfor %}
+
 		$(function() {
-			$('.new-question-form input[name="tags"]').attr('type', 'hidden');
+			$('input[name="tags"]').attr('type', 'hidden');
 
-			var all_tags = [];
-			{% for tag in tags %}
-				all_tags.push('{{tag.tag}}');
-			{% endfor %}
-
-			$('#tags-input-input').keyup(function(event) {
-				val = $('.tags-input input').val();
-				var new_tags = [];
-				for(var i = 0; i < all_tags.length; i++) {
-					if(all_tags[i].indexOf(val) >= 0)
-						new_tags.push(all_tags[i]);
-				}
-				if(new_tags != '') {
-					$('.tags-list').children().remove();
-					for(var i = 0; i < new_tags.length; i++)
-						$('.tags-list').append('<span>' + new_tags[i] + '</span>');
-				} 
-
+			$('#tags-input').keyup(function(event) {
 				if(event.keyCode == 32) {
 					var tag = $(this).val().trim();
-					$(this).val('');
-					$(this).before('<span>' + tag + '<i class="fa fa-times"></i></span>');
-					var prev_tags = $('.new-question-form input[name="tags"]').val();
-					$('.new-question-form input[name="tags"]').val(prev_tags + tag + ' ');
-				} else if(event.keyCode == 8) {
-					var tag = $(this).val();
-					if(!tag) {
-						if($(this).siblings().length > 0) {
-							var prev_tag = $(this).prev().text();
-							$(this).val(prev_tag);
-							$(this).prev().remove();
+					add_tag(tag);
+				} else 
+					set_tags_list();
+			});
 
-							var tags = $('.new-question-form input[name="tags"]').val().trim().split(' ');
-							$('.new-question-form input[name="tags"]').val('');
-							for(var i = 0; i < tags.length - 1; i++)
-								$('.new-question-form input[name="tags"]').val(tags[i] + ' ');
-						}
+			$('#tags-input').keydown(function(event) {
+				if(event.keyCode == 8) {
+					var val = $(this).val();
+					if(!val) {
+						delele_tag($(this).prev());
 					}
 				}
 			});
 
-			$('.tags-list').on('click', 'span', function() {
-				var tag = $(this).text();
-				$('#tags-input-input').val('');
-				$('#tags-input-input').focus();
-				$('#tags-input-input').before('<span>' + tag + '<i class="fa fa-times"></i></span>');
-				var prev_tags = $('.new-question-form input[name="tags"]').val();
-				$('.new-question-form input[name="tags"]').val(prev_tags + tag + ' ');
+			$('.tags').on('click', '.tag i', function() {
+				delele_tag($(this).parent());
 			});
 
-			$('.tags-input').on('click', 'span i', function() {
-				$(this).parent().remove();
+			$('.tags-list').on('click', '.tag', function() {
+				add_tag($(this).children().eq(0).text());
+				$('#tags-input').focus();
 			});
 
-			$('#tags-input-input').focus(function() {
+			$('#tags-input').focus(function() {
 				$(this).parent().css('box-shadow', '0 0 1px 2px #95afc0');
 			});
 
-			$('#tags-input-input').blur(function() {
+			$('#tags-input').blur(function() {
 				$(this).parent().css('box-shadow', 'none');
 			});
-
-			$('.new-question-form').submit(function() {
-				tags = '';
-			});
 		});
+
+		function add_tag(tag) {
+			var tags = $('input[name="tags"]').val().trim().split(' ');
+			if(!tag) {
+				$('#tags-input').val('');
+			} else if(tags.length < 5) {
+				var wr_tags = $('input[name="tags"]').val().trim().split(' ');
+				if(wr_tags.indexOf(tag) >= 0) {
+					alert('Такой тег вы уже вводили');
+					$('#tags-input').val($('#tags-input').val().trim());
+				} else if(all_tags.indexOf(tag) < 0) {
+					alert('Такого тега не существует');
+					$('#tags-input').val($('#tags-input').val().trim());
+				} else {
+					$('#tags-input').before('<span class="tag"><span class="tag-name">' + tag + '</span><i class="fa fa-times"></i></span>');
+					$('input[name="tags"]').val($('input[name="tags"]').val() + ' ' + tag);
+					$('#tags-input').val('');
+				}
+			} else {
+				alert('Вы ввели максимальное количество тегов');
+				$('#tags-input').val($('#tags-input').val().trim());
+			}
+			set_tags_list();
+		} 
+
+		function delele_tag(tag_obj) {
+			var tag = $(tag_obj).text();
+			$(tag_obj).remove();
+			$('#tags-input').val(tag + ' ');
+			var tags = $('input[name="tags"]').val().trim();
+			tags = tags.replace(tag, '').replace('  ', ' ');
+			$('input[name="tags"]').val(tags);
+			set_tags_list();
+		}
+
+		function set_tags_list() {
+			var tag = $('#tags-input').val().trim();
+			var wr_tags = $('input[name="tags"]').val().trim().split(' ');
+			$('.tags-list').children().remove();
+			for(var i = 0; i < all_tags.length; i++) {
+				if(all_tags[i].indexOf(tag) >= 0 && wr_tags.indexOf(all_tags[i]) < 0)
+					$('.tags-list').append('<span class="tag"><span class="tag-name">' + all_tags[i] + '</span></span>');
+			}
+		}
 	</script>
 
 {% endblock %}
@@ -100,16 +119,19 @@
 				<div class="field-help-text">{{field.help_text|safe}}</div>
 				{{field}}
 			{% endfor %}
-			<div class="tags-input">
-				<input type="text" id="tags-input-input" autocomplete="off">
+			<div class="tags">
+				<input type="text" id="tags-input" autocomplete="off">
 				<div class="tags-list">
 					{% for tag in tags %}
-						<span class="tag">{{tag.tag}}</span>
+						<span class="tag">
+							<span class="tag-name">{{tag.tag}}</span>
+							<span class="tag-count">{{tag.questions}}</span>
+						</span>
 					{% endfor %}
 				</div>
 			</div>
 			<input type="submit" value="{% if update %}Сохранить изменения{% else %}Задать вопрос{% endif %}">
-			<label id="question-view-label">Так будет выглядеть ваш пост:<input type="button" value="Обновить" onclick="text_transform()"></label>
+			<label id="question-view-label">Так будет выглядеть ваш вопрос:<input type="button" value="Обновить" onclick="text_transform_qna()"></label>
 			<div id="question-view" class="question-content"></div>
 		</form>
 	</div>

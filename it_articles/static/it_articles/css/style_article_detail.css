@@ -290,14 +290,22 @@
 
 
 /* language-python */
-.language-python .sign {
-	color: #e84118;
+.language-python .sign, .language-python .system {
+	color: #eb3b5a; /*ff4d4d*/
 }
 
 .language-python .function {
-	color: #07a;
+	color: #48dbfb;
 }
 
 .language-python .string {
-	color: #fbc531;
+	color: #ffdd59;
+}
+
+.language-python .class, .language-python .func-dec {
+	color: #adff2f;
+}
+
+.language-python .arg {
+	color: #ff9f43;
 }

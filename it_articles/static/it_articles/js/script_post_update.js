@@ -13,9 +13,15 @@ $(function() {
 		case 'help-btn-header':
 			if(selection){
 				new_vals[0] = '<span class="post-header">';
-				new_vals[1] = '</span>'
-			} else
-				new_val = '<span class="post-header">ЗАГОЛОВОК</span>';
+				new_vals[1] = '</span>';
+			} else {
+				var text = prompt('Какой будет заголовок?');
+				if(text == null)
+					return
+				if(!text)
+					text = 'ЗАГОЛОВОК'
+				new_val = '<span class="post-header">' + text + '</span>';
+			}
 			break;
 		case 'help-btn-paragraph':
 			if(selection) {
@@ -30,7 +36,9 @@ $(function() {
 				new_vals[1] = '</span>'
 			} else {
 				code = prompt('То, что вы считаете кодом:');
-				if(!code)
+				if(code == null)
+					return 
+				else if(!code)
 					code = 'КОД';
 				new_val = '<span class="post-small-code">' + code + '</span>';
 			}
@@ -48,7 +56,9 @@ $(function() {
 				new_vals[1] = '</span>'
 			} else {
 				word = prompt('Что вы хотите выделить?');
-				if(!word)
+				if(word == null)
+					return
+				else if(!word)
 					word = 'ВЫДЕЛЕНИЕ';
 				new_val = '<span class="post-word">' + word + '</span>';
 			}
@@ -60,6 +70,10 @@ $(function() {
 			} else {
 				new_val = '<ul>'
 				var num = prompt('Сколько значений необходимо создать в списке?');
+				if(num == null)
+					return
+				else if(!num)
+					num = 1
 				for(var i = 0; i < num; i++)
 					new_val += '<li>ЗНАЧЕНИЕ ' + (i + 1) + '</li>';
 				new_val += '</ul>';
@@ -72,6 +86,10 @@ $(function() {
 			} else {
 				new_val = '<ol>'
 				var num = prompt('Сколько значений необходимо создать в списке?');
+				if(num == null)
+					return
+				else if(!num)
+					num = 1
 				for(var i = 0; i < num; i++)
 					new_val += '<li>ЗНАЧЕНИЕ ' + (i + 1) + '</li>';
 				new_val += '</ol>';
@@ -80,13 +98,19 @@ $(function() {
 		case 'help-btn-link':
 			if(selection) {
 				var addr = prompt('Какой будет адресс у этой ссылки?');
-				if(!addr)
+				if(addr == null)
+					return
+				else if(!addr)
 					addr = 'АДРЕСС';
 				new_vals[0] = '<a href="' + addr + '">';
 				new_vals[1] = '</a>';
 			} else {
 				var addr = prompt('Адресс ссылки:');
+				if(addr == null)
+					return
 				var link = prompt('Сама ссылка:');
+				if(link == null)
+					return
 				if(!addr)
 					addr = 'АДРЕСС';
 				if(!link)
@@ -96,27 +120,15 @@ $(function() {
 			break;
 		case 'help-btn-image':
 			if(selection) {
-				var width = prompt('Ширина в пикселях (чтобы не менять ширину, ничего не вводите):');
-				var height = prompt('Высота в пикселях (чтобы не менять высоту, ничего не вводите):');
 				new_vals[0] = '<img src="';
-				new_vals[1] = '"';
-				if(width)
-					new_vals[1] += ' width="' + width + 'px"';
-				if(height)
-					new_vals[1] += ' height="' + height + 'px"';
-				new_vals[1] += '>';
+				new_vals[1] = '">';
 			} else {
 				var src = prompt('Адрес картинки: ');
-				var width = prompt('Ширина в пикселях (чтобы не менять ширину, ничего не вводите):');
-				var height = prompt('Высота в пикселях (чтобы не менять высоту, ничего не вводите):');
+				if(src == null)
+					return
 				if(!src)
 					src = 'АДРЕСС';
-				new_val = '<img src="' + src + '"';
-				if(width)
-					new_val += ' width="' + width + 'px"';
-				if(height)
-					new_val += ' height="' + height + 'px"';
-				new_val += '>'
+				new_val = '<img src="' + src + '">';
 			}
 			break;
 		case 'help-btn-underline':
@@ -125,6 +137,8 @@ $(function() {
 				new_vals[1] = '</u>';
 			} else {
 				text = prompt('То, что вы хотите подчеркнуть: ');
+				if(text == null)
+					return
 				if(!text)
 					text = 'ПОДЧЕРКНУТЫЙ ТЕКСТ';
 				new_val = '<u>' + text + '</u>';
@@ -136,6 +150,8 @@ $(function() {
 				new_vals[1] = '</b>';
 			} else {
 				text = prompt('Что будет жирным текстом? ');
+				if(text == null)
+					return
 				if(!text)
 					text = 'ЖИРНЫЙ ТЕКСТ';
 				new_val = '<b>' + text + '</b>';
@@ -147,6 +163,8 @@ $(function() {
 				new_vals[1] = '</i>';
 			} else {
 				text = prompt('Что быдет записано курсивом?');
+				if(text == null)
+					return
 				if(!text)
 					text = 'КУРСИВ';
 				new_val = '<i>' + text + '</i>'
@@ -155,8 +173,10 @@ $(function() {
 		}
 
 		
-		if(!selection)
-			textarea.setRangeText(new_val, textarea.selectionStart, textarea.selectionEnd, "end");
+		if(!selection) {
+			textarea.setRangeText(new_val, textarea.selectionStart, textarea.selectionEnd, 'select');
+			textarea.focus();
+		}
 		else 
 			textarea.value = textarea.value.substr(0, start) + new_vals[0] + textarea.value.substr(start, end - start) + new_vals[1] + textarea.value.substr(end, textarea.value.length - end);
 	});
@@ -166,6 +186,12 @@ function text_transform() {
 	var text = val = $('.new-article-form textarea').val();
 	$('#post-view').html(text);
 }
+
+function text_transform_qna() {
+	var text = val = $('.new-question-form textarea').val();
+	$('#question-view').html(text);
+}
+
 
 /*function new_text() {
 			var val = $('.new-article-form textarea').val();
