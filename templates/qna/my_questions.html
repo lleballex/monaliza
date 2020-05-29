@@ -6,6 +6,19 @@
 
 {% endblock %}
 
+{% block staticfiles %}
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'qna/css/style_my_questions.css' %}">
+	<script>
+		function delete_question(id) {
+			if(confirm('Вы уверены, что хотите удалить этот вопрос?')) 
+				$('#delete-form-' + id).submit();
+		}
+	</script>
+
+{% endblock %}
+
 {% block top %}
 
 	<div class="top_intro">
@@ -16,14 +29,49 @@
 
 {% block content %}
 
-	{% for question in questions %}
-		{{question.title}} <br>
-	{% empty %}
-		<div class="content-container">
-			<div class="information">
-				Вы еще на задали ни один вопрос, но можете <a href="{% url 'qna:new_question' %}">спросить</a> что-нибудь прямо сейчас
-			</div>
+	<div class="content-container">
+	{% if questions %}
+		<div class="my-questions">
+			<ul>
+				<li><b>Всего вопросов</b>: {{questions_count}}</li>
+				<li><b>Всего просмотров</b>: {{views_count}}</li>
+				<li><b>Всего ответов на ваши вопросы</b>: {{answers_count}}</li>
+			</ul>
+			<a href="{% url 'qna:new_question' %}">Задать новый вопрос</a>
 		</div>
-	{% endfor %}
+
+		<table class="all-questions">
+		<thead>
+			<tr>
+				<th>Дата</th>
+				<th>Заголовок</th>
+				<th><i class="fa fa-comment-o"></i></th>
+				<th><i class="fa fa-eye"></i></th>
+				<th id="articles_action">Действие</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for question in questions %}
+				<tr class="{% if question.is_solved %}active{% endif %}">
+					<td>{{question.date|date:'d.m.y - h:m'}}</td>
+					<td><a href="{% url 'qna:detail' question.id %}">{{question.title|truncatechars:30}}</a></td>
+					<td>{{question.answers.count}}</td>
+					<td>{{question.views}}</td>
+					<td>
+						<form id="delete-form-{{question.id}}" action="{% url 'qna:delete_question' question.id %}" method="post">
+							{% csrf_token %}
+							<a href="{% url 'qna:update_question' question.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_question({{question.id}})">Удалить</a>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>	
+	{% else %}
+		<div class="information">
+			У вас пока нет вопросов. <a href="{% url 'qna:new_question' %}">Задать первый?</a>
+		</div>
+	{% endif %}
+	</div>
 
 {% endblock %}

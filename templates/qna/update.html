@@ -14,6 +14,11 @@
 
 		$(function() {
 			$('input[name="tags"]').attr('type', 'hidden');
+			{% if update %}
+			var prev_tags = $('input[name="tags"]').val().trim().split(' ');
+			for(var i = 0; i < prev_tags.length; i++) 
+				$('#tags-input').before('<span class="tag"><span class="tag-name">' + prev_tags[i] + '</span><i class="fa fa-times"></i></span>');
+			{% endif %}
 
 			$('#tags-input').keyup(function(event) {
 				if(event.keyCode == 32) {
@@ -99,13 +104,21 @@
 
 {% block title %}
 
-	{{request.user}} - создание нового вопроса / Monaliza
+	{% if update %}
+		{{request.user}} - редактирование вопроса / Monaliza
+	{% else %}
+		{{request.user}} - создание нового вопроса / Monaliza
+	{% endif %}
 
 {% endblock %}
 
 {% block top %}
 
-	<div class="top_intro">Новый вопрос</div>
+	{% if update %}
+		<div class="top_intro">Редактирование вопроса</div>
+	{% else %}
+		<div class="top_intro">Новый вопрос</div>
+	{% endif %}
 
 {% endblock %}
 

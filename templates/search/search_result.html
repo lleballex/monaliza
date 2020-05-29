@@ -269,7 +269,7 @@
 						<a href="{% url 'posts:detail' article.id %}">{{article.title}}</a>
 					</div>
 					<div class="article-text">
-						{% with article.text|safe as text  %}
+						{% with article.text|without_html as text  %}
 							{{text|truncatechars:'900'}}
 						{% endwith %}
 					</div>

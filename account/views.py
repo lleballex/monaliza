@@ -6,10 +6,27 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.http.response import HttpResponse
 
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 from .forms import *
 from .models import User, Notification, FavouriteArticle
 from it_articles.models import Article
 from .utils import *
+
+def mail_send(mail_to, url):
+	email = 'lleballex@yandex.ru'
+	html = '<a href="' + url + '>' + url + '</a>'
+	message = MIMEMultipart()
+	message['Subject'] = 'Подтверждение аккаунта'
+	message['From'] = email
+	message['To'] = mail_to
+	message.attach(MIMEText(html, 'html'))
+	context = ssl.create_default_context()
+	with smtplib.SMTP_SSL('smtp.yandex.ru', 465, context = context) as server:
+		server.login(email, 'password')
+		server.sendmail(email, email, message.as_string())
 
 class Redirect(View):
 	def get(self, request):
@@ -45,6 +62,7 @@ class UserLoginView(LoginView):
 	success_url = reverse_lazy('start_page:main_view')
 
 	def get_success_url(self):
+		#mail_send('lleballex@yandex.ru', 'https://google.com')
 		return reverse_lazy('account:profile')
 
 class UserLogout(LogoutView):

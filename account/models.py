@@ -77,3 +77,7 @@ class FavouriteArticle(models.Model):
 	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'favourite_articles')
 	article = models.ForeignKey(Article, on_delete = models.CASCADE, related_name = 'favourite_articles')
 	date = models.DateTimeField(auto_now = True)
+
+class ActivateUrl(models.Model):
+	user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'activate_url')
+	token = models.CharField(max_length = 100)

@@ -17,11 +17,11 @@ class SearchView(View):
 
 		if model == 'post':
 			if sort == 'time':
-				context['articles'] = Article.objects.filter(title__icontains = text).order_by('-date')
+				context['articles'] = Article.objects.filter(title__icontains = text, is_available = True).order_by('-date')
 			elif sort == 'likes':
-				context['articles'] = Article.objects.filter(title__icontains = text).order_by('-date').order_by('-likes') 
+				context['articles'] = Article.objects.filter(title__icontains = text, is_available = True).order_by('-date').order_by('-likes') 
 			elif sort == 'views':
-				context['articles'] = Article.objects.filter(title__icontains = text).order_by('-date').order_by('-views')
+				context['articles'] = Article.objects.filter(title__icontains = text, is_available = True).order_by('-date').order_by('-views')
 		elif model == 'question':
 			context['questions'] = Question.objects.filter(title__icontains = text).order_by('-date')
 		elif model == 'user':

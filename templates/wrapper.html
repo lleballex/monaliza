@@ -76,7 +76,9 @@
 				<div class="sub_menu {% if url_qna in request.path %}active{% endif %}">
 					{% if request.user.is_authenticated %}
 					{% url 'qna:my_questions' as url_myquestions %}
-					<a href="{% url 'qna:my_questions' %}" class="{% if request.path == url_myquestions %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои вопросы</a>
+					<a href="{% url 'qna:my_questions' %}" class="{% if url_myquestions in request.path %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои вопросы</a>
+					{% url 'qna:my_answers' as url_myanswers %}
+					<a href="{% url 'qna:my_answers' %}" class="{% if url_myanswers in request.path %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои ответы</a>
 					{% url 'qna:new_question' as url_newquestion %}
 					<a href="{% url 'qna:new_question' %}" class="{% if request.path == url_newquestion %}active{% endif %}"><i class="fa fa-plus-circle"></i> Задать вопрос</a>
 					{% endif %}
