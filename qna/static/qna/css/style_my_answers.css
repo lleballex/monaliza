@@ -1,0 +1,78 @@
+.all-answers {
+	margin: auto;
+	border-spacing: 0;
+	color: #000;
+	font-size: 16px;
+}
+
+.all-answers thead {
+	background: #343a40;
+	color: #fff;
+}
+
+.all-answers th {
+	text-align: inherit;
+}
+
+.all-answers td, .all-answers th {
+	padding: 15px;
+	border-top: 1px solid #aaa;
+}
+
+.all-answers tbody td {
+	position: relative;
+}
+
+.all-answers tbody tr a {
+	text-decoration: none;
+	color: #8e44ad;
+	font-weight: 500;
+	position: relative;
+}
+
+.all-answers tbody tr a:hover {
+	text-decoration: underline;
+}
+
+.all-answers tbody .active > td {
+	background: #c3e6cb;
+}
+
+.form-slash {
+	padding: 0 7px;
+}
+
+
+/* my-answers */
+
+.my-answers {
+	color: #000;
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.my-answers ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.my-answers a {
+	padding: 20px 25px;
+	text-decoration: none;
+	border-radius: 5px;
+	background: #22a6b3;
+	color: #fff;
+	transition: .2s all;
+}
+
+.my-answers a:hover {
+	background: #7ed6df;
+}
+
+.my-answers a:focus {
+	box-shadow: 0 0 1px 3px #3dc1d3;
+}
+

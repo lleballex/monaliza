@@ -93,7 +93,7 @@
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 	background: #fff;
-	padding: 8px;
+	padding: 8px 8px 0 8px;
 	max-height: 0;
 	opacity: 0;
 	transition: .2s opacity;
@@ -101,7 +101,7 @@
 }
 
 .tags .tags-list .tag {
-	margin: 0 20px 0 0;
+	margin: 0 20px 8px 0;
 }
 
 .tags .tags-list .tag:hover {

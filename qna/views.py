@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, ListView, DetailView, CreateView
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 from django.http.response import HttpResponse
 
 from .models import Question, Answer, Tag
 from .forms import QuestionForm
 from account.models import User, Notification
+from account.utils import MessagesMixin
 
 class Redirect(View):
 	def get(self, request):
@@ -71,8 +72,18 @@ class DeleteRightAnswer(View):
 class MyQuestionsView(View):
 	def get(self, request):
 		questions = Question.objects.filter(user = request.user)
+		questions_count = 0
+		views_count = 0
+		answers_count = 0
+		for question in questions:
+			questions_count += 1
+			views_count += question.views
+			answers_count += question.answers.count()
 		content = {
 			'questions': questions,
+			'questions_count': questions_count,
+			'views_count': views_count,
+			'answers_count': answers_count,
 		}
 		return render(request, 'qna/my_questions.html', content)
 
@@ -97,3 +108,34 @@ class NewQuestionView(CreateView):
 	def get_context_data(self, **kwargs):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
+
+class QuestionUpdateView(UpdateView):
+	model = Question
+	form_class = QuestionForm
+	template_name = 'qna/update.html'
+	success_url = reverse_lazy('qna:my_questions')
+
+	def get_context_data(self, **kwargs):
+		kwargs['update'] = True
+		return super().get_context_data(**kwargs)
+
+class QuestionDelete(MessagesMixin, DeleteView):
+	model = Question
+	success_url = reverse_lazy('qna:my_questions')
+	success_msg = 'Ваш вопрос был успешно удален'
+
+class MyAnswersView(View):
+	def get(self, request):
+		answers = Answer.objects.filter(user = request.user)
+		answers_count = 0
+		right_answers_count = 0
+		for answer in answers:
+			answers_count += 1
+			if answer.is_right_answer:
+				right_answers_count += 1
+		content = {
+			'answers': answers,
+			'answers_count': answers_count,
+			'right_answers_count': right_answers_count,
+		}
+		return render(request, 'qna/my_answers.html', content)
