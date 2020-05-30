@@ -7,6 +7,12 @@
 
 {% endblock %}
 
+{% block description %}
+
+	Добро пожаловать на Monaliza! Это проект, где вы найдете интересные статьи об IT-сфере, узнаете много нового. Здесь вы сможете найти ответиты на свои вопросы, попросить помощи у других пользователей или же подсказать им решение их проблем. Удачи!
+
+{% endblock %}
+
 {% block title %}
 
 	Monaliza - регистрация
@@ -16,7 +22,7 @@
 {% block top %}
 
 	<form method="post" class="user-form">
-		<div class="title">Регистрация</div>
+		<div class="title">Sign up</div>
 		{% csrf_token %}
 		{% for field in form %}
 			{{field}}
