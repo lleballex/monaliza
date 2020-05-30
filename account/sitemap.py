@@ -4,7 +4,7 @@ from django.urls import reverse
 from .models import User, Notification
 
 class AccountIndexSitemap(Sitemap):
-	changefreq = 'daily'
+	changefreq = 'weekly'
 	priority = 0.9
 
 	def items(self):
@@ -14,7 +14,7 @@ class AccountIndexSitemap(Sitemap):
 		return reverse(item)
 
 class UserSitemap(Sitemap):
-	changefreq = 'weekly'
+	changefreq = 'daily'
 	priority = 0.9
 
 	def items(self):

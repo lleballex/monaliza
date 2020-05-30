@@ -11,7 +11,7 @@ class ArticlesSitemap(Sitemap):
 		return Article.objects.filter(is_available = True)
 
 class ItArticlesIndexSitemap(Sitemap):
-	changefreq = 'weekly'
+	changefreq = 'daily'
 	priority = 0.9
 
 	def items(self):

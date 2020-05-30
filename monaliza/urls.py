@@ -23,12 +23,15 @@ from django.views.generic import TemplateView, RedirectView
 from account.sitemap import UserSitemap
 from it_articles.sitemap import ArticlesSitemap, ItArticlesIndexSitemap
 from account.sitemap import AccountIndexSitemap
+from qna.sitemap import QuestionsSitemap#, AnswersSitemap
 
 sitemaps = {
     'users': UserSitemap,
     'articles': ArticlesSitemap,
     'it_articles_pages': ItArticlesIndexSitemap,
     'account_pages': AccountIndexSitemap,
+    'questions': QuestionsSitemap,
+    #'answers': AnswersSitemap,
 }
 
 urlpatterns = [
