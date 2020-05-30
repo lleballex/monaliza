@@ -140,7 +140,7 @@ class LikeArticle(View):
 		id = request.GET.get('id')
 		try:
 			article = Article.objects.get(id = id)
-			fav_article = FavouriteArticle.objects.get(article = article)
+			fav_article = FavouriteArticle.objects.get(article = article, user = request.user)
 			fav_article.delete()
 			article.likes -= 1
 			article.save()

@@ -52,7 +52,7 @@
 				<tr>
 					<td class="{% if not article.is_available %}not-available-article{% endif %}">{{article.id}}</td>
 					<td>{{article.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="{% url 'posts:detail' article.id %}">{{article.title|truncatechars:30}}</a></td>
+					<td><a href="{% url 'posts:detail' article.id %}" title="{{article.title}}">{{article.title|truncatechars:30}}</a></td>
 					<td>{{article.likes}}</td>
 					<td>{{article.comments.count}}</td>
 					<td>{{article.views}}</td>

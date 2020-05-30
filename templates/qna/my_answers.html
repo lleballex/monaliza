@@ -51,8 +51,8 @@
 			{% for answer in answers %}
 				<tr class="{% if answer.is_right_answer %}active{% endif %}">
 					<td>{{answer.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="">{{answer.question.title|truncatechars:30}}</a></td>
-					<td><a href="">{{answer.text|truncatechars:30}}</a></td>
+					<td><a href="{% url 'qna:detail' answer.question.id %}" title="{{answer.question.title}}">{{answer.question.title|truncatechars:30}}</a></td>
+					<td><a href="" title="{{answer.text|truncatechars:50}}">{{answer.text|truncatechars:30}}</a></td>
 					<td>
 						<form id="delete-form-{{answer.id}}" action="" method="post">
 							{% csrf_token %}
