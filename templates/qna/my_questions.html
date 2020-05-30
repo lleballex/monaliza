@@ -54,7 +54,7 @@
 			{% for question in questions %}
 				<tr class="{% if question.is_solved %}active{% endif %}">
 					<td>{{question.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="{% url 'qna:detail' question.id %}">{{question.title|truncatechars:30}}</a></td>
+					<td><a href="{% url 'qna:detail' question.id %}" title="{{question.title}}">{{question.title|truncatechars:30}}</a></td>
 					<td>{{question.answers.count}}</td>
 					<td>{{question.views}}</td>
 					<td>
