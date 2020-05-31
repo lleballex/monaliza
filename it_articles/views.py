@@ -38,7 +38,7 @@ class DetailArticleView(AccessMixin, MessagesMixin, View):
 	def get(self, request, pk):
 		try:
 			article = Article.objects.get(id = pk)
-		except self.model.DoesNotExist:
+		except Article.DoesNotExist:
 			self.message = 'К сожалению, данного поста не существует'
 			return self.mixin_render()
 
