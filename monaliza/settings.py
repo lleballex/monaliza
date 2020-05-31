@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'it_articles',
     'qna',
     'search',
+    'support',
 ]
 
 MIDDLEWARE = [
