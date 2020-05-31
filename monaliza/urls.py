@@ -41,6 +41,8 @@ urlpatterns = [
     path('posts/', include('it_articles.urls')),
     path('qna/', include('qna.urls')),
     path('search/', include('search.urls')),
+    path('support/', include('support.urls')),
+    path('about/', TemplateView.as_view(template_name = 'about.html'), name = 'about'),
     path('favicon.ico/', RedirectView.as_view(url = '/static/favicon.ico', permanent = True), name = 'favicon'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name = 'robots.txt', content_type='text/plain')),

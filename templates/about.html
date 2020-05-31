@@ -1,0 +1,97 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+
+	О проекте / Monaliza
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">О проекте</div>
+
+{% endblock %}
+
+{% block content %}
+
+	<style>
+.about {
+	color: #111;
+	line-height: 30px;
+}
+
+.connection .title {
+	text-align: center;
+	font-weight: 500;
+	font-size: 20px;
+	margin-top: 15px;
+}
+
+.connection > ul {
+	list-style: none;
+	padding: 0;
+	margin: 15px 30px 0 30px;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.connection > ul a {
+	text-decoration: none;
+	color: #8e44ad;
+	font-weight: 500;
+}
+
+.connection > ul > li {
+	text-align: center;
+	font-size: 14px;
+}
+
+.connection > ul .fa {
+	font-size: 40px;
+	display: block;
+	margin-bottom: 5px;
+	transition: .2s all;
+}
+
+.connection > ul .fa:hover {
+	color: #444;
+}
+
+.connection > ul .fa-telegram {
+	color: #0088cc;
+}
+
+.connection > ul .fa-vk {
+	color: #597da3;
+}
+
+.connection > ul .fa-support {
+	color: #f39c12;
+}
+	</style>
+
+	<div class="content-container">
+		<div class="about">
+			Добро пожаловать на Monaliza! Это проект, где вы найдете интересные статьи об IT-сфере, узнаете много нового. Здесь, в разделе Q&A, вы сможете найти ответиты на свои вопросы, попросить помощи у других пользователей или же подсказать им решение их проблем. Удачи! <br>
+			Если у вас есть какие-либо проблемы, пожелания или предложения, обращайтесь ко мне по указанным ссылкам. <br>
+			<div class="connection">
+				<div class="title">Связь со мной:</div>
+				<ul>
+					<li>
+						<a href="https://tlgg.ru/lleballex" target="_blank"><i class="fa fa-telegram"></i></a>
+						<a href="https://tlgg.ru/lleballex" target="_blank">Телеграм</a>
+					</li>
+					<li>
+						<a href="https://vk.com/lleballex" target="_blank"><i class="fa fa-vk"></i></a>
+						<a href="https://vk.com/lleballex" target="_blank">ВКонтакте</a>
+					</li>
+					<!--<li>
+						<a href="f" target="_blank"><i class="fa fa-support" aria-hidden="true"></i></a>
+						<a href="f" target="_blank">Поддержка</a>
+					</li>-->
+				</ul>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
