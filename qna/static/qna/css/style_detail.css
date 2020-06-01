@@ -20,45 +20,44 @@
 	align-items: center;
 }
 
-		.question-title .user-img {
-			min-width: 35px;
-			min-height: 35px;
-			max-width: 35px;
-			max-height: 35px;
-			border-radius: 3px;
-		}
+.question-title .user-img {
+	min-width: 35px;
+	min-height: 35px;
+	max-width: 35px;
+	max-height: 35px;
+	border-radius: 3px;
+}
 
-		.question-title .user-a {
-			text-decoration: none;
-			font-weight: 600;
-			padding-left: 10px;
-			padding-right: 4px;
-			color: #05c46b;
-			transition: .2s all;
-		}
-			
-		.question-title .user-a:hover {
-			color: #0be881;
-		}
-
-		.question-title .question-views  {
-			position: relative;
-		}
+.question-title .user-a {
+	text-decoration: none;
+	font-weight: 600;
+	padding-left: 10px;
+	padding-right: 4px;
+	color: #05c46b;
+	transition: .2s all;
+}
 		
-		.question-title .question-views i {
-			padding-right: 10px;
-		}
+.question-title .user-a:hover {
+	color: #0be881;
+}
 
-		.question-title .question-views:after {
-			content: "";
-			position: absolute;
-			height: 100%;
-			width: 1px;
-			background: #bbb;
-			left: -20px;
-			top: 0;
-		}
+.question-title .question-views  {
+	position: relative;
+}
+		
+.question-title .question-views i {
+	padding-right: 10px;
+}
 
+.question-title .question-views:after {
+	content: "";
+	position: absolute;
+	height: 100%;
+	width: 1px;
+	background: #bbb;
+	left: -20px;
+	top: 0;
+}
 
 .answers {
 	display: flex;
@@ -259,12 +258,18 @@
 }
 
 .answer-view {
-	border: 1px solid red;
+	background: #fff;
 	height: 300px;
 	overflow: auto;
+	padding: 10px;
+	font-size: 16px;
+	line-height: 23px;
+	border-left: 1px solid #bbb;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb
 }
 
-.answer-form input[type="button"] {
+.answer-form input[type="submit"] {
 	margin-top: 15px;
 	background: #00a8ff;
 	padding: 10px 15px;
@@ -273,17 +278,17 @@
 	color: #fff;
 	font-weight: 500;
 	font-size: 15px;
-	width: 150px;
+	max-width: 250px;
 	text-align: center;
 	transition: .2s all;
 }
 
-.answer-form input[type="button"]:hover {
+.answer-form input[type="submit"]:hover {
 	background: #0097e6;
 	cursor: pointer;
 }
 
-.answer-form input[type="button"]:focus {
+.answer-form input[type="submit"]:focus {
 	outline: none;
 	box-shadow: 0 0 1px 4px #48dbfb;
 }

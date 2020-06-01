@@ -95,8 +95,16 @@
 			</ul>
 		</div>
 		<div class="answer-form">
+			{% if update %}
+				<form method="post">
+				{% csrf_token %}
+			{% endif %}
 			<div class="title">
-				Оставить свой ответ
+				{% if update %}
+					Редактировать свой ответ
+				{% else %}
+					Оставить свой ответ
+				{% endif %}
 			</div>
 			<div class="answer-views">
 				<button type="button" class="active">Редактор</button>
@@ -139,12 +147,14 @@
 						<button id="help-btn-italic" type="button" title="Текст курсивом"><i class="fa fa-italic"></i></button>
 					</li>
 				</ul>
-				<textarea></textarea>
+				<textarea name="answer-text">{% if update %}{{answer.text}}{% endif %}</textarea>
 			</div>
 			<div class="answer-view">
-				j
 			</div>
-			<input type="button" value="Отправить" onclick="set_answer()">
+			<input type="submit" value="{% if update %}Сохранить изменения{% else %}Отправить{% endif %}" {% if not update %}onclick="set_answer()"{% endif %}>
+			{% if update %}
+				</form>
+			{% endif %}
 		</div>
 		</div>
 	</div>

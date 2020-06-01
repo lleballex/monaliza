@@ -139,3 +139,24 @@ class MyAnswersView(View):
 			'right_answers_count': right_answers_count,
 		}
 		return render(request, 'qna/my_answers.html', content)
+
+class UpdateAnswerView(View):
+	def get(self, request, pk):
+		answer = Answer.objects.get(id = pk)
+		context = {
+			'answer': answer,
+			'question': answer.question,
+			'update': True,
+		}
+		return render(request, 'qna/detail.html', context)
+
+	def post(self, request, pk):
+		answer = Answer.objects.get(id = pk)
+		answer.text = request.POST.get('answer-text')
+		answer.save()
+		return redirect(reverse('qna:my_answers'))
+
+class DeleteAnswerView(DeleteView):
+	model = Answer
+	success_url = reverse_lazy('qna:my_answers')
+	success_msg = 'Ваш ответ был успешно удален'
