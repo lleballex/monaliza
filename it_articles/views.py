@@ -10,11 +10,11 @@ from qna.models import Tag
 from .forms import *
 from account.utils import MessagesMixin, AccessMixin
 
-class Redirect(View):
+class Index(View):
 	def get(self, request):
-		return redirect(reverse('it_articles:all_posts'))
+		return redirect(reverse('posts:all'))
 
-class AllArticlesView(View):
+class PostsView(View):
 	def get(self, request):
 		articles = Article.objects.filter(is_available = True).order_by('-date')
 		articles_count = articles.count()
@@ -32,9 +32,9 @@ class AllArticlesView(View):
 			'articles_count': articles_count,
 			#'articles_popular': Article.objects.order_by('-likes'),
 		}
-		return render(request, 'it_articles/all_articles.html', context)
+		return render(request, 'posts/all.html', context)
 
-class DetailArticleView(AccessMixin, MessagesMixin, View):
+class PostView(AccessMixin, MessagesMixin, View):
 	def get(self, request, pk):
 		try:
 			article = Article.objects.get(id = pk)
@@ -57,7 +57,7 @@ class DetailArticleView(AccessMixin, MessagesMixin, View):
 			'article': article,
 			'comments': article.comments.order_by('-date'),
 		}
-		return render(request, 'it_articles/detail.html', context)
+		return render(request, 'posts/detail.html', context)
 
 	def post(self, request, pk):
 		text = request.POST.get('text')
@@ -80,9 +80,9 @@ class DetailArticleView(AccessMixin, MessagesMixin, View):
 				comment.save()
 			else:
 					self.set_error_msg('You writed the bad word')
-		return redirect(reverse('it_articles:detail', kwargs = {'pk': pk}))
+		return redirect(reverse('posts:detail', kwargs = {'pk': pk}))
 
-class SetPostAvailable(View):
+class PostAvailable(View):
 	def get(self, request, pk):
 		post = Article.objects.get(id = pk)
 		notification = Notification()
@@ -100,73 +100,7 @@ class SetPostAvailable(View):
 		print(pk)
 		return redirect(reverse('posts:detail', kwargs = {'pk': pk}))
 
-'''class SearchView(View):
-	def get(self, request):
-		context = {
-			'articles': Article.objects.filter(title__contains = (request.GET.get('text')))
-		}
-		return render(request, 'it_articles/all_articles.html', context)'''
-
-class SendComment(View):
-	def get(self, request, pk):
-		text = request.GET.get('text')
-		comment = Comment()
-		comment.user = request.user
-		comment.text = text
-		comment.article = Article.objects.get(id = pk)
-		comment.save()
-		context = {
-			'text': comment.text,
-			'date': comment.date.strftime('%B %d, %H:%M'),
-			'id': comment.id,
-		}
-		return HttpResponse(json.dumps(context))
-
-class DeleteComment(View):
-	def get(self, request, pk):
-		id = request.GET.get('id')
-		try:
-			comment = Comment.objects.get(id = id)
-			if comment.user == request.user:
-				comment.delete()
-				return HttpResponse('200')
-			else:
-				return HttpResponse('403')
-		except:
-			return HttpResponse('404')
-
-class LikeArticle(View):
-	def get(self, request):
-		id = request.GET.get('id')
-		try:
-			article = Article.objects.get(id = id)
-			fav_article = FavouriteArticle.objects.get(article = article, user = request.user)
-			fav_article.delete()
-			article.likes -= 1
-			article.save()
-			return HttpResponse('EXIST')
-		except:
-			article = Article.objects.get(id = id)
-			fav_article = FavouriteArticle()
-			fav_article.article = article
-			fav_article.user = request.user
-			fav_article.save()
-			article.likes += 1
-			article.save()
-			return HttpResponse('DOES_NOT_EXIST')
-
-class FavouritePostsView(ListView):
-	template_name = 'it_articles/all_articles.html'
-	context_object_name = 'articles'
-
-	def get_queryset(self):
-		fav_articles = FavouriteArticle.objects.filter(user = self.request.user)
-		articles = []
-		for article in fav_articles:
-			articles.append(article.article)
-		return articles
-		
-class MyArticlesView(AccessMixin, MessagesMixin, View):
+class MyPostsView(AccessMixin, MessagesMixin, View):
 	def get(self, request):
 		if not request.user.is_authenticated:
 			self.status_code = 403
@@ -192,14 +126,24 @@ class MyArticlesView(AccessMixin, MessagesMixin, View):
 			'comments': comments
 		}
 
-		return render(request, 'it_articles/my_articles.html', context)
+		return render(request, 'posts/my.html', context)
 
+class FavouritePostsView(ListView):
+	template_name = 'posts/all.html'
+	context_object_name = 'articles'
 
-class NewArticleView(MessagesMixin, CreateView):
-	template_name = 'it_articles/edit_article.html'
+	def get_queryset(self):
+		fav_articles = FavouriteArticle.objects.filter(user = self.request.user)
+		articles = []
+		for article in fav_articles:
+			articles.append(article.article)
+		return articles
+
+class NewPostView(MessagesMixin, CreateView):
+	template_name = 'posts/update.html'
 	model = Article
 	form_class = NewArticleForm
-	success_url = reverse_lazy('posts:my_posts')
+	success_url = reverse_lazy('posts:my')
 	success_msg = 'The article was successfuly created. Please wait for verification'
 
 	def form_valid(self, form):
@@ -218,11 +162,11 @@ class NewArticleView(MessagesMixin, CreateView):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
-class EditArticleView(AccessMixin, MessagesMixin, UpdateView):
+class UpdatePostView(AccessMixin, MessagesMixin, UpdateView):
 	model = Article
 	form_class = NewArticleForm
-	template_name = 'it_articles/edit_article.html'
-	success_url = reverse_lazy('posts:my_posts')
+	template_name = 'posts/update.html'
+	success_url = reverse_lazy('posts:my')
 	success_msg = 'The article was successfuly updated'
 	
 	def get(self, request, *args, **kwargs):
@@ -246,7 +190,7 @@ class EditArticleView(AccessMixin, MessagesMixin, UpdateView):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
-class DeleteArticleView(MessagesMixin, DeleteView):
+class DeletePost(MessagesMixin, DeleteView):
 	success_msg = 'The article was successfuly deleted'
 	model = Article
-	success_url = reverse_lazy('posts:my_posts')
+	success_url = reverse_lazy('posts:my')

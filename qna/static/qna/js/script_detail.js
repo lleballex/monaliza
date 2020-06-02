@@ -63,7 +63,28 @@ $(function() {
 	});
 });
 
-function delete_answer(id, url) {
+function answer_send(url, question_id) {
+	var text = $('.form-view textarea').val();
+	$.ajax({
+		type: 'get',
+		url: url,
+		data: {
+			'question_id': question_id,
+			'text': text,
+		},
+		dataType: 'json',
+		success: function(data) {
+			alert('Ваш ответ успешно отправлен');
+			$('.form-view textarea').val('');
+			$('.answers ul').append(data.html);
+		},
+		error: function(data) {
+			alert('Ошибка ' + data.status + ' (' + data.statusText + ') - ' + data.responseJSON.info);
+		}
+	});
+}
+
+function answer_delete(url, id) {
 	if(confirm('Вы уверены, что хотите удалить свой ответ?'))
 		$.ajax({
 			type: 'get',
@@ -71,17 +92,17 @@ function delete_answer(id, url) {
 			data: {
 				'id': id,
 			},
-			dataType: 'text',
+			dataType: 'json',
 			success: function(data) {
-				if(data == '200')
-					$('#answer-' + id).remove();
-				else
-					alert(data)
+				$('#answer-' + id).remove();
 			},
+			error: function(data) {
+				alert('Ошибка ' + data.status + ' (' + data.statusText + ') - ' + data.responseJSON.info);
+			}
 		});	
 }
 
-function set_right_answer(id, url, is_right_answer) {
+function answer_right(url, id, is_right_answer) {
 	if(confirm(is_right_answer ? 'Вы уверены, что этот ответ не является решением вопроса?' : 'Вы точно хотите отметить этот ответ решением вопроса?'))
 		$.ajax({
 			type: 'get',
@@ -89,19 +110,28 @@ function set_right_answer(id, url, is_right_answer) {
 			data: {
 				'id': id,
 			},
-			dataType: 'text',
+			dataType: 'json',
 			success: function(data) {
-				if(data == '200') {
-					for(var i = 0; i < $('.answers ul').children().length; i++) 
-						if($('.answers ul').children().eq(i).attr('class') == 'right-answer')
-							$('.answers ul').children().eq(i).toggleClass('right-answer');
-					
-					if(!is_right_answer)
-						$('#answer-' + id).addClass('right-answer');
-					else
-						$('#answer-' + id).removeClass('right-answer');
-				} else
-					alert(data);
+				if(!is_right_answer) {
+					var parameters = $('.right-answer .user i').eq(0).attr('onclick');
+					if(parameters) {
+						parameters = parameters.split(',');
+						parameters[2] = ' false)';
+						$('.right-answer .user i').eq(0).attr('onclick', parameters.toString());
+						$('.answers .right-answer').removeClass('right-answer');
+					}
+					parameters = $('#answer-' + id + ' .user i').eq(0).attr('onclick').split(',');
+					parameters[2] = ' true)';
+					$('#answer-' + id + ' .user i').eq(0).attr('onclick', parameters.toString());	
+				} else {
+					var parameters = $('#answer-' + id + ' .user i').eq(0).attr('onclick').split(',');
+					parameters[2] = ' false)';
+					$('#answer-' + id + ' .user i').eq(0).attr('onclick', parameters.toString());	
+				}
+				$('#answer-' + id).toggleClass('right-answer');
 			},
+			error: function(data) {
+				alert('Ошибка ' + data.status + ' (' + data.statusText + ') - ' + data.responseJSON.info);
+			}
 		});	
 }

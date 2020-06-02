@@ -1,12 +1,8 @@
 {% extends 'wrapper.html' %}
 
-{% block top %}
+{% load static %}
 
-	<div class="top_intro">{{question.title}}</div>
-
-{% endblock %}
-
-{% block staticfiles %}
+{% block head %}
 
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'qna/css/style_detail.css' %}">
@@ -15,35 +11,23 @@
 
 {% endblock %}
 
+{% block top %}
+
+	<div class="top_intro">{{question.title}}</div>
+
+{% endblock %}
+
 {% block content %}
 
-<script>
-
-	function set_answer() {
-		var text = $('.form-view textarea').val();
-		$.ajax({
-			type: 'get',
-			url: "{% url 'qna:set_answer' question.id %}",
-			data: {
-				'text': text,
-			},
-			dataType: 'text',
-			success: function(data) {
-				if(data == '200') {
-					alert('Ваш ответ успешно отправлен');
-					$('.form-view textarea').val('');
-					{% load static %}
-					$('.answers ul').append('<li id="answer-{{comment.id}}" class="{% if answer.is_right_answer %}right-answer{% endif %}"><img src="' + "{% if user.image %}{{user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" + ' alt="Mona.png"><div class="answer"><div class="user"><div><div>{{request.user}}</div><div class="date">1111111</div></div>{% if request.user == question.user and question.user != request.user%}Отметить ответ решением{% elif request.user == question.user and question.user != request.user %}Это не решение{% elif answer.user == request.user %}<i class="fa fa-times" aria-hidden="true" onclick="delete_comment({{comment.id}})"></i>{% endif %}</div><div class="text">' + text + '</div></div></li>');
-				} else 
-					alert(data);
-			},
-		});
-	}
-
-</script>
+	{% url 'qna:answer_send' as url_answer_send %}
+	{% url 'qna:answer_delete' as url_answer_delete %}
+	{% url 'qna:answer_right' as url_answer_right %}
 
 	<div class="content-container">
 		<div style="height: 300px; margin-left: 30px;">
+			<div style="margin-bottom: 20px;">
+				<iframe data-aa="1394416" src="//ad.a-ads.com/1394416?size=250x250" scrolling="no" style="width:250px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+			</div>
 			<iframe data-aa="1394416" src="//ad.a-ads.com/1394416?size=250x250" scrolling="no" style="width:250px; height:250px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
 		</div>
 		<div class="question-container">
@@ -75,16 +59,11 @@
 								<div class="date">{{answer.date|date:'F d, G:m'}}</div>
 							</div>
 							<div>
-							{% if request.user == question.user and not answer.is_right_answer %}
-								{% url 'qna:set_right_answer' question.id as url_set_right_answer %}
-								<i class="fa fa-check" aria-hidden="true" onclick="set_right_answer({{answer.id}}, '{{url_set_right_answer}}', false)"></i>
-							{% elif request.user == question.user %}
-								{% url 'qna:delete_right_answer' question.id as url_delete_right_answer %}
-								<i class="fa fa-check" aria-hidden="true" onclick="set_right_answer({{answer.id}}, '{{url_delete_right_answer}}', true)"></i>
+							{% if request.user == question.user %}
+								<i class="fa fa-check" aria-hidden="true" onclick="answer_right('{{url_answer_right}}', {{answer.id}} , {{answer.is_right_answer|lower}})"></i>
 							{% endif %}
 							{% if request.user == answer.user %}
-								{% url 'qna:delete_answer' question.id as url_delete_answer %}
-								<i class="fa fa-times" aria-hidden="true" onclick="delete_answer({{answer.id}}, '{{url_delete_answer}}')" style="padding-left: 5px;"></i>
+								<i class="fa fa-times" aria-hidden="true" onclick="answer_delete('{{url_answer_delete}}', {{answer.id}})" style="padding-left: 5px;"></i>
 							{% endif %}
 							</div>
 						</div>
@@ -151,7 +130,7 @@
 			</div>
 			<div class="answer-view">
 			</div>
-			<input type="submit" value="{% if update %}Сохранить изменения{% else %}Отправить{% endif %}" {% if not update %}onclick="set_answer()"{% endif %}>
+			<input type="submit" value="{% if update %}Сохранить изменения{% else %}Отправить{% endif %}" {% if not update %}onclick="{% if request.user.is_authenticated %}answer_send('{{url_answer_send}}', {{question.id}}, ){% else %}alert('Для этого необходимо авторизоваться'){% endif %}"{% endif %}>
 			{% if update %}
 				</form>
 			{% endif %}

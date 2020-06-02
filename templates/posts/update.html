@@ -1,5 +1,7 @@
 {% extends 'wrapper.html' %}
 
+{% load static %}
+
 {% block title %}
 
 	{% if update %}
@@ -10,9 +12,8 @@
 
 {% endblock %}
 
-{% block staticfiles %}
+{% block head %}
 
-	{% load static %}
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_new.css' %}">
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
 	<script src="{% static 'it_articles/js/script_post_update.js' %}"></script>

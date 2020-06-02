@@ -51,10 +51,10 @@
 			{% for answer in answers %}
 				<tr class="{% if answer.is_right_answer %}active{% endif %}">
 					<td>{{answer.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="{% url 'qna:detail' answer.question.id %}" title="{{answer.question.title}}">{{answer.question.title|truncatechars:30}}</a></td>
-					<td><a href="{% url 'qna:detail' answer.question.id %}" title="{{answer.text|truncatechars:50}}">{{answer.text|truncatechars:30}}</a></td>
+					<td><a href="{% url 'qna:question' answer.question.id %}" title="{{answer.question.title}}">{{answer.question.title|truncatechars:30}}</a></td>
+					<td><a href="{% url 'qna:question' answer.question.id %}" title="{{answer.text|truncatechars:50}}">{{answer.text|truncatechars:30}}</a></td>
 					<td>
-						<form id="delete-form-{{answer.id}}" method="post" action="{% url 'qna:answer_delete' answer.id %}">
+						<form id="delete-form-{{answer.id}}" method="post" action="{% url 'qna:answer_delete' %}?id={{answer.id}}">
 							{% csrf_token %}
 							<a href="{% url 'qna:answer_update' answer.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_answer({{answer.id}})">Удалить</a>
 						</form>
@@ -65,7 +65,7 @@
 	</table>	
 	{% else %}
 		<div class="information">
-			Вы еще не ответили ни на один вопрос <a href="{% url 'qna:all_questions' %}">Посмотреть вопросы?</a>
+			Вы еще не ответили ни на один вопрос <a href="{% url 'qna:questions' %}">Посмотреть вопросы?</a>
 		</div>
 	{% endif %}
 	</div>

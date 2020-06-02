@@ -1,20 +1,21 @@
 from django.urls import path
-from . import views
+from . import views, ajax
 
 app_name = 'qna'
 urlpatterns = [
-	path('', views.Redirect.as_view(), name = 'qna'),
-	path('questions/all/', views.AllQuestionsView.as_view(), name = 'all_questions'),
-	path('questions/detail/<int:pk>/', views.DetailQuestionView.as_view(), name = 'detail'),
-	path('questions/detail/<int:pk>/set_answer/', views.SetAnswer.as_view(), name = 'set_answer'),
-	path('questions/detail/<int:pk>/delete_answer/', views.DeleteAnswer.as_view(), name = 'delete_answer'),
-	path('questions/detail/<int:pk>/set_right_answer/', views.SetRightAnswer.as_view(), name = 'set_right_answer'),
-	path('questions/detail/<int:pk>/delete_right_answer/', views.DeleteRightAnswer.as_view(), name = 'delete_right_answer'),
-	path('myquestions/', views.MyQuestionsView.as_view(), name = 'my_questions'),
-	path('myquestions/new/', views.NewQuestionView.as_view(), name = 'new_question'),
-	path('myquestions/update/<int:pk>/', views.QuestionUpdateView.as_view(), name = 'update_question'),
-	path('myquestions/delete/<int:pk>/', views.QuestionDelete.as_view(), name = 'delete_question'),
-	path('myanswers/', views.MyAnswersView.as_view(), name = 'my_answers'),
-	path('myanswers/update/<int:pk>/', views.UpdateAnswerView.as_view(), name = 'answer_update'),
-	path('myanswers/delete/<int:pk>/', views.DeleteAnswerView.as_view(), name = 'answer_delete'),
+	path('', views.Index.as_view(), name = 'index'),
+	path('questions/all/', views.QuestionsView.as_view(), name = 'questions'),
+	path('questions/', views.QuestionView.as_view(), name = 'question'),
+	path('questions/my/', views.MyQuestionsView.as_view(), name = 'questions_my'),
+	path('questions/my/new/', views.NewQuestionView.as_view(), name = 'question_new'),
+	path('questions/my/update/', views.UpdateQuestionView.as_view(), name = 'question_update'),
+	
+	path('answer_send/', ajax.AnswerSend.as_view(), name = 'answer_send'),
+	path('answer_delete/', ajax.AnswerDelete.as_view(), name = 'answer_delete'),
+	path('answer_right/', ajax.AnswerRight.as_view(), name = 'answer_right'),
+	
+	
+	path('question/my/delete/<int:pk>/', views.QuestionDelete.as_view(), name = 'delete_question'),
+	path('answers/my/', views.MyAnswersView.as_view(), name = 'my_answers'),
+	path('answers/my/update/<int:pk>/', views.UpdateAnswerView.as_view(), name = 'answer_update'),
 ]

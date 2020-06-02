@@ -1,15 +1,12 @@
 {% extends 'wrapper.html' %}
+
 {% load qna_tags %}
+{% load static %}
 
-{% block title %}
+{% block title %}Последние вопросы / Monaliza{% endblock %}
 
-	Monaliza - последние вопросы
+{% block head %}
 
-{% endblock %}
-
-{% block staticfiles %}
-
-	{% load static %}
 	<link rel="stylesheet" href="{% static 'qna/css/style_questions.css' %}">
 
 {% endblock %}
@@ -31,7 +28,7 @@
 				<li class="question">
 					<div>
 						<div class="question-title">
-							<a href="{% url 'qna:detail' question.id %}">{{question.title}}</a>
+							<a href="{% url 'qna:question' %}?id={{question.id}}">{{question.title}}</a>
 						</div>
 						<div class="question-tags">
 							{% for tag in question.tags|to_array %}

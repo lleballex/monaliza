@@ -48,3 +48,5 @@ urlpatterns = [
     path('robots.txt', TemplateView.as_view(template_name = 'robots.txt', content_type='text/plain')),
     path('all_ad', TemplateView.as_view(template_name = 'all_ad.html')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+handler404 = 'monaliza.utils.handler_404'
