@@ -1,8 +1,9 @@
 {% extends 'wrapper.html' %}
 
-{% block staticfiles %}
+{% load static %}
 
-	{% load static %}
+{% block head %}
+
 	<link rel="stylesheet" href="{% static 'qna/css/style_update.css' %}">
 	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
 	<script src="{% static 'it_articles/js/script_post_update.js' %}"></script>

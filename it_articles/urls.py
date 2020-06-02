@@ -1,19 +1,19 @@
 from django.urls import path
-from . import views
+from . import views, ajax
 
 app_name = 'posts'
 urlpatterns = [
-	path('', views.Redirect.as_view(), name = 'posts'),
-	path('all/', views.AllArticlesView.as_view(), name = 'all_posts'),
-	path('detail/<int:pk>/', views.DetailArticleView.as_view(), name = 'detail'),
-	path('detail/<int:pk>/set_available', views.SetPostAvailable.as_view(), name = 'set_post_available'),
-	#path('search/', views.SearchView.as_view(), name = 'search'),
-	path('send_comment/<int:pk>', views.SendComment.as_view(), name = 'send_comment'),
-	path('detail/<int:pk>/delete_comment/', views.DeleteComment.as_view(), name = 'delete_comment'),
-	path('like_article', views.LikeArticle.as_view(), name = 'like_article'),
-	path('favourite/', views.FavouritePostsView.as_view(), name = 'favourite'),
-	path('myposts/', views.MyArticlesView.as_view(), name = 'my_posts'),
-	path('myposts/new/', views.NewArticleView.as_view(), name = 'new_post'),
-	path('myposts/edit/<int:pk>/', views.EditArticleView.as_view(), name = 'edit_post'),
-	path('myposts/delete/<int:pk>/', views.DeleteArticleView.as_view(), name = 'delete_post'),
+	path('', views.Index.as_view(), name = 'index'),
+	path('all/', views.PostsView.as_view(), name = 'all'),
+	path('<int:pk>/', views.PostView.as_view(), name = 'detail'),
+	path('<int:pk>/set_available/', views.PostAvailable.as_view(), name = 'set_available'),	
+	path('my/', views.MyPostsView.as_view(), name = 'my'),
+	path('my/favourite/', views.FavouritePostsView.as_view(), name = 'favourite'),
+	path('my/new/', views.NewPostView.as_view(), name = 'new'),
+	path('my/update/<int:pk>/', views.UpdatePostView.as_view(), name = 'update'),
+	path('my/delete/<int:pk>/', views.DeletePost.as_view(), name = 'delete'),
+
+	path('post_like/', ajax.PostLike.as_view(), name = 'post_like'),
+	path('comment_send/', ajax.CommentSend.as_view(), name = 'comment_send'),
+	path('comment_delete/', ajax.CommentDelete.as_view(), name = 'comment_delete'),
 ]

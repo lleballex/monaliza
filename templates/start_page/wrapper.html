@@ -34,8 +34,8 @@
 				</div>			
 				<div class="top-menu">
 					<ul>
-						<li><a href="{% url 'posts:all_posts' %}">Посты</a></li>
-						<li><a href="{% url 'qna:all_questions' %}">Q&A</a></li>		
+						<li><a href="{% url 'posts:all' %}">Посты</a></li>
+						<li><a href="{% url 'qna:questions' %}">Q&A</a></li>		
 						{% if request.user.is_authenticated %}
 							<li><a href="{% url 'account:profile' %}">Профиль</a></li>		
 						{% endif %}

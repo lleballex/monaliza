@@ -66,7 +66,7 @@ class UserLoginView(LoginView):
 		return reverse_lazy('account:profile')
 
 class UserLogout(LogoutView):
-	next_page = reverse_lazy('posts:all_posts')
+	next_page = reverse_lazy('posts:all')
 
 class ProfileView(View):
 	def get(self, request):

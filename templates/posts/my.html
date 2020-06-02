@@ -1,8 +1,9 @@
 {% extends 'wrapper.html' %}
 
-{% block staticfiles %}
+{% load static %}
 
-	{% load static %}
+{% block head %}
+
 	<link rel="stylesheet" href="{% static 'account/css/style_profile.css' %}">
 
 	<script>
@@ -32,7 +33,7 @@
 				<li><b>Всего просмотров</b>: {{views}}</li>
 				<li><b>Всего комментариев</b>: {{comments}}</li>
 			</ul>
-			<a href="{% url 'posts:new_post' %}">Создать новый пост</a>
+			<a href="{% url 'posts:new' %}">Создать новый пост</a>
 		</div>
 
 		<table class="all_articles">
@@ -57,9 +58,9 @@
 					<td>{{article.comments.count}}</td>
 					<td>{{article.views}}</td>
 					<td>
-						<form id="delete-form-{{article.id}}" action="{% url 'posts:delete_post' article.id %}" method="post">
+						<form id="delete-form-{{article.id}}" action="{% url 'posts:delete' article.id %}" method="post">
 							{% csrf_token %}
-							<a href="{% url 'posts:edit_post' article.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
+							<a href="{% url 'posts:update' article.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_article({{article.id}})">Удалить</a>
 						</form>
 					</td>
 				</tr>

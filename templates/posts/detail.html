@@ -1,0 +1,105 @@
+{% extends 'wrapper.html' %}
+
+{% load static %}
+{% load it_articles_tags %}
+
+{% block title %}{{article.title}} / Monaliza{% endblock %}
+
+{% block description %}
+
+	{% with article.text|without_html as text  %}
+		{{text|truncatechars:'900'}}
+	{% endwith %}
+
+{% endblock %}
+
+{% block head %}
+
+	<link rel="stylesheet" href="{% static 'it_articles/css/style_article_detail.css' %}">
+
+	<script src="{% static 'it_articles/js/script.js' %}"></script>
+	<script src="{% static 'it_articles/js/script_post_detail.js' %}"></script>
+	<script>
+		function check_comment_send() {
+			{% if request.user.is_authenticated %}
+				send_comment({{article.id}}, "{% url 'posts:comment_send' %}", "{% url 'posts:comment_delete' %}", '{{request.user.username}}', "{% static 'account/images/user_2.png' %}");
+			{% else %}
+				alert('Для этого необходимо авторизоваться');
+			{% endif %}
+		}
+	</script>
+
+{% endblock %}
+
+{% block top %}
+
+	<div class="top_intro">
+		{{article.title}}
+		<div class="top_user">
+			<a href="{% url 'search:user_page' article.user.username %}">{{article.user}}</a> - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
+		</div>
+	</div>
+	{% if request.user.is_superuser or request.user == article.user %}
+		<div class="settings">
+			<i class="fa fa-ellipsis-h settings-btn"></i>
+			<ul class="settings-menu">
+				<li><a href="{% url 'posts:update' article.id %}">Редактировать</a></li>
+				<li><form action="{% url 'posts:delete' article.id %}" method="post">{% csrf_token %}<input type="submit" value="Удалить"></form></li>
+				{% if request.user.is_superuser %}
+				<li><a href="{% if article.is_available %}{% url 'posts:set_available' article.id %}?is_available=false{% else %}{% url 'posts:set_available' article.id %}?is_available=true{% endif %}">{% if article.is_available %}Не проверено{% else %}Проверено{% endif %}</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+	{% url 'posts:comment_delete' as url_comment_delete %}
+	
+	<div class="content-container">
+	<div class="article-content">
+		{{article.text|safe}}
+		<ul class="post-info">
+			{% url 'posts:post_like' as url_postlike %}
+			<li id="like-{{article.id}}" class="post-like {% is_liked request.user article %}" onclick="{% if not request.user.is_authenticated %}alert('Для того, чтобы ставить лайки, необходимо авторизоваться');{% else %}like({{article.id}}, '{{url_postlike}}', true){% endif %}">
+				<i class="fa {% is_liked_fa_heart request.user article %}" aria-hidden="true"></i> 
+				<span>{{article.likes}}</span>
+			</li>
+			<li><i class="fa fa-eye" aria-hidden="true"></i> {{article.views}}</li>
+		</ul>
+	</div>
+	<div style="display: flex; justify-content: center; margin-bottom: 20px;">
+		<iframe data-aa="1394405" src="//ad.a-ads.com/1394405?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+	</div>
+	<div class="comments">
+		<div class="title">Комментарии (<span id="articles-count">{{article.comments.all.count}}</span>)</div>
+		<div class="take-comment-form">
+			<img src="{% if request.user.image %}{{request.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
+			<input id="comment-text" name="text" type="text" placeholder="Enter text of your message..." autocomplete="off">
+			<input type="submit" value="Send" onclick="check_comment_send()">
+			</div>
+		<ul>
+			{% for comment in comments %}
+				<li id="comment-{{comment.id}}">
+					<img src="{% if comment.user.image %}{{comment.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
+					<div class="comment">
+						<div class="user">
+							<div>
+								<div>{{comment.user}}</div>
+								<div class="date">{{comment.date|date:'F d, G:m'}}</div>
+							</div>
+							{% if comment.user == request.user %}
+								<i class="fa fa-times" aria-hidden="true" onclick="delete_comment({{comment.id}}, '{{url_comment_delete}}')"></i>
+							{% endif %}
+						</div>
+						<div class="text">{{comment.text}}</div>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+	</div>
+
+{% endblock %}

@@ -1,14 +1,15 @@
 {% extends 'wrapper.html' %}
 
+{% load static %}
+
 {% block title %}
 
 	Мои вопросы
 
 {% endblock %}
 
-{% block staticfiles %}
+{% block head %}
 
-	{% load static %}
 	<link rel="stylesheet" href="{% static 'qna/css/style_my_questions.css' %}">
 	<script>
 		function delete_question(id) {
@@ -33,11 +34,11 @@
 	{% if questions %}
 		<div class="my-questions">
 			<ul>
-				<li><b>Всего вопросов</b>: {{questions_count}}</li>
+				<li><b>Всего вопросов</b>: {{questions.count}}</li>
 				<li><b>Всего просмотров</b>: {{views_count}}</li>
 				<li><b>Всего ответов на ваши вопросы</b>: {{answers_count}}</li>
 			</ul>
-			<a href="{% url 'qna:new_question' %}">Задать новый вопрос</a>
+			<a href="{% url 'qna:question_new' %}">Задать новый вопрос</a>
 		</div>
 
 		<table class="all-questions">
@@ -54,13 +55,13 @@
 			{% for question in questions %}
 				<tr class="{% if question.is_solved %}active{% endif %}">
 					<td>{{question.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="{% url 'qna:detail' question.id %}" title="{{question.title}}">{{question.title|truncatechars:30}}</a></td>
+					<td><a href="{% url 'qna:question' %}?id=question.id" title="{{question.title}}">{{question.title|truncatechars:30}}</a></td>
 					<td>{{question.answers.count}}</td>
 					<td>{{question.views}}</td>
 					<td>
 						<form id="delete-form-{{question.id}}" action="{% url 'qna:delete_question' question.id %}" method="post">
 							{% csrf_token %}
-							<a href="{% url 'qna:update_question' question.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_question({{question.id}})">Удалить</a>
+							<a href="{% url 'qna:question_update' %}?id={{question.id}}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_question({{question.id}})">Удалить</a>
 						</form>
 					</td>
 				</tr>

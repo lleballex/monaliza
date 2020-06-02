@@ -1,0 +1,86 @@
+{% extends 'wrapper.html' %}
+
+{% load static %}
+{% load it_articles_tags %}
+
+{% block title %}Последние посты / Monaliza{% endblock %}
+
+{% block description %}
+
+	На этой странице вы найдете много полезных статей, направленных на IT сферу. Читайте, комментируйте, пишите свои посты. Monaliza
+
+{% endblock %}
+
+{% block head %}
+
+	<link rel="stylesheet" href="{% static 'it_articles/css/posts.css' %}">
+	<link rel="stylesheet" href="{% static 'css/number_menu.css' %}">
+	<script src="{% static 'it_articles/js/script.js' %}"></script>
+
+{% endblock %}
+
+{% block top %}
+	
+	<div class="top_intro">Последние посты</div>
+
+{% endblock %}
+
+{% block content %}
+
+	{% url 'posts:post_like' as url_post_like %}
+
+	<div class="content-container">
+		<div class="articles-container">
+			<div style="display: flex; justify-content: center;">
+				<iframe data-aa="1394405" src="//ad.a-ads.com/1394405?size=728x90" scrolling="no" style="width:728px; height:90px; border:0px; padding:0; overflow:hidden" allowtransparency="true"></iframe>
+			</div>
+			<ul>
+			{% for article in articles %}
+				<li class="article">
+					<div class="article-user">
+						<img src="{% static 'account/images/user_2.png' %}" alt="" class="user-img"><a href="{% url 'search:user_page' article.user.username %}" class="user-a">{{article.user.username}} </a>
+						 - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
+					</div>
+					<div class="article-title">
+						<a href="{% url 'posts:detail' article.id %}">{{article.title}}</a>
+					</div>
+					<div class="article-text">
+						{% with article.text|without_html as text  %}
+							{{text|truncatechars:'900'}}
+						{% endwith %}
+					</div>
+					<div class="article-bottom">
+						<a href="{% url 'posts:detail' article.id %}" class="btn-read-more">Читать далее</a>
+						<ul class="article-info">
+							<li class="first-li like-article {% is_liked request.user article %}" id="like-{{article.id}}" onclick="{% if not request.user.is_authenticated %}alert('Для того, чтобы ставить лайки, необходимо авторизоваться'){% else %}like({{article.id}}, '{{url_post_like}}'){% endif %}">
+								<i class="fa {% is_liked_fa request.user article %}"></i><span>{{article.likes}}</span>
+							</li>
+							<li>
+								<i class="fa fa-eye"></i>{{article.views}}
+							</li>
+						</ul>
+					</div>
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+		<div class="number-menu">
+			<ul>
+				{% if request.GET.page %}
+					{% for i in articles_count|get_menu:request.GET.page %}
+						<li {% if request.GET.page == i %}class="active"{% endif %}>
+							<a href="?page={{i}}">{{i}}</a>
+						</li>
+					{% endfor %}
+				{% else %}
+					{% for i in articles_count|get_menu:1 %}
+						<li {% if '1' == i %}class="active"{% endif %}>
+							<a href="?page={{i}}">{{i}}</a>
+						</li>
+					{% endfor %}
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+
+{% endblock %}

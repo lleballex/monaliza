@@ -1,0 +1,90 @@
+.top {
+	box-sizing: border-box;
+	width: 100%;
+	background: #227093;
+	padding: 25px 0 0 25px;
+	position: relative;
+}
+
+.top_intro {
+	font-size: 30px;
+	color: #fff;
+	padding-bottom: 25px;
+	text-transform: uppercase;
+}
+
+.top_user {
+	text-align: right;
+	padding-right: 20px;
+	font-size: 18px;
+	padding-top: 10px;
+	color: #ddd;
+	text-transform: none;
+}
+
+.top_user a {
+	color: #fed330;
+	text-decoration: none;
+}
+
+.top .settings {
+	position: absolute;
+	top: 2px;
+	right: 10px;
+	text-align: right;
+	overflow: hidden;
+}	
+
+.top .settings-btn {
+	font-size: 23px;
+}
+
+.top .settings-btn:hover {
+	cursor: pointer;
+}
+
+.top .settings-btn:hover ~ .settings-menu, .top .settings-menu:hover {
+	max-height: 100px;
+	opacity: 1;
+}
+
+.top .settings-menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	max-height: 0;
+	opacity: 0;
+	background: #fff;
+	border-radius: 5px;
+	padding: 2px 5px;
+	font-size: 14px;
+	border: 2px solid #227093;
+	transition: .3s all;
+}
+
+.top .settings-menu a {
+	text-decoration: none;
+	color: powderblue;
+	transition: .1s all;
+}
+
+.top .settings-menu a:hover {
+	color: #00a8ff;
+}
+
+.top .settings-menu input {
+	border: none;
+	background: none;
+	color: powderblue;
+	font-size: 15px;
+	padding: 0;
+}
+
+.top .settings-menu input:hover {
+	color: #00a8ff;
+	cursor: pointer;
+}
+
+.top .settings-menu input:focus {
+	outline: none;
+}
