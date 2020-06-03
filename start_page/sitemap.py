@@ -1,14 +1,12 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from .models import User, Notification
-
-class AccountIndexSitemap(Sitemap):
+class StartPageIndexSitemap(Sitemap):
 	changefreq = 'daily'
 	priority = 0.9
 
 	def items(self):
-		return ['account:login', 'account:register']
+		return ['start_page:main_view']
 
 	def location(self, item):
 		return reverse(item)

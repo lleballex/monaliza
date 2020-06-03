@@ -55,13 +55,13 @@
 			{% for question in questions %}
 				<tr class="{% if question.is_solved %}active{% endif %}">
 					<td>{{question.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="{% url 'qna:question' %}?id=question.id" title="{{question.title}}">{{question.title|truncatechars:30}}</a></td>
+					<td><a href="{% url 'qna:question' question.id %}" title="{{question.title}}">{{question.title|truncatechars:30}}</a></td>
 					<td>{{question.answers.count}}</td>
 					<td>{{question.views}}</td>
 					<td>
-						<form id="delete-form-{{question.id}}" action="{% url 'qna:delete_question' question.id %}" method="post">
+						<form id="delete-form-{{question.id}}" action="{% url 'qna:question_delete' question.id %}" method="post">
 							{% csrf_token %}
-							<a href="{% url 'qna:question_update' %}?id={{question.id}}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_question({{question.id}})">Удалить</a>
+							<a href="{% url 'qna:question_update' question.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_question({{question.id}})">Удалить</a>
 						</form>
 					</td>
 				</tr>
@@ -70,7 +70,7 @@
 	</table>	
 	{% else %}
 		<div class="information">
-			У вас пока нет вопросов. <a href="{% url 'qna:new_question' %}">Задать первый?</a>
+			У вас пока нет вопросов. <a href="{% url 'qna:question_new' %}">Задать первый?</a>
 		</div>
 	{% endif %}
 	</div>

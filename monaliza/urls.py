@@ -20,18 +20,17 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView, RedirectView
 
-from account.sitemap import UserSitemap
-from it_articles.sitemap import ArticlesSitemap, ItArticlesIndexSitemap
+from it_articles.sitemap import PostsSitemap, PostsIndexSitemap
 from account.sitemap import AccountIndexSitemap
-from qna.sitemap import QuestionsSitemap#, AnswersSitemap
+from qna.sitemap import QuestionsSitemap
+from start_page.sitemap import StartPageIndexSitemap
 
 sitemaps = {
-    'users': UserSitemap,
-    'articles': ArticlesSitemap,
-    'it_articles_pages': ItArticlesIndexSitemap,
-    'account_pages': AccountIndexSitemap,
+    'posts': PostsSitemap,
+    'posts_index': PostsIndexSitemap,
+    'account_index': AccountIndexSitemap,
     'questions': QuestionsSitemap,
-    #'answers': AnswersSitemap,
+    'start_page_index': StartPageIndexSitemap,
 }
 
 urlpatterns = [

@@ -12,8 +12,8 @@
 {% url 'posts:new' as url_posts_new %}
 {% url 'qna:index' as url_qna_index %}
 {% url 'qna:questions' as url_questions %}
-{% url 'qna:question' as url_question %}
 {% url 'qna:questions_my' as url_questions_my %}
+{% url 'qna:answers_my' as url_answers_my %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -81,12 +81,11 @@
 				</div>
 			</li>
 			<li>
-				<a href="{% url 'qna:questions' %}" class="main_menu {% if url_qna_index in request.path %}active{% endif %} {% if url_questions == request.path or url_question == request.path %}active-2{% endif %}">Q&A</a>
+				<a href="{% url 'qna:questions' %}" class="main_menu {% if url_qna_index in request.path %}active{% endif %} {% if url_questions == request.path %}active-2{% endif %}">Q&A</a>
 				<div class="sub_menu {% if url_qna_index in request.path %}active{% endif %}">
 					{% if request.user.is_authenticated %}
 					<a href="{% url 'qna:questions_my' %}" class="{% if url_questions_my == request.path %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои вопросы</a>
-					{% url 'qna:my_answers' as url_myanswers %}
-					<a href="{% url 'qna:my_answers' %}" class="{% if url_myanswers in request.path %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои ответы</a>
+					<a href="{% url 'qna:answers_my' %}" class="{% if url_answers_my == request.path %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои ответы</a>
 					{% url 'qna:question_new' as url_question_new %}
 					<a href="{% url 'qna:question_new' %}" class="{% if request.path == url_question_new %}active{% endif %}"><i class="fa fa-plus-circle"></i> Задать вопрос</a>
 					{% endif %}
