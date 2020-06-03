@@ -1,18 +1,15 @@
 {% extends 'wrapper.html' %}
 
-{% block title %}
+{% load static %}
 
-	Мои ответы / Monaliza
+{% block title %}Мои ответы / Monaliza{% endblock %}
 
-{% endblock %}
+{% block head %}
 
-{% block staticfiles %}
-
-	{% load static %}
 	<link rel="stylesheet" href="{% static 'qna/css/style_my_answers.css' %}">
 	<script>
-		function delete_answer(id) {
-			if(confirm('Вы уверены, что хотите удалить этот ответ?')) 
+		function answer_delete(id) {
+			if(confirm('Вы уверены, что хотите удалит свой вопрос?'))
 				$('#delete-form-' + id).submit();
 		}
 	</script>
@@ -33,7 +30,7 @@
 	{% if answers %}
 		<div class="my-answers">
 			<ul>
-				<li><b>Всего ответов</b>: {{answers_count}}</li>
+				<li><b>Всего ответов</b>: {{answers.count}}</li>
 				<li><b>Всего ответов, которые являются решением</b>: {{right_answers_count}}</li>
 			</ul>
 		</div>
@@ -54,9 +51,9 @@
 					<td><a href="{% url 'qna:question' answer.question.id %}" title="{{answer.question.title}}">{{answer.question.title|truncatechars:30}}</a></td>
 					<td><a href="{% url 'qna:question' answer.question.id %}" title="{{answer.text|truncatechars:50}}">{{answer.text|truncatechars:30}}</a></td>
 					<td>
-						<form id="delete-form-{{answer.id}}" method="post" action="{% url 'qna:answer_delete' %}?id={{answer.id}}">
+						<form id="delete-form-{{answer.id}}" method="post" action="{% url 'qna:answer_delete_notajax' answer.id %}">
 							{% csrf_token %}
-							<a href="{% url 'qna:answer_update' answer.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="delete_answer({{answer.id}})">Удалить</a>
+							<a href="{% url 'qna:answer_update' answer.id %}">Изменить</a><span class="form-slash">/</span><a href="javascript:void()" onclick="answer_delete({{answer.id}})">Удалить</a>
 						</form>
 					</td>
 				</tr>

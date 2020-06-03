@@ -28,7 +28,7 @@
 				<li class="question">
 					<div>
 						<div class="question-title">
-							<a href="{% url 'qna:question' %}?id={{question.id}}">{{question.title}}</a>
+							<a href="{% url 'qna:question' question.id %}">{{question.title}}</a>
 						</div>
 						<div class="question-tags">
 							{% for tag in question.tags|to_array %}

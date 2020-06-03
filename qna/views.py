@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
 from .models import Question, Answer, Tag
 from .forms import QuestionForm
 from account.models import User, Notification
-from account.utils import MessagesMixin
-from monaliza.utils import DetailMixin, UpdateMixin
+from monaliza.utils import default_handler
 
 class Index(View):
 	def get(self, request):
@@ -14,23 +13,31 @@ class Index(View):
 
 class QuestionsView(ListView):
 	queryset = Question.objects.order_by('-date')
-	template_name = 'qna/all_questions.html'
+	template_name = 'qna/questions.html'
 	context_object_name = 'questions'
 
-class QuestionView(DetailMixin):
+class QuestionView(DetailView):
 	model = Question
-	template_name = 'qna/detail.html'
+	template_name = 'qna/question.html'
 	context_object_name = 'question'
-	error_url = reverse_lazy('qna:questions')
 	
-	def function(self):
+	def get_context_data(self, **kwargs):
 		self.object.views += 1
 		self.object.save()
+		return super().get_context_data(**kwargs)
 
-	success_func = function
+class UpdateQuestionView(UpdateView):
+	model = Question
+	form_class = QuestionForm
+	template_name = 'qna/question_update.html'
+	success_url = reverse_lazy('qna:questions_my')
+	
+	def get_context_data(self, **kwargs):
+		kwargs['update'] = True
+		return super().get_context_data(**kwargs)
 
 class MyQuestionsView(ListView):
-	template_name = 'qna/my_questions.html'
+	template_name = 'qna/questions_my.html'
 	context_object_name = 'questions'
 
 	def get_queryset(self):
@@ -49,13 +56,12 @@ class MyQuestionsView(ListView):
 class NewQuestionView(CreateView):
 	model = Question
 	form_class = QuestionForm
-	template_name = 'qna/update.html'
+	template_name = 'qna/question_update.html'
 	success_url = reverse_lazy('qna:questions')
 
 	def form_valid(self, form):
 		self.object = form.save(commit = False)
 		self.object.user = self.request.user
-		#self.object.text = self.post_text(self.object.text)
 		self.object.save()
 		notification = Notification()
 		notification.user = User.objects.get(is_superuser = True)
@@ -68,34 +74,24 @@ class NewQuestionView(CreateView):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
-class UpdateQuestionView(UpdateMixin):
-	model = Question
-	form_class = QuestionForm
-	template_name = 'qna/update.html'
-	success_url = reverse_lazy('qna:questions_my')
-	success_msg = 'Ваш вопрос был успешно обновлен'
-	new_kwargs = {'update': True}
-
-class QuestionDelete(MessagesMixin, DeleteView):
+class DeleteQuestion(DeleteView):
 	model = Question
 	success_url = reverse_lazy('qna:questions_my')
-	success_msg = 'Ваш вопрос был успешно удален'
 
-class MyAnswersView(View):
-	def get(self, request):
-		answers = Answer.objects.filter(user = request.user)
-		answers_count = 0
+class MyAnswersView(ListView):
+	template_name = 'qna/answers_my.html'
+	context_object_name = 'answers'
+
+	def get_queryset(self):
+		return Answer.objects.filter(user = self.request.user).order_by('-date')
+
+	def get_context_data(self, **kwargs):
 		right_answers_count = 0
-		for answer in answers:
-			answers_count += 1
-			if answer.is_right_answer:
+		for obj in self.object_list:
+			if obj.is_right_answer:
 				right_answers_count += 1
-		content = {
-			'answers': answers,
-			'answers_count': answers_count,
-			'right_answers_count': right_answers_count,
-		}
-		return render(request, 'qna/my_answers.html', content)
+		kwargs['right_answers_count'] = right_answers_count
+		return super().get_context_data(**kwargs)
 
 class UpdateAnswerView(View):
 	def get(self, request, pk):
@@ -105,15 +101,24 @@ class UpdateAnswerView(View):
 			'question': answer.question,
 			'update': True,
 		}
-		return render(request, 'qna/detail.html', context)
+		return render(request, 'qna/question.html', context)
 
 	def post(self, request, pk):
 		answer = Answer.objects.get(id = pk)
 		answer.text = request.POST.get('answer-text')
 		answer.save()
-		return redirect(reverse('qna:my_answers'))
+		return redirect(reverse('qna:answers_my'))
 
-class DeleteAnswerView(DeleteView):
-	model = Answer
-	success_url = reverse_lazy('qna:my_answers')
-	success_msg = 'Ваш ответ был успешно удален'
+class DeleteAnswer(View):
+	def get(self, request, *args, **kwargs):
+		return default_handler(request, 405, 'Эта страница не подразумевает такой метод (get)')
+
+	def post(self, request, pk):
+		try:
+			self.object = Answer.objects.get(id = pk)
+		except Answer.DoesNotExist:
+			return default_handler(request, 404, 'Такого вопроса не существует')
+		if request.user != self.object.user:
+			return default_handler(request, 401, 'Доступ к этой странице для вас запрещен')
+		self.object.delete()
+		return redirect(reverse_lazy('qna:answers_my'))
