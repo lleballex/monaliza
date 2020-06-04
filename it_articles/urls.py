@@ -3,15 +3,14 @@ from . import views, ajax
 
 app_name = 'posts'
 urlpatterns = [
-	path('', views.Index.as_view(), name = 'index'),
-	path('all/', views.PostsView.as_view(), name = 'all'),
-	path('<int:pk>/', views.PostView.as_view(), name = 'detail'),
-	path('<int:pk>/set_available/', views.PostAvailable.as_view(), name = 'set_available'),	
+	path('', views.PostsView.as_view(), name = 'posts'),
+	path('<int:pk>/', views.PostView.as_view(), name = 'post'),
+	path('<int:pk>/set_available/', views.AvailablePost.as_view(), name = 'set_available'),	
 	path('my/', views.MyPostsView.as_view(), name = 'my'),
-	path('my/favourite/', views.FavouritePostsView.as_view(), name = 'favourite'),
-	path('my/new/', views.NewPostView.as_view(), name = 'new'),
-	path('my/update/<int:pk>/', views.UpdatePostView.as_view(), name = 'update'),
-	path('my/delete/<int:pk>/', views.DeletePost.as_view(), name = 'delete'),
+	path('favourite/', views.FavouritePostsView.as_view(), name = 'favourite'),
+	path('new/', views.NewPostView.as_view(), name = 'new'),
+	path('<int:pk>/update/', views.UpdatePostView.as_view(), name = 'update'),
+	path('<int:pk>/delete/', views.DeletePost.as_view(), name = 'delete'),
 
 	path('post_like/', ajax.PostLike.as_view(), name = 'post_like'),
 	path('comment_send/', ajax.CommentSend.as_view(), name = 'comment_send'),

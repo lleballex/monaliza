@@ -49,3 +49,4 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 handler404 = 'monaliza.utils.handler_404'
+handler500 = 'monaliza.utils.handler_500'

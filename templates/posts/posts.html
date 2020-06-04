@@ -42,7 +42,7 @@
 						 - {{article.date|date:'d'}} of {{article.date|date:'F'}} at {{article.date|date:'G:m'}}
 					</div>
 					<div class="article-title">
-						<a href="{% url 'posts:detail' article.id %}">{{article.title}}</a>
+						<a href="{% url 'posts:post' article.id %}">{{article.title}}</a>
 					</div>
 					<div class="article-text">
 						{% with article.text|without_html as text  %}
@@ -50,7 +50,7 @@
 						{% endwith %}
 					</div>
 					<div class="article-bottom">
-						<a href="{% url 'posts:detail' article.id %}" class="btn-read-more">Читать далее</a>
+						<a href="{% url 'posts:post' article.id %}" class="btn-read-more">Читать далее</a>
 						<ul class="article-info">
 							<li class="first-li like-article {% is_liked request.user article %}" id="like-{{article.id}}" onclick="{% if not request.user.is_authenticated %}alert('Для того, чтобы ставить лайки, необходимо авторизоваться'){% else %}like({{article.id}}, '{{url_post_like}}'){% endif %}">
 								<i class="fa {% is_liked_fa request.user article %}"></i><span>{{article.likes}}</span>

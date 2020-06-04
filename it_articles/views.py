@@ -1,90 +1,58 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
-from django.http.response import HttpResponse
-import json
+from django.http import Http404
+
 
 from .models import Article, Comment
 from account.models import FavouriteArticle, Notification, User
 from qna.models import Tag
 from .forms import *
 from account.utils import MessagesMixin, AccessMixin
+from monaliza.utils import default_handler
 
-class Index(View):
-	def get(self, request):
-		return redirect(reverse('posts:all'))
+class PostsView(ListView):
+	context_object_name = 'articles'
+	template_name = 'posts/posts.html'
 
-class PostsView(View):
-	def get(self, request):
-		articles = Article.objects.filter(is_available = True).order_by('-date')
-		articles_count = articles.count()
-		page = request.GET.get('page')
-		count = 10
-
+	def get_queryset(self):
+		posts = Article.objects.filter(is_available = True).order_by('-date')
+		page = self.request.GET.get('page')
 		if not page:
 			page = 1
 		else:
 			page = int(page)
-		articles = articles[(page - 1) * count:page * count]
-	
-		context = {
-			'articles': articles,
-			'articles_count': articles_count,
-			#'articles_popular': Article.objects.order_by('-likes'),
-		}
-		return render(request, 'posts/all.html', context)
+		return posts[(page - 1) * 10:page * 10]
 
-class PostView(AccessMixin, MessagesMixin, View):
+	def get_context_data(self, **kwargs):
+		kwargs['articles_count'] = Article.objects.filter(is_available = True).order_by('-date').count()
+		return super().get_context_data(**kwargs)
+
+class PostView(MessagesMixin, DetailView):
+	model = Article
+	template_name = 'posts/post.html'
+	context_object_name = 'article'
+
+	def get(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		if not self.object.is_available:
+			if not request.user.is_superuser and request.user != self.object.user:
+				return default_handler(request, 403, 'Доступ к данной странице для вас запрещен')
+			self.set_error_msg('Этот пост еще не проверен и не доступен для других пользователей')
+		else:
+			self.object.views += 1
+			self.object.save()
+		context = self.get_context_data(object = self.object)
+		return self.render_to_response(context)
+
+class AvailablePost(View):
 	def get(self, request, pk):
 		try:
-			article = Article.objects.get(id = pk)
-		except Article.DoesNotExist:
-			self.message = 'К сожалению, данного поста не существует'
-			return self.mixin_render()
-
-		if not article.is_available:
-			if not request.user.is_authenticated or (not request.user == article.user and not request.user.is_superuser):
-				self.message = 'К сожалению, этот пост еще не верифицирован. поэтом он вам не доступен. Вы можете подождать его верифицакии'
-				self.status_code = 403
-				return self.mixin_render()
-			else:
-				self.set_error_msg('Этот пост еще не проверен, из-за чего он пока не доступен для других пользователей')
-		else:
-			article.views += 1;
-			article.save()
-
-		context = {
-			'article': article,
-			'comments': article.comments.order_by('-date'),
-		}
-		return render(request, 'posts/detail.html', context)
-
-	def post(self, request, pk):
-		text = request.POST.get('text')
-		if text.strip():
-			go = True
-			for i in text.lower().split():
-				if i in bad_words:
-					go = False
-					break
-			'''for i in bad_words:
-				if text.lower().find(i) > 0:
-					print(text.lower().find(i))
-					go = False
-					break'''
-			if go:
-				comment = Comment()
-				comment.user = request.user
-				comment.text = text
-				comment.article = Article.objects.get(id = pk)
-				comment.save()
-			else:
-					self.set_error_msg('You writed the bad word')
-		return redirect(reverse('posts:detail', kwargs = {'pk': pk}))
-
-class PostAvailable(View):
-	def get(self, request, pk):
-		post = Article.objects.get(id = pk)
+			post = Article.objects.get(id = pk)
+		except:
+			raise Http404
+		if not request.user.is_superuser:
+			return default_handler(request, 403, 'Доступ к данной странице для вас запрещен')
 		notification = Notification()
 		notification.user = post.user
 		notification.title = 'Проверка поста'
@@ -96,65 +64,54 @@ class PostAvailable(View):
 			notification.text = 'Ваш пост <a href="' + post.get_absolute_url() + '">' + post.title + '</a> был заблокирован для других пользователей после проверки'
 		post.save()
 		notification.save()
-		print(post)
-		print(pk)
-		return redirect(reverse('posts:detail', kwargs = {'pk': pk}))
+		return redirect(reverse('posts:post', kwargs = {'pk': pk}))
 
-class MyPostsView(AccessMixin, MessagesMixin, View):
+class MyPostsView(View):
 	def get(self, request):
 		if not request.user.is_authenticated:
-			self.status_code = 403
-			self.message = 'Для доступа к данной странице необходимо авторизоваться'
-			return self.mixin_render()
-
-		likes = 0
-		all_articles = 0
-		views = 0
-		comments = 0
-		articles = Article.objects.filter(user = request.user)
-		for article in articles:
-			likes += article.likes
-			views += article.views
-			comments += article.comments.count()
-			all_articles += 1
+			return default_handler(request, 403, 'Для доступа к данной странице необходимо авторизоватся')
+	
+		likes_count = 0
+		views_count = 0
+		comments_count = 0
+		posts = Article.objects.filter(user = request.user)
+		for post in posts:
+			likes_count += post.likes
+			views_count += post.views
+			comments_count += post.comments.count()
 
 		context = {
-			'articles': articles.order_by('-id'),
-			'likes': likes,
-			'all_articles': all_articles,
-			'views': views,
-			'comments': comments
+			'articles': posts.order_by('-date'),
+			'likes_count': likes_count,
+			'views_count': views_count,
+			'comments_count': comments_count,
 		}
 
 		return render(request, 'posts/my.html', context)
 
 class FavouritePostsView(ListView):
-	template_name = 'posts/all.html'
+	template_name = 'posts/favourite.html'
 	context_object_name = 'articles'
 
 	def get_queryset(self):
-		fav_articles = FavouriteArticle.objects.filter(user = self.request.user)
-		articles = []
-		for article in fav_articles:
-			articles.append(article.article)
-		return articles
+		posts = FavouriteArticle.objects.filter(user = self.request.user)
+		return posts
 
 class NewPostView(MessagesMixin, CreateView):
 	template_name = 'posts/update.html'
 	model = Article
 	form_class = NewArticleForm
 	success_url = reverse_lazy('posts:my')
-	success_msg = 'The article was successfuly created. Please wait for verification'
+	success_msg = 'Пост был успешно создал! Ожидайте модерациии'
 
 	def form_valid(self, form):
 		self.object = form.save(commit = False)
 		self.object.user = self.request.user
-		#self.object.text = self.post_text(self.object.text)
 		self.object.save()
 		notification = Notification()
 		notification.user = User.objects.get(is_superuser = True)
 		notification.title = 'Был создан новый пост'
-		notification.text = self.object.user.username + ' создал новый пост - <a href="' + self.object.get_absolute_url() + '">' + self.object.title + '</a>'
+		notification.text = self.object.user.username + ' создал новый пост - <a href="' + reverse('posts:post', args = [self.object.id]) + '">' + self.object.title + '</a>'
 		notification.save()
 		return super().form_valid(form)
 
@@ -162,35 +119,43 @@ class NewPostView(MessagesMixin, CreateView):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
-class UpdatePostView(AccessMixin, MessagesMixin, UpdateView):
-	model = Article
+class UpdatePostView(MessagesMixin, UpdateView):
 	form_class = NewArticleForm
 	template_name = 'posts/update.html'
 	success_url = reverse_lazy('posts:my')
-	success_msg = 'The article was successfuly updated'
-	
-	def get(self, request, *args, **kwargs):
-		pk = kwargs.get(self.pk_url_kwarg)
+
+	def get_object(self, queryset = None):
+		pk = self.kwargs.get(self.pk_url_kwarg)
 		try:
-			self.get_queryset().filter(pk = pk).get()
-		except self.model.DoesNotExist:
-			self.message = 'К соэжалению, данного поста не существует'
-			return self.mixin_render()
-		
-		self.object = self.get_object()
-		context = self.get_context_data(object=self.object)
-		return self.render_to_response(context)
+			post = Article.objects.get(pk = pk)
+		except Article.DoesNotExist:
+			raise Http404
+		if not self.request.user.is_authenticated or self.request.user != post.user:
+			raise Http404
+		return post
 
 	def get_context_data(self, **kwargs):
-		if not self.request.user.is_authenticated or self.request.user != self.get_object().user:
-			self.message = 'Этот пост принадлежит другому пользователю, и только он может его редактировать!'
-			self.status_code = 403
-			self.access_mixin = True
 		kwargs['update'] = True
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
+	def get_success_url(self):
+		self.object.is_available = False
+		self.object.save()
+		self.set_success_msg('Пост был успешно обновлен! Ожидайте модерации')
+		return self.success_url
+
 class DeletePost(MessagesMixin, DeleteView):
-	success_msg = 'The article was successfuly deleted'
+	success_msg = 'Ваш пост был успешно удален'
 	model = Article
 	success_url = reverse_lazy('posts:my')
+
+	def delete(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		if request.user != self.object.user and not request.user.is_superuser:
+			return default_handler(request, 403, 'Доступ к этой странице для вас запрещен')
+		self.object.delete()
+		return redirect(self.get_success_url())
+
+	def get(self, request, *args, **kwargs):
+		return default_handler(request, 400, 'Данная страница не поддерживает этот медот загрузки (get)')

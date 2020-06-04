@@ -11,14 +11,14 @@ class PostsSitemap(Sitemap):
 		return Article.objects.filter(is_available = True)
 
 	def location(self, item):
-		return reverse('posts:detail', kwargs = {'pk': item.id})
+		return reverse('posts:post', kwargs = {'pk': item.id})
 
 class PostsIndexSitemap(Sitemap):
 	changefreq = 'daily'
 	priority = 0.9
 
 	def items(self):
-		return['posts:all']
+		return['posts:posts']
 
 	def location(self, item):
 		return reverse(item)
