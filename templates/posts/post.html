@@ -81,7 +81,7 @@
 			<input type="submit" value="Send" onclick="check_comment_send()">
 			</div>
 		<ul>
-			{% for comment in comments %}
+			{% for comment in article.comments.all %}
 				<li id="comment-{{comment.id}}">
 					<img src="{% if comment.user.image %}{{comment.user.image.url}}{% else %}{% static 'account/images/user_2.png' %}{% endif %}" alt="Mona.png">
 					<div class="comment">

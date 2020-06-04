@@ -6,8 +6,7 @@
 {% url 'account:profile' as url_profile %}
 {% url 'account:settings' as url_settings %}
 {% url 'account:notifications' as url_notifications %}
-{% url 'posts:index' as url_posts_index %}
-{% url 'posts:all' as url_posts_all %}
+{% url 'posts:posts' as url_posts %}
 {% url 'posts:my' as url_posts_my %}
 {% url 'posts:new' as url_posts_new %}
 {% url 'qna:index' as url_qna_index %}
@@ -57,8 +56,8 @@
 				{% endif %}
 			</li>
 			<li>
-				<a class="main_menu {% if url_posts_index in request.path %}active{% endif %} {% if url_posts_all == request.path %}active-2{% endif %}" href="{% url 'posts:all' %}">Посты</a>
-				<div class="sub_menu {% if url_posts_index in request.path %}active{% endif %}">
+				<a class="main_menu {% if url_posts in request.path %}active{% endif %} {% if url_posts == request.path %}active-2{% endif %}" href="{% url 'posts:posts' %}">Посты</a>
+				<div class="sub_menu {% if url_posts in request.path %}active{% endif %}">
 					{% if request.user.is_authenticated %}
 					<a href="{% url 'posts:my' %}" class="{% if request.path == url_posts_my %}active{% endif %}"><i class="fa fa-list-ul"></i> Мои посты</a>
 					<a href="{% url 'posts:new' %}" class="{% if request.path == url_posts_new %}active{% endif %}"><i class="fa fa-plus-circle"></i> Новый пост</a>

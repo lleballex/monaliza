@@ -4,7 +4,14 @@ from django.views.generic import View, UpdateView
 def handler_404(request, exception):
 	context = {
 		'status_code': 404,
-		'message': 'Кажется, то, что вы ищете, не существует'
+		'message': 'Кажется, здесь ничего нет, особенно гото, что вы ищете'
+	}
+	return render(request, 'handler.html', context)
+
+def handler_500(request):
+	context = {
+		'status_code': 404,
+		'message': 'С сервером какие-то проблемы, но мы скоро все починим'
 	}
 	return render(request, 'handler.html', context)
 

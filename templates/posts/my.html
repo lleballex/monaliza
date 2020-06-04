@@ -28,10 +28,10 @@
 	{% if articles %}
 		<div class="my_articles">
 			<ul>
-				<li><b>Всего постов</b>: {{all_articles}}</li>
-				<li><b>Всего лайков</b>: {{likes}}</li>
-				<li><b>Всего просмотров</b>: {{views}}</li>
-				<li><b>Всего комментариев</b>: {{comments}}</li>
+				<li><b>Всего постов</b>: {{articles.count}}</li>
+				<li><b>Всего лайков</b>: {{likes_count}}</li>
+				<li><b>Всего просмотров</b>: {{views_count}}</li>
+				<li><b>Всего комментариев</b>: {{comments_count}}</li>
 			</ul>
 			<a href="{% url 'posts:new' %}">Создать новый пост</a>
 		</div>
@@ -53,7 +53,7 @@
 				<tr>
 					<td class="{% if not article.is_available %}not-available-article{% endif %}">{{article.id}}</td>
 					<td>{{article.date|date:'d.m.y - h:m'}}</td>
-					<td><a href="{% url 'posts:detail' article.id %}" title="{{article.title}}">{{article.title|truncatechars:30}}</a></td>
+					<td><a href="{% url 'posts:post' article.id %}" title="{{article.title}}">{{article.title|truncatechars:30}}</a></td>
 					<td>{{article.likes}}</td>
 					<td>{{article.comments.count}}</td>
 					<td>{{article.views}}</td>
@@ -69,7 +69,7 @@
 	</table>	
 	{% else %}
 		<div class="information">
-			У вас пока нет постов. <a href="{% url 'posts:new_post' %}">Создать первый?</a>
+			У вас пока нет постов. <a href="{% url 'posts:new' %}">Создать первый?</a>
 		</div>
 	{% endif %}
 	</div>
