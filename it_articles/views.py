@@ -3,13 +3,12 @@ from django.views.generic import View, DetailView, ListView, CreateView, UpdateV
 from django.urls import reverse_lazy, reverse
 from django.http import Http404
 
-
-from .models import Article, Comment
+from .models import Article
 from account.models import FavouriteArticle, Notification, User
 from qna.models import Tag
 from .forms import *
-from account.utils import MessagesMixin, AccessMixin
-from monaliza.utils import default_handler
+from account.utils import MessagesMixin
+from monaliza.utils import default_handler, AccessMixin
 
 class PostsView(ListView):
 	context_object_name = 'articles'
@@ -66,11 +65,12 @@ class AvailablePost(View):
 		notification.save()
 		return redirect(reverse('posts:post', kwargs = {'pk': pk}))
 
-class MyPostsView(View):
+class MyPostsView(AccessMixin, View):
 	def get(self, request):
-		if not request.user.is_authenticated:
-			return default_handler(request, 403, 'Для доступа к данной странице необходимо авторизоватся')
-	
+		checking = self.auth_check()
+		if checking:
+			return checking
+
 		likes_count = 0
 		views_count = 0
 		comments_count = 0
@@ -89,20 +89,22 @@ class MyPostsView(View):
 
 		return render(request, 'posts/my.html', context)
 
-class FavouritePostsView(ListView):
+class FavouritePostsView(AccessMixin, ListView):
 	template_name = 'posts/favourite.html'
 	context_object_name = 'articles'
+	list_view = True
 
 	def get_queryset(self):
 		posts = FavouriteArticle.objects.filter(user = self.request.user)
 		return posts
 
-class NewPostView(MessagesMixin, CreateView):
+class NewPostView(AccessMixin, MessagesMixin, CreateView):
 	template_name = 'posts/update.html'
 	model = Article
 	form_class = NewArticleForm
 	success_url = reverse_lazy('posts:my')
 	success_msg = 'Пост был успешно создал! Ожидайте модерациии'
+	create_view = True
 
 	def form_valid(self, form):
 		self.object = form.save(commit = False)
@@ -119,20 +121,12 @@ class NewPostView(MessagesMixin, CreateView):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
-class UpdatePostView(MessagesMixin, UpdateView):
+class UpdatePostView(AccessMixin, MessagesMixin, UpdateView):
+	model = Article
 	form_class = NewArticleForm
 	template_name = 'posts/update.html'
 	success_url = reverse_lazy('posts:my')
-
-	def get_object(self, queryset = None):
-		pk = self.kwargs.get(self.pk_url_kwarg)
-		try:
-			post = Article.objects.get(pk = pk)
-		except Article.DoesNotExist:
-			raise Http404
-		if not self.request.user.is_authenticated or self.request.user != post.user:
-			raise Http404
-		return post
+	update_view = True
 
 	def get_context_data(self, **kwargs):
 		kwargs['update'] = True
@@ -145,17 +139,11 @@ class UpdatePostView(MessagesMixin, UpdateView):
 		self.set_success_msg('Пост был успешно обновлен! Ожидайте модерации')
 		return self.success_url
 
-class DeletePost(MessagesMixin, DeleteView):
+class DeletePost(AccessMixin, MessagesMixin, DeleteView):
 	success_msg = 'Ваш пост был успешно удален'
 	model = Article
 	success_url = reverse_lazy('posts:my')
-
-	def delete(self, request, *args, **kwargs):
-		self.object = self.get_object()
-		if request.user != self.object.user and not request.user.is_superuser:
-			return default_handler(request, 403, 'Доступ к этой странице для вас запрещен')
-		self.object.delete()
-		return redirect(self.get_success_url())
+	delete_view = True
 
 	def get(self, request, *args, **kwargs):
 		return default_handler(request, 400, 'Данная страница не поддерживает этот медот загрузки (get)')
