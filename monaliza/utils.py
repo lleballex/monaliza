@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, UpdateView
 
-def handler_404(request, exception):
+def handler_404(request, exception = None):
 	context = {
 		'status_code': 404,
 		'message': 'Кажется, здесь ничего нет, особенно гото, что вы ищете'
@@ -10,7 +10,7 @@ def handler_404(request, exception):
 
 def handler_500(request):
 	context = {
-		'status_code': 404,
+		'status_code': 500,
 		'message': 'С сервером какие-то проблемы, но мы скоро все починим'
 	}
 	return render(request, 'handler.html', context)
@@ -23,60 +23,98 @@ def default_handler(request, status_code, info):
 	response = render(request, 'handler.html', context)
 	return response
 
+
 class DetailMixin(View):
-	model = None
-	info_404 = 'Кажется, тут ничего нет, особенно того, что вы ищете'
-	error_url = None
-	template_name = None
-	object = None
-	context_object_name = None
-	success_func = None
-
-	def get(self, request):
-		id = request.GET.get('id')
-		if not id:
-			if self.error_url:
-				return redirect(self.error_url)
-			else:
-				return default_handler(request, 404, self.info_404)
-		try:
-			self.object = self.model.objects.get(id = id)
-		except self.model.DoesNotExist:
-			return default_handler(request, 404, self.info_404)
-		if self.success_func:
-			self.success_func()
-		return render(request, self.template_name, {self.context_object_name: self.object})
-
-class UpdateMixin(UpdateView):
-	model = None
-	form_class = None
-	template_name = None
-	success_url = None
-	new_kwargs = None
-	info_404 = 'Кажется, тут ничего нет, особенно того, что вы ищете'
+	auth_check = False
 
 	def get(self, request, *args, **kwargs):
-		id = self.request.GET.get('id')
+		if self.auth_check:
+			if not request.user.is_authenticated:
+				return default_handler(request, 401, 'Для доступа к этой странице необходимо авторизоваться')
 
-		if not id:
-			return default_handler(request, 404, self.info_404)
-		if not request.user.is_authenticated:
-			return default_handler(request, 401, 'Для доступа к этой странице необходимо авторизоваться')
-		try:
-			self.object = self.model.objects.get(id = id)
-		except self.model.DoesNotExist:
-			return default_handler(request, 404, self.info_404)
-		if request.user != self.object.user:
-			return default_handler(request, 403, 'Досуп к этой странице для вас запрещен')
 
-		return super().get(request, *args, **kwargs)
+		self.object = self.get_object()
+		context = self.get_context_data(object = self.object)
+		return self.render_to_response(context)
 
-	def get_object(self, queryset = None):
-		id = self.request.GET.get('id')
-		return self.model.objects.get(id = id)
+class AccessMixin(View):
+	list_view = False
+	update_view = False
+	create_view = False
+	delete_view = False
 
-	def get_context_data(self, **kwargs):
-		if self.new_kwargs:
-			for i in self.new_kwargs:
-				kwargs[i] = self.new_kwargs[i] 
-		return super().get_context_data(**kwargs)
+	def auth_check(self):
+		if not self.request.user.is_authenticated:
+			return default_handler(self.request, 401, 'Для доступа к этой странице необходимо авторизоваться')
+		else:
+			return False
+
+	def user_check(self):
+		if self.request.user != self.object.user and not self.request.user.is_superuser:
+			return default_handler(self.request, 403, 'Доступ к этой странице для вас запрещен')
+		else:
+			return False
+
+	def multi_check(self):
+		auth_checking = self.auth_check()
+		if auth_checking:
+			return auth_checking
+
+		user_checking = self.user_check()
+		if user_checking:
+			return user_checking
+
+		return False
+
+	def get(self, request, *args, **kwargs):
+		if self.list_view:
+			checking = self.auth_check()
+			if checking:
+				return checking
+			self.object_list = self.get_queryset()
+			context = self.get_context_data()
+			return self.render_to_response(context)
+
+		elif self.update_view:
+			self.object = self.get_object()
+			checking = self.multi_check()
+			if checking:
+				return checking
+			return super().get(request, *args, **kwargs)
+
+		elif self.create_view:
+			self.object = None
+			checking = self.auth_check()
+			if checking:
+				return checking
+			return super().get(request, *args, **kwargs)
+
+		elif self.delete_view:
+			return default_handler(request, 400, 'Эта страница не поддерживает этот метод запроса (get)')
+
+
+	def post(self, request, *args, **kwargs):
+		if self.list_view:
+			return default_handler(request, 400, 'Эта страница не поддерживает этот метод запроса (get)')
+
+		elif self.update_view:
+			self.object = self.get_object()
+			checking = self.multi_check()
+			if checking:
+				return checking
+			return super().post(request, *args, **kwargs)
+
+		elif self.create_view:
+			self.object = None
+			checking = self.auth_check()
+			if checking:
+				return checking
+			return super().post(request, *args, **kwargs)
+
+		elif self.delete_view:
+			self.object = self.get_object()
+			checking = self.multi_check()
+			if checking:
+				return checking
+			self.object.delete()
+			return redirect(self.get_success_url())
