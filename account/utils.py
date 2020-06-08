@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render
 
+from monaliza.utils import AccessMixin
+
 class MessagesMixin:
 	success_msg = None
 	error_msg = None
@@ -22,25 +24,21 @@ class MessagesMixin:
 	def set_error_msg(self, msg):
 		messages.error(self.request, msg)
 
-class AccessMixin:
-	message = 'К сожалению, эта страница не существует.'
-	status_code = 404
-	access_mixin = False
+class UserAccessMixin(AccessMixin):
+	update_view = False
 
-	def get_context_data(self, **kwargs):
-		if self.access_mixin:
-			kwargs = {'message': self.message, 'status_code': str(self.status_code),}
-		return super().get_context_data(**kwargs)
+	def get(self, request, *args, **kwargs):
+		if self.update_view:
+			checking = self.auth_check()
+			if checking:
+				return checking
+			self.object = self.get_object()
+			return super().get(request, *args, **kwargs)
 
-	def get_template_names(self):
-		if self.access_mixin:
-			return ['access_mixin_wrapper.html']
-		elif self.template_name is None:
-			raise ImproperlyConfigured(
-				"TemplateResponseMixin requires either a definition of "
-				"'template_name' or an implementation of 'get_template_names()'")
-		else:
-			return [self.template_name]
-
-	def mixin_render(self):
-		return render(self.request, 'access_mixin_wrapper.html', {'message': self.message, 'status_code': str(self.status_code),})
+	def post(self, request, *args, **kwargs):
+		if self.update_view:
+			checking = self.auth_check()
+			if checking:
+				return checking
+			self.object = self.get_object()
+			return super().post(request, *args, **kwargs)

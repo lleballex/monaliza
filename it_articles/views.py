@@ -8,7 +8,7 @@ from account.models import FavouriteArticle, Notification, User
 from qna.models import Tag
 from .forms import *
 from account.utils import MessagesMixin
-from monaliza.utils import default_handler, AccessMixin
+from monaliza.utils import default_handler, AccessViewMixin
 
 class PostsView(ListView):
 	context_object_name = 'articles'
@@ -65,7 +65,7 @@ class AvailablePost(View):
 		notification.save()
 		return redirect(reverse('posts:post', kwargs = {'pk': pk}))
 
-class MyPostsView(AccessMixin, View):
+class MyPostsView(AccessViewMixin, View):
 	def get(self, request):
 		checking = self.auth_check()
 		if checking:
@@ -89,7 +89,7 @@ class MyPostsView(AccessMixin, View):
 
 		return render(request, 'posts/my.html', context)
 
-class FavouritePostsView(AccessMixin, ListView):
+class FavouritePostsView(AccessViewMixin, ListView):
 	template_name = 'posts/favourite.html'
 	context_object_name = 'articles'
 	list_view = True
@@ -98,7 +98,7 @@ class FavouritePostsView(AccessMixin, ListView):
 		posts = FavouriteArticle.objects.filter(user = self.request.user)
 		return posts
 
-class NewPostView(AccessMixin, MessagesMixin, CreateView):
+class NewPostView(AccessViewMixin, MessagesMixin, CreateView):
 	template_name = 'posts/update.html'
 	model = Article
 	form_class = NewArticleForm
@@ -121,7 +121,7 @@ class NewPostView(AccessMixin, MessagesMixin, CreateView):
 		kwargs['tags'] = Tag.objects.all()
 		return super().get_context_data(**kwargs)
 
-class UpdatePostView(AccessMixin, MessagesMixin, UpdateView):
+class UpdatePostView(AccessViewMixin, MessagesMixin, UpdateView):
 	model = Article
 	form_class = NewArticleForm
 	template_name = 'posts/update.html'
@@ -139,7 +139,7 @@ class UpdatePostView(AccessMixin, MessagesMixin, UpdateView):
 		self.set_success_msg('Пост был успешно обновлен! Ожидайте модерации')
 		return self.success_url
 
-class DeletePost(AccessMixin, MessagesMixin, DeleteView):
+class DeletePost(AccessViewMixin, MessagesMixin, DeleteView):
 	success_msg = 'Ваш пост был успешно удален'
 	model = Article
 	success_url = reverse_lazy('posts:my')

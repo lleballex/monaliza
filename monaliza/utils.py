@@ -1,19 +1,24 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, UpdateView
+from django.urls import reverse
 
 def handler_404(request, exception = None):
 	context = {
 		'status_code': 404,
 		'message': 'Кажется, здесь ничего нет, особенно гото, что вы ищете'
 	}
-	return render(request, 'handler.html', context)
+	response = render(request, 'handler.html', context)
+	response.status_code = 404
+	return response
 
 def handler_500(request):
 	context = {
 		'status_code': 500,
 		'message': 'С сервером какие-то проблемы, но мы скоро все починим'
 	}
-	return render(request, 'handler.html', context)
+	response = render(request, 'handler.html', context)
+	response.status_code = 500
+	return response
 
 def default_handler(request, status_code, info): 
 	context = {
@@ -21,6 +26,8 @@ def default_handler(request, status_code, info):
 		'message': info,
 	}
 	response = render(request, 'handler.html', context)
+	response.status_code = 400
+	print(dir(response))
 	return response
 
 
@@ -30,7 +37,7 @@ class DetailMixin(View):
 	def get(self, request, *args, **kwargs):
 		if self.auth_check:
 			if not request.user.is_authenticated:
-				return default_handler(request, 401, 'Для доступа к этой странице необходимо авторизоваться')
+				return default_handler(request, 401, 'Для доступа к этой странице необходимо <a href="' + reverse('account:login') + '">авторизоваться</a>')
 
 
 		self.object = self.get_object()
@@ -38,14 +45,9 @@ class DetailMixin(View):
 		return self.render_to_response(context)
 
 class AccessMixin(View):
-	list_view = False
-	update_view = False
-	create_view = False
-	delete_view = False
-
 	def auth_check(self):
 		if not self.request.user.is_authenticated:
-			return default_handler(self.request, 401, 'Для доступа к этой странице необходимо авторизоваться')
+			return default_handler(self.request, 401, 'Для доступа к этой странице необходимо <a href="' + reverse('account:login') + '">авторизоваться</a>')
 		else:
 			return False
 
@@ -65,6 +67,13 @@ class AccessMixin(View):
 			return user_checking
 
 		return False
+
+class AccessViewMixin(AccessMixin):
+	list_view = False
+	update_view = False
+	create_view = False
+	delete_view = False
+	template_view = False
 
 	def get(self, request, *args, **kwargs):
 		if self.list_view:
@@ -92,10 +101,16 @@ class AccessMixin(View):
 		elif self.delete_view:
 			return default_handler(request, 400, 'Эта страница не поддерживает этот метод запроса (get)')
 
+		elif self.template_view:
+			checking = self.auth_check()
+			if checking:
+				return checking
+			context = self.get_context_data(**kwargs)
+			return self.render_to_response(context)
 
 	def post(self, request, *args, **kwargs):
 		if self.list_view:
-			return default_handler(request, 400, 'Эта страница не поддерживает этот метод запроса (get)')
+			return default_handler(request, 400, 'Эта страница не поддерживает этот метод запроса (post)')
 
 		elif self.update_view:
 			self.object = self.get_object()
@@ -118,3 +133,6 @@ class AccessMixin(View):
 				return checking
 			self.object.delete()
 			return redirect(self.get_success_url())
+
+		elif self.template_view:
+			return default_handler(request, 400, 'Эта страница не поддерживает этот метод запроса (post)')

@@ -14,3 +14,23 @@ body {
 .hidden-ad {
 	display: none;
 }
+
+body::-webkit-scrollbar {
+	width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+	background: #444;
+}
+
+body::-webkit-scrollbar-thumb:vertical {
+	background: linear-gradient(to bottom, #fff, #4a4a4a);
+}
+
+body::-webkit-scrollbar-thumb:horizontal {
+	background: linear-gradient(to right, #fff, #4a4a4a);
+}
+
+body::-webkit-scrollbar-corner {
+	background: #4a4a4a;
+}

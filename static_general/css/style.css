@@ -40,16 +40,18 @@ body {
 	color: #27ae60;
 }
 
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
 	width: 12px;
 }
 
-::-webkit-scrollbar-track {
-	background: #fff;
-}
-
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb:vertical {
 	background: linear-gradient(to bottom, #227093, #fafafa); /*#227093;*/
-	transition: .2s all
 }
 
+body::-webkit-scrollbar-thumb:horizontal {
+	background: linear-gradient(to right, #227093, #fafafa); /*#227093;*/
+}
+
+body::-webkit-scrollbar-corner {
+	background: #fafafa;
+}
