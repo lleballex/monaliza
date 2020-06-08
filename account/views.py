@@ -1,32 +1,15 @@
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, View, UpdateView, ListView, DeleteView
+from django.views.generic import TemplateView, CreateView, View, ListView, UpdateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy, reverse
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.http.response import HttpResponse
+from django.http import Http404
 
-import smtplib, ssl
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
-from .forms import *
+from .forms import UserRegisterForm, UserLoginForm, UserUpdateForm
 from .models import User, Notification, FavouriteArticle
-from it_articles.models import Article
-from .utils import *
-
-def mail_send(mail_to, url):
-	email = 'lleballex@yandex.ru'
-	html = '<a href="' + url + '>' + url + '</a>'
-	message = MIMEMultipart()
-	message['Subject'] = 'Подтверждение аккаунта'
-	message['From'] = email
-	message['To'] = mail_to
-	message.attach(MIMEText(html, 'html'))
-	context = ssl.create_default_context()
-	with smtplib.SMTP_SSL('smtp.yandex.ru', 465, context = context) as server:
-		server.login(email, 'password')
-		server.sendmail(email, email, message.as_string())
+from .utils import MessagesMixin, UserAccessMixin
+from monaliza.utils import AccessViewMixin
 
 class Redirect(View):
 	def get(self, request):
@@ -59,56 +42,46 @@ class UserRegisterView(CreateView):
 class UserLoginView(LoginView):
 	template_name = 'account/login.html'
 	form_class = UserLoginForm
-	success_url = reverse_lazy('start_page:main_view')
 
 	def get_success_url(self):
-		#mail_send('lleballex@yandex.ru', 'https://google.com')
 		return reverse_lazy('account:profile')
 
 class UserLogout(LogoutView):
 	next_page = reverse_lazy('posts:posts')
 
-class ProfileView(View):
-	def get(self, request):
-		context = {
-			'articles': Article.objects.filter(user = request.user).order_by('-date'),
-		}
-		return render(request, 'account/profile.html', context)
+class ProfileView(AccessViewMixin, TemplateView):
+	template_name = 'account/profile.html'
+	template_view = True
 
-class SettingsView(MessagesMixin, View):
-	def get(self, request):
-		context = {
-			'form': UserUpdateForm(instance = request.user), 
-		}
-		return render(request, 'account/update.html', context)
+class SettingsView(UserAccessMixin, MessagesMixin, UpdateView):
+	form_class = UserUpdateForm
+	template_name = 'account/update.html'
+	success_url = reverse_lazy('account:settings')
+	update_view = True
 
-	def post(self, request):
-		right_username = request.user.username
-		right_email = request.user.email
-		form = UserUpdateForm(request.POST, request.FILES, instance = request.user)
-		if form.is_valid():
-			form.save()
-			self.set_success_msg('Profile was successfule updated')
-		else:
-			username = request.POST.get('username')
-			email = request.POST.get('email')
-			form = UserUpdateForm(instance = request.user)
-			for user in User.objects.all():
-				if username == user.username and user.email != right_email:
-					self.set_error_msg('This username is already taken')
-				if email == user.email and user.username != right_username:
-					print(user, ' - ', user.email)
-					print(right_username)
-					self.set_error_msg('This email is alreade taken')
-		return redirect(reverse('account:settings'))
+	def get_object(self, queryset = None):
+		return User.objects.get(id = self.request.user.id)
+
+	def form_invalid(self, form):
+		for i in form.errors.values():
+			for error in i:
+				self.set_error_msg(error)
+		new_form = UserUpdateForm(instance = self.get_object())
+		return self.render_to_response(self.get_context_data(form = new_form))
+
+	def form_valid(self, form):
+		self.set_success_msg('Профиль был успешно обновлен!')
+		self.object = form.save()
+		return super().form_valid(form)
 
 
-class NotificationsView(View):
-	def get(self, request):
-		context = {
-			'notifications': Notification.objects.filter(user = request.user).order_by('-date'),
-		}
-		return render(request, 'account/notifications.html', context)
+class NotificationsView(AccessViewMixin, ListView):
+	template_name = 'account/notifications.html'
+	context_object_name = 'notifications'
+	list_view = True
+
+	def get_queryset(self):
+		return Notification.objects.filter(user = self.request.user).order_by('-date')
 
 class SetNotificationsNotNew(View):
 	def get(self, request):

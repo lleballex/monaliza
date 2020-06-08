@@ -27,7 +27,7 @@ class AnswerSend(View):
 		answer.save()
 		html = '''
 				<li id="answer-%i">
-				<img src="static/account/images/user_2.png">
+				<img src="/static/account/images/user_2.png">
 				<div class="answer">
 				<div class="user">
 				<div>

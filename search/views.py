@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import View
+from django.http import Http404
 
 from it_articles.models import Article
 from qna.models import Question
 from account.models import User
-from account.utils import AccessMixin
 
 class SearchView(View):
 	def get(self, request):
@@ -32,13 +32,12 @@ class SearchView(View):
 
 		return render(request, template_name, context)
 
-class UserView(AccessMixin, View):
+class UserView(View):
 	def get(self, request, username):
 		try:
 			user = User.objects.get(username = username)
 		except User.DoesNotExist:
-			self.message = 'Данного пользователя не существует'
-			return self.mixin_render()
+			raise Http404
 		context = {'user': user}
 		return render(request, 'search/user_page.html', context)
 		
